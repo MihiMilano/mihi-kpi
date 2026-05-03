@@ -702,14 +702,16 @@ function genSuggerimenti(c, d, servizi){
 
   const suggs=[];
 
-  // 1. Serv/Cliente sotto target (priorità alta)
-  if(d.serv!==null&&d.serv!==undefined&&c.serv_t>0&&d.serv<c.serv_t){
-    const gap=(c.serv_t-d.serv).toFixed(1);
+  // 1. Serv/Cliente ≤ target: 2 è il MINIMO, spingiamo sempre oltre
+  if(d.serv!==null&&d.serv!==undefined&&c.serv_t>0&&d.serv<=c.serv_t){
+    const atTarget=d.serv>=c.serv_t;
     suggs.push({icon:'➕',cls:'sugg-card-fat',title:'Aumenta i servizi per cliente',
-      text:`Media attuale ${d.serv.toFixed(1)} vs target ${c.serv_t}. Proponi almeno 1 servizio aggiuntivo per ogni cliente: un trattamento, un finish, una cura specifica. Anche +${gap} serv/cliente fa la differenza sul ticket finale.`});
+      text:atTarget
+        ?`Sei al minimo di ${c.serv_t} serv/cliente — non fermarti qui. Ogni cliente è un'occasione: proponi un trattamento, un finish, una cura specifica. Punta a ${(c.serv_t+0.5).toFixed(1)}+ e il ticket si alza da solo.`
+        :`Media attuale ${d.serv.toFixed(1)} vs target ${c.serv_t}. Proponi almeno 1 servizio aggiuntivo per ogni cliente: un trattamento, un finish, una cura specifica. Ogni +0.5 serv/cliente si traduce in fatturato reale.`});
   }
 
-  // 2. Fiche media sotto target (priorità alta)
+  // 2. Fiche media sotto target
   if(suggs.length<2&&d.fiche!==null&&d.fiche!==undefined&&c.fiche_t>0&&d.fiche<c.fiche_t){
     const gap=Math.round(c.fiche_t-d.fiche);
     let txt=`Ticket medio €${d.fiche.toFixed(2)} vs target €${c.fiche_t}. `;
@@ -721,20 +723,24 @@ function genSuggerimenti(c, d, servizi){
     suggs.push({icon:'💎',cls:'sugg-card-fat',title:'Alza il ticket medio',text:txt});
   }
 
-  // 3. KPI secondari se c'è spazio
-  if(suggs.length<2&&d.rit!==null&&c.rit_tw>0&&d.rit/c.rit_tw<0.7)
+  // 3. Saturazione bassa → esperienza wow + rifissa appuntamento
+  if(suggs.length<2&&d.sat!==null&&d.sat!==undefined&&d.sat<70){
+    const lvl=d.sat<50?'molto bassa':'sotto soglia';
+    suggs.push({icon:'✨',cls:'sugg-card-fat',title:'Crea un\'esperienza wow',
+      text:`Saturazione ${lvl} (${d.sat}%). Ogni cliente che entra deve vivere una consulenza memorabile: analisi del capello, proposta personalizzata, styling finale. Rifissa l'appuntamento prima che esca — è il momento giusto. Un'esperienza wow genera passaparola.`});
+  }
+
+  // 4. Ritorni bassi se c'è ancora spazio (solo se dato presente e sotto metà target)
+  if(suggs.length<2&&d.rit!==null&&c.rit_tw>0&&d.rit/c.rit_tw<0.4)
     suggs.push({icon:'🔄',cls:'sugg-card-fat',title:'Fidelizza i clienti',
-      text:'I ritorni sono sotto soglia. Un messaggio di ringraziamento entro 48h rafforza il legame e aumenta la probabilità di ritorno.'});
-  if(suggs.length<2&&d.rich!==null&&c.rich_tw>0&&d.rich/c.rich_tw<0.7)
-    suggs.push({icon:'⭐',cls:'sugg-card-rich',title:'Aumenta le preferenze',
-      text:`Solo ${d.rich||0} clienti ti hanno scelto specificatamente. Personalizza il servizio e crea un'esperienza riconoscibile.`});
+      text:'I ritorni sono sotto soglia. Rifissa sempre l\'appuntamento in cassa prima che il cliente esca — è l\'abitudine più importante per costruire una clientela solida.'});
 
   // Se tutto ok
   if(suggs.length===0)
     suggs.push({icon:'🌟',cls:'sugg-card-ok',title:'KPI in linea — ottimo!',
       text:'Serv/cliente e ticket medio sono in target. Mantieni il ritmo e punta a chiudere la settimana in verde!'});
 
-  // SEMPRE: Retail motivazionale
+  // SEMPRE slot 3: Retail motivazionale
   const retOk=d.ret!==null&&c.ret_tw>0&&d.ret>=c.ret_tw*0.8;
   suggs.push({icon:'🛍️',cls:'sugg-card-retail',
     title:retOk?'Mantieni il ritmo sui prodotti':'Spingi i prodotti',
