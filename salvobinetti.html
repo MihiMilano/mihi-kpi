@@ -8,6 +8,8 @@
 :root{--bg:#f5f4ef;--bg2:#eeecea;--card:#fff;--card2:#f9f8f5;--bord:#dedad3;--bord2:#c8c3bb;--gold:#a67318;--text:#1a1510;--text2:#6b6055;--green:#15803d;--amber:#b45309;--red:#b91c1c;--pur:#6d28d9;--pink:#be185d}
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Segoe UI',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+
+/* COVER */
 .cover{min-height:100vh;display:flex;flex-direction:column;background:var(--bg)}
 .cover-hero{background:#1a1510;padding:48px 24px 40px;text-align:center;border-bottom:1px solid #2e2820}
 .cover-logo{font-size:28px;font-weight:900;letter-spacing:6px;color:var(--gold);margin-bottom:6px}
@@ -31,6 +33,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Segoe UI',sa
 .mod-chev{color:var(--bord2);font-size:18px;flex-shrink:0}
 .cover-footer{text-align:center;padding:20px;margin-top:auto}
 .cover-footer-txt{font-size:10px;color:var(--text2);letter-spacing:.5px;text-transform:uppercase}
+
+/* HEADER */
 .hdr{background:#1a1510;border-bottom:1px solid #2e2820;padding:0 14px;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;gap:8px}
 .logo{font-size:17px;font-weight:900;letter-spacing:4px;color:var(--gold)}
 .hdr-left{display:flex;align-items:center;gap:8px}
@@ -41,28 +45,42 @@ body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Segoe UI',sa
 .hdr-btns{display:flex;gap:6px;flex-shrink:0}
 .btn-hdr{background:none;border:1px solid #3a3028;color:#a09080;padding:5px 10px;border-radius:7px;font-size:11px;font-weight:700;cursor:pointer;transition:all .15s;white-space:nowrap}
 .btn-hdr:hover{border-color:var(--gold);color:var(--gold)}
+
+/* NAV BREADCRUMB */
 .nav-bc{background:#1a1510;padding:8px 16px;display:flex;align-items:center;gap:8px;border-bottom:1px solid #2e2820}
 .nav-home-btn{background:none;border:none;color:#a09080;font-size:11px;font-weight:600;cursor:pointer;padding:0;letter-spacing:.5px;text-transform:uppercase;transition:color .15s}
 .nav-home-btn:hover{color:var(--gold)}
 .nav-sep{color:#3a3028;font-size:12px}
 .nav-current{font-size:11px;font-weight:700;color:var(--gold);letter-spacing:.5px;text-transform:uppercase}
+
+/* TABS NAV */
 .tabs-nav{background:var(--card);border-bottom:2px solid var(--bord);display:flex;overflow-x:auto;position:sticky;top:56px;z-index:90}
 .tab-btn{padding:13px 18px;font-size:13px;font-weight:700;color:var(--text2);cursor:pointer;border-bottom:3px solid transparent;white-space:nowrap;transition:all .2s;letter-spacing:.3px}
 .tab-btn.active{color:var(--gold);border-bottom-color:var(--gold)}
 .tab-btn:hover:not(.active){color:var(--text)}
+
+/* SUMMARY BAR */
 .sumbar{background:var(--card);border-bottom:1px solid var(--bord);padding:10px 16px;display:flex;overflow-x:auto;gap:0}
 .ss{padding:4px 14px;border-right:1px solid var(--bord);flex-shrink:0;text-align:center}
 .ss:first-child{padding-left:0}.ss:last-child{border-right:none;padding-right:0}
 .sv{font-size:17px;font-weight:800;color:var(--gold)}
 .sl{font-size:9px;text-transform:uppercase;letter-spacing:.8px;color:var(--text2);margin-top:2px}
+
+/* TAB CONTENT */
 .tab-pane{display:none;padding:14px 16px;max-width:720px;margin:0 auto}
 .tab-pane.active{display:block}
+
+/* SECTION LABEL */
 .sec-lbl{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1.2px;color:var(--text2);margin:16px 0 9px;padding-bottom:5px;border-bottom:1px solid var(--bord)}
+
+/* COLLAB CARD */
 .ccard{background:var(--card);border:1px solid var(--bord);border-radius:14px;padding:13px 14px;margin-bottom:9px;border-left:4px solid var(--bord2)}
 .ccard-hdr{display:flex;align-items:center;gap:10px;margin-bottom:11px}
 .cav{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;flex-shrink:0}
 .cname{font-size:15px;font-weight:800}
 .crole{font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;letter-spacing:.4px;display:inline-block;margin-top:2px}
+
+/* KPI GRID */
 .kpi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:5px}
 @media(min-width:480px){.kpi-grid{grid-template-columns:repeat(6,1fr)}}
 .kc{background:var(--bg2);border-radius:9px;padding:8px 5px;text-align:center}
@@ -71,8 +89,47 @@ body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Segoe UI',sa
 .kt{font-size:9px;color:var(--text2);margin-top:2px}
 .kp{font-size:9px;opacity:.6;margin-left:1px}
 .dot{width:6px;height:6px;border-radius:50%;display:inline-block;margin-right:2px;vertical-align:middle}
+
+/* semaforo */
 .g{color:var(--green)}.a{color:var(--amber)}.r{color:var(--red)}.n{color:var(--text2)}
 .dg{background:var(--green)}.da{background:var(--amber)}.dr{background:var(--red)}.dn{background:var(--bord2)}
+
+/* ── v3: EXPAND BUTTON ── */
+.expand-btn{width:100%;margin-top:10px;padding:8px;background:none;border:1px dashed var(--bord2);border-radius:8px;color:var(--text2);font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;letter-spacing:.3px;transition:all .18s;text-align:center}
+.expand-btn:hover{border-color:var(--gold);color:var(--gold);background:rgba(166,115,24,.04)}
+.expand-btn.open{border-style:solid;border-color:var(--bord2)}
+
+/* ── v3: PROFILO WRAP ── */
+.profilo-wrap{margin-top:12px;border-top:1px solid var(--bord);padding-top:12px}
+
+/* ── v3: SUGG SECTION LABEL ── */
+.psec-lbl{font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--text2);margin-bottom:8px;margin-top:0}
+
+/* ── v3: SUGGESTION CARDS ── */
+.sugg-card{display:flex;gap:9px;align-items:flex-start;background:var(--bg2);border-radius:9px;padding:9px 10px;margin-bottom:6px;border-left:3px solid transparent}
+.sugg-card-fat{border-left-color:var(--amber)}
+.sugg-card-retail{border-left-color:#0369a1}
+.sugg-card-rich{border-left-color:var(--green)}
+.sugg-card-nuovi{border-left-color:var(--pur)}
+.sugg-card-ok{border-left-color:var(--green)}
+.sugg-card-form{border-left-color:#92400e}
+.sugg-icon{font-size:17px;flex-shrink:0;margin-top:1px}
+.sugg-title{font-size:11px;font-weight:800;margin-bottom:2px}
+.sugg-text{font-size:11px;color:var(--text2);line-height:1.5}
+
+/* ── v3: SERVICE PROFILE ── */
+.serv-cat{margin-bottom:10px}
+.serv-cat-lbl{font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.8px;color:var(--text2);margin-bottom:5px;display:flex;align-items:center;gap:4px}
+.serv-row{display:flex;align-items:center;gap:6px;margin-bottom:5px}
+.serv-info{min-width:0;flex:1}
+.serv-nome{display:block;font-size:11px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.serv-meta{display:block;font-size:9px;color:var(--text2);margin-top:1px}
+.serv-bar-wrap{width:55px;flex-shrink:0;background:var(--bord);border-radius:2px;height:5px;overflow:hidden}
+.serv-bar-fill{height:5px;border-radius:2px;opacity:.75;transition:width .5s ease}
+.serv-qty{font-size:10px;color:var(--text2);font-weight:700;flex-shrink:0;width:22px;text-align:right}
+.no-serv-msg{font-size:11px;color:var(--text2);padding:8px 0;font-style:italic;line-height:1.5}
+
+/* MESE/STORICO TABLE */
 .kpi-sel{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
 .kbtn{padding:5px 12px;border-radius:20px;border:1px solid var(--bord2);background:transparent;color:var(--text2);cursor:pointer;font-size:11px;font-weight:700;letter-spacing:.3px;font-family:inherit}
 .kbtn.active{background:var(--gold);color:#fff;border-color:var(--gold)}
@@ -85,14 +142,23 @@ td:first-child{text-align:left;padding-left:12px;font-weight:700}
 tr:last-child td{border-bottom:none}
 .tot-row td{background:rgba(166,115,24,.07);font-weight:800}
 .badge-live{font-size:8px;font-weight:800;padding:1px 5px;border-radius:8px;background:rgba(166,115,24,.15);color:var(--gold);margin-left:3px;vertical-align:middle}
+
+/* STORICO month selector */
 .msel-wrap{display:flex;gap:10px;align-items:center;margin-bottom:12px;flex-wrap:wrap}
 select{background:var(--card);color:var(--text);border:1px solid var(--bord2);padding:7px 12px;border-radius:8px;font-size:13px;font-weight:600;font-family:inherit;cursor:pointer}
 .badge-chiuso{font-size:9px;font-weight:800;padding:2px 8px;border-radius:10px;background:rgba(21,128,61,.12);color:var(--green)}
+
+/* ANALISI SALONE */
 .as-wrap{min-height:50vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 24px;text-align:center}
 .as-icon{font-size:48px;margin-bottom:20px;opacity:.4}
 .as-title{font-size:22px;font-weight:800;margin-bottom:8px}
 .as-sub{font-size:14px;color:var(--text2);line-height:1.6;max-width:380px;margin:0 auto 24px}
 .as-badge{display:inline-flex;align-items:center;gap:6px;background:var(--bg2);border:1px solid var(--bord);border-radius:20px;padding:8px 16px;font-size:12px;font-weight:700;color:var(--text2)}
+.as-modules{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:28px;max-width:480px}
+.as-mod{background:var(--card);border:1px solid var(--bord);border-radius:10px;padding:12px 16px;font-size:12px;color:var(--text2);text-align:left}
+.as-mod-title{font-size:11px;font-weight:800;color:var(--text);margin-bottom:3px;text-transform:uppercase;letter-spacing:.5px}
+
+/* COMPARE PICKER */
 .cpicker{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:200;display:flex;align-items:flex-end;justify-content:center}
 .cpicker-box{background:var(--bg2);border-radius:16px 16px 0 0;width:100%;max-width:680px;padding:20px;max-height:70vh;overflow-y:auto}
 .cpicker-title{font-size:13px;font-weight:700;margin-bottom:14px}
@@ -100,6 +166,8 @@ select{background:var(--card);color:var(--text);border:1px solid var(--bord2);pa
 .cpicker-item:hover{border-color:var(--gold);background:var(--card)}
 .cpicker-av{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;flex-shrink:0}
 .cpicker-cancel{margin-top:6px;width:100%;padding:12px;background:none;border:1px solid var(--bord2);color:var(--text2);border-radius:10px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit}
+
+/* COMPARE VIEW */
 .cmp-hdr{display:flex;align-items:center;gap:8px;padding:14px 16px;border-bottom:1px solid var(--bord);background:var(--bg2)}
 .cmp-av{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;flex-shrink:0}
 .cmp-name{font-size:14px;font-weight:700}
@@ -118,26 +186,31 @@ select{background:var(--card);color:var(--text);border:1px solid var(--bord2);pa
 .cmp-sep{font-size:11px;font-weight:900;color:var(--bord2);text-align:center}
 .cmp-winner{margin-top:8px;font-size:10px;text-align:center;color:var(--text2);font-style:italic}
 .cmp-topbar{background:var(--card);border-bottom:1px solid var(--bord);padding:10px 16px;display:flex;align-items:center;justify-content:space-between}
+
+/* PRINT */
 @media print{
   @page{margin:14mm 12mm}
-  #view-cover,#view-analisi,.tabs-nav,.sumbar,.nav-bc,.hdr,.cpicker,#view-cmp{display:none!important}
+  #view-cover,#view-analisi,.tabs-nav,.sumbar,.nav-bc,.hdr,.cpicker,#view-cmp,.expand-btn,.profilo-wrap{display:none!important}
   body{background:white!important;color:#111!important}
   .tab-pane{display:block!important;padding:0!important}
-  .ccard{background:white!important;border-color:#ddd!important;break-inside:avoid}
+  .sec-lbl{color:#333!important}
+  .ccard{background:white!important;border-color:#ddd!important;break-inside:avoid;page-break-inside:avoid}
   .kc{background:#f5f5f5!important}
 }
+
 .no-data{text-align:center;padding:40px 20px;color:var(--text2);font-size:14px}
 .foot{text-align:center;padding:20px;color:var(--text2);font-size:11px;opacity:.7}
 </style>
 </head>
 <body>
 
+<!-- COVER -->
 <div id="view-cover" class="cover">
   <div class="cover-hero">
     <div class="cover-logo">MIHI</div>
     <div class="cover-salon">Salvo Binetti Parrucchieri · Molfetta</div>
     <div class="cover-title">Management System</div>
-    <div class="cover-update" id="cover-update"></div>
+    <div class="cover-update" id="cover-update">—</div>
   </div>
   <div class="cover-modules">
     <div class="mod-card" onclick="showModule('team')">
@@ -145,7 +218,7 @@ select{background:var(--card);color:var(--text);border:1px solid var(--bord2);pa
       <div class="mod-body">
         <div class="mod-num">Modulo 01</div>
         <div class="mod-name">Target Team</div>
-        <div class="mod-desc">KPI individuali, semafori, storico settimanale e confronto collaboratori</div>
+        <div class="mod-desc">KPI individuali, semafori, profilo servizi, suggerimenti AI e confronto collaboratori</div>
       </div>
       <span class="mod-status mod-live">Live</span>
       <span class="mod-chev">›</span>
@@ -160,12 +233,13 @@ select{background:var(--card);color:var(--text);border:1px solid var(--bord2);pa
       <span class="mod-status mod-soon">In arrivo</span>
     </div>
   </div>
-  <div class="cover-footer">
-    <div class="cover-footer-txt">MIHI Management System · Proprietà di MIHI Milano</div>
-  </div>
+  <div class="cover-footer"><div class="cover-footer-txt">MIHI Management System · Proprietà di MIHI Milano</div></div>
 </div>
 
+<!-- MAIN APP -->
 <div id="view-app" style="display:none">
+
+  <!-- HEADER -->
   <div class="hdr">
     <div class="hdr-left">
       <span class="logo">MIHI</span><span class="hsep">·</span>
@@ -174,31 +248,48 @@ select{background:var(--card);color:var(--text);border:1px solid var(--bord2);pa
     <div class="hmeta"><span id="hdr-week">–</span><br><b id="hdr-month">–</b></div>
     <div class="hdr-btns">
       <button class="btn-hdr" onclick="showComparePicker()">⇄ Confronta</button>
-      <button class="btn-hdr" onclick="window.print()">🖨 PDF</button>
     </div>
   </div>
+
+  <!-- NAV BREADCRUMB -->
   <div class="nav-bc">
     <button class="nav-home-btn" onclick="goHome()">⌂ Home</button>
     <span class="nav-sep">›</span>
     <span class="nav-current" id="nav-label">Target Team</span>
   </div>
+
+  <!-- TABS -->
   <div class="tabs-nav" id="tabs-nav">
     <div class="tab-btn active" onclick="switchTab('live')">📊 Settimana Live</div>
     <div class="tab-btn" onclick="switchTab('mese')">📅 Il Mese</div>
     <div class="tab-btn" onclick="switchTab('storico')">🗂️ Storico</div>
   </div>
+
+  <!-- SUMMARY BAR -->
   <div class="sumbar" id="sumbar"></div>
+
+  <!-- TAB PANES -->
   <div class="tab-pane active" id="pane-live"></div>
   <div class="tab-pane" id="pane-mese"></div>
   <div class="tab-pane" id="pane-storico"></div>
+
+  <!-- ANALISI SALONE (coming soon) -->
   <div id="view-analisi" style="display:none">
     <div class="as-wrap">
       <div class="as-icon">📊</div>
       <div class="as-title">Analisi Salone</div>
-      <div class="as-sub">Il modulo di analisi economica del salone è in fase di sviluppo.</div>
+      <div class="as-sub">Il modulo di analisi economica è in fase di sviluppo. Sarà disponibile a breve con conto economico completo, benchmark di settore e analisi delle potenzialità.</div>
       <div class="as-badge">⏳ In sviluppo — disponibile a breve</div>
+      <div class="as-modules">
+        <div class="as-mod"><div class="as-mod-title">Conto Economico</div>Fatturato, costi fissi e variabili, margine operativo</div>
+        <div class="as-mod"><div class="as-mod-title">Benchmark Settore</div>Confronto con medie nazionali saloni italiani</div>
+        <div class="as-mod"><div class="as-mod-title">Potenzialità</div>Saturazione agenda, ore disponibili vs prodotte</div>
+        <div class="as-mod"><div class="as-mod-title">Break-Even Salone</div>Punto di pareggio totale inclusi costi generali</div>
+      </div>
     </div>
   </div>
+
+  <!-- COMPARE VIEW -->
   <div id="view-cmp" style="display:none">
     <div class="cmp-topbar">
       <button class="btn-hdr" onclick="closeCompare()" style="border-color:var(--bord2);color:var(--text2)">← Indietro</button>
@@ -207,9 +298,11 @@ select{background:var(--card);color:var(--text);border:1px solid var(--bord2);pa
     </div>
     <div id="cmp-wrap"></div>
   </div>
+
   <div class="foot">MIHI Management System · Proprietà di MIHI Milano · Aggiornato: <span id="last-upd">mai</span></div>
 </div>
 
+<!-- COMPARE PICKER OVERLAY -->
 <div id="cpicker" class="cpicker" style="display:none" onclick="if(event.target===this)closeComparePicker()">
   <div class="cpicker-box">
     <div class="cpicker-title">Seleziona collaboratore da confrontare</div>
@@ -219,44 +312,527 @@ select{background:var(--card);color:var(--text);border:1px solid var(--bord2);pa
 </div>
 
 <script>
+// ╔══════════════════════════════════════════════════════════════╗
+// ║  SEZIONE 1 — TARGET MENSILI                                  ║
+// ║  Aggiornare all'inizio di ogni mese                         ║
+// ╚══════════════════════════════════════════════════════════════╝
 const MESI = {
   "2026-05": {
-    label: "Maggio 2026",
-    settimane: [
-      { id:"S1", da:"2026-05-02", a:"2026-05-09",  label:"S1 · 2-9 mag"   },
-      { id:"S2", da:"2026-05-12", a:"2026-05-16",  label:"S2 · 12-16 mag" },
-      { id:"S3", da:"2026-05-19", a:"2026-05-23",  label:"S3 · 19-23 mag" },
-      { id:"S4", da:"2026-05-26", a:"2026-05-30",  label:"S4 · 26-30 mag" }
+    "label": "Maggio 2026",
+    "settimane": [
+      {
+        "id": "S1",
+        "da": "2026-05-02",
+        "a": "2026-05-09",
+        "label": "S1 · 2-9 mag"
+      },
+      {
+        "id": "S2",
+        "da": "2026-05-12",
+        "a": "2026-05-16",
+        "label": "S2 · 12-16 mag"
+      },
+      {
+        "id": "S3",
+        "da": "2026-05-19",
+        "a": "2026-05-23",
+        "label": "S3 · 19-23 mag"
+      },
+      {
+        "id": "S4",
+        "da": "2026-05-26",
+        "a": "2026-05-30",
+        "label": "S4 · 26-30 mag"
+      }
     ],
-    collaboratori: [
-      { id:"miky",       nome:"Miky Basile",     ruolo:"Direttore",     costo_m:0, fat_tw:0, fat_tm:0, pre_tw:0, pre_tm:0, ret_tw:0, ret_tm:0, rit_tw:0, rit_tm:0, nuovi_tw:0, nuovi_tm:0, rich_tw:0, rich_tm:0, serv_t:0, fiche_t:0, sat_t:0 },
-      { id:"valentina",  nome:"Valentina Dista",  ruolo:"Resp.Tecnico",  costo_m:0, fat_tw:0, fat_tm:0, pre_tw:0, pre_tm:0, ret_tw:0, ret_tm:0, rit_tw:0, rit_tm:0, nuovi_tw:0, nuovi_tm:0, rich_tw:0, rich_tm:0, serv_t:0, fiche_t:0, sat_t:0 },
-      { id:"antonella",  nome:"Antonella Maggi",  ruolo:"Resp.Care",     costo_m:0, fat_tw:0, fat_tm:0, pre_tw:0, pre_tm:0, ret_tw:0, ret_tm:0, rit_tw:0, rit_tm:0, nuovi_tw:0, nuovi_tm:0, rich_tw:0, rich_tm:0, serv_t:0, fiche_t:0, sat_t:0 },
-      { id:"andrea",     nome:"Andrea Stasolla",  ruolo:"Resp.Styling",  costo_m:0, fat_tw:0, fat_tm:0, pre_tw:0, pre_tm:0, ret_tw:0, ret_tm:0, rit_tw:0, rit_tm:0, nuovi_tw:0, nuovi_tm:0, rich_tw:0, rich_tm:0, serv_t:0, fiche_t:0, sat_t:0 },
-      { id:"mariangela", nome:"Mariangela",       ruolo:"Stilista",      costo_m:0, fat_tw:0, fat_tm:0, pre_tw:0, pre_tm:0, ret_tw:0, ret_tm:0, rit_tw:0, rit_tm:0, nuovi_tw:0, nuovi_tm:0, rich_tw:0, rich_tm:0, serv_t:0, fiche_t:0, sat_t:0 },
-      { id:"mariarita",  nome:"Maria Rita",       ruolo:"Stilista",      costo_m:0, fat_tw:0, fat_tm:0, pre_tw:0, pre_tm:0, ret_tw:0, ret_tm:0, rit_tw:0, rit_tm:0, nuovi_tw:0, nuovi_tm:0, rich_tw:0, rich_tm:0, serv_t:0, fiche_t:0, sat_t:0 },
-      { id:"dario",      nome:"Dario",            ruolo:"Assistente",    costo_m:0, fat_tw:0, fat_tm:0, pre_tw:0, pre_tm:0, ret_tw:0, ret_tm:0, rit_tw:0, rit_tm:0, nuovi_tw:0, nuovi_tm:0, rich_tw:0, rich_tm:0, serv_t:0, fiche_t:0, sat_t:0 }
+    "collaboratori": [
+      {
+        "id": "miky",
+        "nome": "Miky Basile",
+        "ruolo": "Direttore",
+        "costo_m": 0,
+        "fat_tw": 0,
+        "fat_tm": 0,
+        "pre_tw": 0,
+        "pre_tm": 0,
+        "ret_tw": 0,
+        "ret_tm": 0,
+        "rit_tw": 0,
+        "rit_tm": 0,
+        "nuovi_tw": 0,
+        "nuovi_tm": 0,
+        "rich_tw": 0,
+        "rich_tm": 0,
+        "serv_t": 0,
+        "fiche_t": 0,
+        "sat_t": 0
+      },
+      {
+        "id": "valentina",
+        "nome": "Valentina Dista",
+        "ruolo": "Resp.Tecnico",
+        "costo_m": 0,
+        "fat_tw": 0,
+        "fat_tm": 0,
+        "pre_tw": 0,
+        "pre_tm": 0,
+        "ret_tw": 0,
+        "ret_tm": 0,
+        "rit_tw": 0,
+        "rit_tm": 0,
+        "nuovi_tw": 0,
+        "nuovi_tm": 0,
+        "rich_tw": 0,
+        "rich_tm": 0,
+        "serv_t": 0,
+        "fiche_t": 0,
+        "sat_t": 0
+      },
+      {
+        "id": "antonella",
+        "nome": "Antonella Maggi",
+        "ruolo": "Resp.Care",
+        "costo_m": 0,
+        "fat_tw": 0,
+        "fat_tm": 0,
+        "pre_tw": 0,
+        "pre_tm": 0,
+        "ret_tw": 0,
+        "ret_tm": 0,
+        "rit_tw": 0,
+        "rit_tm": 0,
+        "nuovi_tw": 0,
+        "nuovi_tm": 0,
+        "rich_tw": 0,
+        "rich_tm": 0,
+        "serv_t": 0,
+        "fiche_t": 0,
+        "sat_t": 0
+      },
+      {
+        "id": "andrea",
+        "nome": "Andrea Stasolla",
+        "ruolo": "Resp.Styling",
+        "costo_m": 0,
+        "fat_tw": 0,
+        "fat_tm": 0,
+        "pre_tw": 0,
+        "pre_tm": 0,
+        "ret_tw": 0,
+        "ret_tm": 0,
+        "rit_tw": 0,
+        "rit_tm": 0,
+        "nuovi_tw": 0,
+        "nuovi_tm": 0,
+        "rich_tw": 0,
+        "rich_tm": 0,
+        "serv_t": 0,
+        "fiche_t": 0,
+        "sat_t": 0
+      },
+      {
+        "id": "mariangela",
+        "nome": "Mariangela",
+        "ruolo": "Stilista",
+        "costo_m": 0,
+        "fat_tw": 0,
+        "fat_tm": 0,
+        "pre_tw": 0,
+        "pre_tm": 0,
+        "ret_tw": 0,
+        "ret_tm": 0,
+        "rit_tw": 0,
+        "rit_tm": 0,
+        "nuovi_tw": 0,
+        "nuovi_tm": 0,
+        "rich_tw": 0,
+        "rich_tm": 0,
+        "serv_t": 0,
+        "fiche_t": 0,
+        "sat_t": 0
+      },
+      {
+        "id": "mariarita",
+        "nome": "Maria Rita",
+        "ruolo": "Stilista",
+        "costo_m": 0,
+        "fat_tw": 0,
+        "fat_tm": 0,
+        "pre_tw": 0,
+        "pre_tm": 0,
+        "ret_tw": 0,
+        "ret_tm": 0,
+        "rit_tw": 0,
+        "rit_tm": 0,
+        "nuovi_tw": 0,
+        "nuovi_tm": 0,
+        "rich_tw": 0,
+        "rich_tm": 0,
+        "serv_t": 0,
+        "fiche_t": 0,
+        "sat_t": 0
+      },
+      {
+        "id": "dario",
+        "nome": "Dario",
+        "ruolo": "Assistente",
+        "costo_m": 0,
+        "fat_tw": 0,
+        "fat_tm": 0,
+        "pre_tw": 0,
+        "pre_tm": 0,
+        "ret_tw": 0,
+        "ret_tm": 0,
+        "rit_tw": 0,
+        "rit_tm": 0,
+        "nuovi_tw": 0,
+        "nuovi_tm": 0,
+        "rich_tw": 0,
+        "rich_tm": 0,
+        "serv_t": 0,
+        "fiche_t": 0,
+        "sat_t": 0
+      }
     ]
   }
 };
 
+// ╔══════════════════════════════════════════════════════════════╗
+// ║  SEZIONE 2 — STORICO DATI REALI                             ║
+// ║  ⚠️  AGGIORNATO AUTOMATICAMENTE — Non modificare manualmente ║
+// ╚══════════════════════════════════════════════════════════════╝
 // === BEGIN_STORICO ===
 const STORICO = {
   "2026-05": {
-    chiuso: false,
-    ultimo_aggiornamento: null,
-    S1: { miky:{fat:null,pre:null,ret:null,rit:null,nuovi:null,rich:null,serv:null,fiche:null}, valentina:{fat:null,pre:null,ret:null,rit:null,nuovi:null,rich:null,serv:null,fiche:null}, antonella:{fat:null,pre:null,ret:null,rit:null,nuovi:null,rich:null,serv:null,fiche:null}, andrea:{fat:null,pre:null,ret:null,rit:null,nuovi:null,rich:null,serv:null,fiche:null}, mariangela:{fat:null,pre:null,ret:null,rit:null,nuovi:null,rich:null,serv:null,fiche:null}, mariarita:{fat:null,pre:null,ret:null,rit:null,nuovi:null,rich:null,serv:null,fiche:null}, dario:{fat:null,pre:null,ret:null,rit:null,nuovi:null,rich:null,serv:null,fiche:null} },
-    S2: { miky:{fat:null,pre:null,ret:null,rit:null,nuovi:null,rich:null,serv:null,fiche:null}, valentina:{fat:null,pre:null,ret:null,rit:null,nuovi:null,rich:null,serv:null,fiche:null}, antonella:{fat:null,pre:null,ret:null,rit:null,nuovi:null,rich:null,serv:null,fiche:null}, andrea:{fat:null,pre:null,ret:null,rit:null,nuovi:null,rich:null,serv:null,fiche:null}, mariangela:{fat:null,pre:null,ret:null,rit:null,nuovi:null,rich:null,serv:null,fiche:null}, mariarita:{fat:null,pre:null,ret:null,rit:null,nuovi:null,rich:null,serv:null,fiche:null}, dario:{fat:null,pre:null,ret:null,rit:null,nuovi:null,rich:null,serv:null,fiche:null} },
-    S3: { miky:{fat:null,pre:null,ret:null,rit:null,nuovi:null,rich:null,serv:null,fiche:null}, valentina:{fat:null,pre:null,ret:null,rit:null,nuovi:null,rich:null,serv:null,fiche:null}, antonella:{fat:null,pre:null,ret:null,rit:null,nuovi:null,rich:null,serv:null,fiche:null}, andrea:{fat:null,pre:null,ret:null,rit:null,nuovi:null,rich:null,serv:null,fiche:null}, mariangela:{fat:null,pre:null,ret:null,rit:null,nuovi:null,rich:null,serv:null,fiche:null}, mariarita:{fat:null,pre:null,ret:null,rit:null,nuovi:null,rich:null,serv:null,fiche:null}, dario:{fat:null,pre:null,ret:null,rit:null,nuovi:null,rich:null,serv:null,fiche:null} },
-    S4: { miky:{fat:null,pre:null,ret:null,rit:null,nuovi:null,rich:null,serv:null,fiche:null}, valentina:{fat:null,pre:null,ret:null,rit:null,nuovi:null,rich:null,serv:null,fiche:null}, antonella:{fat:null,pre:null,ret:null,rit:null,nuovi:null,rich:null,serv:null,fiche:null}, andrea:{fat:null,pre:null,ret:null,rit:null,nuovi:null,rich:null,serv:null,fiche:null}, mariangela:{fat:null,pre:null,ret:null,rit:null,nuovi:null,rich:null,serv:null,fiche:null}, mariarita:{fat:null,pre:null,ret:null,rit:null,nuovi:null,rich:null,serv:null,fiche:null}, dario:{fat:null,pre:null,ret:null,rit:null,nuovi:null,rich:null,serv:null,fiche:null} }
+    "chiuso": false,
+    "ultimo_aggiornamento": null,
+    "S1": {
+      "miky": {
+        "fat": null,
+        "pre": null,
+        "ret": null,
+        "rit": null,
+        "nuovi": null,
+        "rich": null,
+        "serv": null,
+        "fiche": null,
+        "servizi": null
+      },
+      "valentina": {
+        "fat": null,
+        "pre": null,
+        "ret": null,
+        "rit": null,
+        "nuovi": null,
+        "rich": null,
+        "serv": null,
+        "fiche": null,
+        "servizi": null
+      },
+      "antonella": {
+        "fat": null,
+        "pre": null,
+        "ret": null,
+        "rit": null,
+        "nuovi": null,
+        "rich": null,
+        "serv": null,
+        "fiche": null,
+        "servizi": null
+      },
+      "andrea": {
+        "fat": null,
+        "pre": null,
+        "ret": null,
+        "rit": null,
+        "nuovi": null,
+        "rich": null,
+        "serv": null,
+        "fiche": null,
+        "servizi": null
+      },
+      "mariangela": {
+        "fat": null,
+        "pre": null,
+        "ret": null,
+        "rit": null,
+        "nuovi": null,
+        "rich": null,
+        "serv": null,
+        "fiche": null,
+        "servizi": null
+      },
+      "mariarita": {
+        "fat": null,
+        "pre": null,
+        "ret": null,
+        "rit": null,
+        "nuovi": null,
+        "rich": null,
+        "serv": null,
+        "fiche": null,
+        "servizi": null
+      },
+      "dario": {
+        "fat": null,
+        "pre": null,
+        "ret": null,
+        "rit": null,
+        "nuovi": null,
+        "rich": null,
+        "serv": null,
+        "fiche": null,
+        "servizi": null
+      }
+    },
+    "S2": {
+      "miky": {
+        "fat": null,
+        "pre": null,
+        "ret": null,
+        "rit": null,
+        "nuovi": null,
+        "rich": null,
+        "serv": null,
+        "fiche": null,
+        "servizi": null
+      },
+      "valentina": {
+        "fat": null,
+        "pre": null,
+        "ret": null,
+        "rit": null,
+        "nuovi": null,
+        "rich": null,
+        "serv": null,
+        "fiche": null,
+        "servizi": null
+      },
+      "antonella": {
+        "fat": null,
+        "pre": null,
+        "ret": null,
+        "rit": null,
+        "nuovi": null,
+        "rich": null,
+        "serv": null,
+        "fiche": null,
+        "servizi": null
+      },
+      "andrea": {
+        "fat": null,
+        "pre": null,
+        "ret": null,
+        "rit": null,
+        "nuovi": null,
+        "rich": null,
+        "serv": null,
+        "fiche": null,
+        "servizi": null
+      },
+      "mariangela": {
+        "fat": null,
+        "pre": null,
+        "ret": null,
+        "rit": null,
+        "nuovi": null,
+        "rich": null,
+        "serv": null,
+        "fiche": null,
+        "servizi": null
+      },
+      "mariarita": {
+        "fat": null,
+        "pre": null,
+        "ret": null,
+        "rit": null,
+        "nuovi": null,
+        "rich": null,
+        "serv": null,
+        "fiche": null,
+        "servizi": null
+      },
+      "dario": {
+        "fat": null,
+        "pre": null,
+        "ret": null,
+        "rit": null,
+        "nuovi": null,
+        "rich": null,
+        "serv": null,
+        "fiche": null,
+        "servizi": null
+      }
+    },
+    "S3": {
+      "miky": {
+        "fat": null,
+        "pre": null,
+        "ret": null,
+        "rit": null,
+        "nuovi": null,
+        "rich": null,
+        "serv": null,
+        "fiche": null,
+        "servizi": null
+      },
+      "valentina": {
+        "fat": null,
+        "pre": null,
+        "ret": null,
+        "rit": null,
+        "nuovi": null,
+        "rich": null,
+        "serv": null,
+        "fiche": null,
+        "servizi": null
+      },
+      "antonella": {
+        "fat": null,
+        "pre": null,
+        "ret": null,
+        "rit": null,
+        "nuovi": null,
+        "rich": null,
+        "serv": null,
+        "fiche": null,
+        "servizi": null
+      },
+      "andrea": {
+        "fat": null,
+        "pre": null,
+        "ret": null,
+        "rit": null,
+        "nuovi": null,
+        "rich": null,
+        "serv": null,
+        "fiche": null,
+        "servizi": null
+      },
+      "mariangela": {
+        "fat": null,
+        "pre": null,
+        "ret": null,
+        "rit": null,
+        "nuovi": null,
+        "rich": null,
+        "serv": null,
+        "fiche": null,
+        "servizi": null
+      },
+      "mariarita": {
+        "fat": null,
+        "pre": null,
+        "ret": null,
+        "rit": null,
+        "nuovi": null,
+        "rich": null,
+        "serv": null,
+        "fiche": null,
+        "servizi": null
+      },
+      "dario": {
+        "fat": null,
+        "pre": null,
+        "ret": null,
+        "rit": null,
+        "nuovi": null,
+        "rich": null,
+        "serv": null,
+        "fiche": null,
+        "servizi": null
+      }
+    },
+    "S4": {
+      "miky": {
+        "fat": null,
+        "pre": null,
+        "ret": null,
+        "rit": null,
+        "nuovi": null,
+        "rich": null,
+        "serv": null,
+        "fiche": null,
+        "servizi": null
+      },
+      "valentina": {
+        "fat": null,
+        "pre": null,
+        "ret": null,
+        "rit": null,
+        "nuovi": null,
+        "rich": null,
+        "serv": null,
+        "fiche": null,
+        "servizi": null
+      },
+      "antonella": {
+        "fat": null,
+        "pre": null,
+        "ret": null,
+        "rit": null,
+        "nuovi": null,
+        "rich": null,
+        "serv": null,
+        "fiche": null,
+        "servizi": null
+      },
+      "andrea": {
+        "fat": null,
+        "pre": null,
+        "ret": null,
+        "rit": null,
+        "nuovi": null,
+        "rich": null,
+        "serv": null,
+        "fiche": null,
+        "servizi": null
+      },
+      "mariangela": {
+        "fat": null,
+        "pre": null,
+        "ret": null,
+        "rit": null,
+        "nuovi": null,
+        "rich": null,
+        "serv": null,
+        "fiche": null,
+        "servizi": null
+      },
+      "mariarita": {
+        "fat": null,
+        "pre": null,
+        "ret": null,
+        "rit": null,
+        "nuovi": null,
+        "rich": null,
+        "serv": null,
+        "fiche": null,
+        "servizi": null
+      },
+      "dario": {
+        "fat": null,
+        "pre": null,
+        "ret": null,
+        "rit": null,
+        "nuovi": null,
+        "rich": null,
+        "serv": null,
+        "fiche": null,
+        "servizi": null
+      }
+    }
   }
 };
 // === END_STORICO ===
 
-const RC = {Stilista:'#6d28d9',Direttore:'#92400e','Resp.Tecnico':'#0369a1','Resp.Care':'#be185d','Resp.Styling':'#7c3aed',Assistente:'#64748b'};
+// ╔══════════════════════════════════════════════════════════════╗
+// ║  UTILITY                                                     ║
+// ╚══════════════════════════════════════════════════════════════╝
+const RC = {"Stilista":"#6d28d9","Direttore":"#92400e","Resp.Tecnico":"#0369a1","Resp.Care":"#be185d","Resp.Styling":"#7c3aed","Assistente":"#64748b"};
 function rc(r){return RC[r]||'#64748b'}
 function ini(n){return n.charAt(0)}
-function getMk(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')}
+function getMk(){const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`}
 function getSW(mk){
   const m=MESI[mk];if(!m)return null;
   const t=new Date();t.setHours(12,0,0,0);
@@ -267,9 +843,13 @@ function getSW(mk){
   }
   return [...m.settimane].reverse().find(s=>new Date(s.da)<=t)||m.settimane[0];
 }
-function sem(a,t){if(a===null||a===undefined)return'n';if(!t)return'n';const p=a/t;return p>=1?'g':p>=0.8?'a':'r';}
+function sem(a,t){
+  if(a===null||a===undefined)return'n';
+  if(!t)return'n';
+  const p=a/t;return p>=1?'g':p>=0.8?'a':'r';
+}
 function eur(v){if(v===null||v===undefined)return'–';return'€'+Math.round(v).toLocaleString('it-IT')}
-function num(v,d){if(v===null||v===undefined)return'–';return d?v.toFixed(d):String(Math.round(v))}
+function num(v,d=0){if(v===null||v===undefined)return'–';return d?v.toFixed(d):String(Math.round(v))}
 function pct(a,t){if(a===null||!t)return'';return Math.round((a/t)*100)+'%'}
 const KD=[
   {k:'fat',lbl:'Fatturato',tw:'fat_tw',tm:'fat_tm',fmt:eur},
@@ -293,6 +873,270 @@ function getTot(mk,cid){
   }
   return t;
 }
+
+// ╔══════════════════════════════════════════════════════════════╗
+// ║  v3: PROFILO SERVIZI & SUGGERIMENTI                         ║
+// ╚══════════════════════════════════════════════════════════════╝
+
+// Classifica un servizio in: punta / medi / rari
+function categorizaServizio(s, tutti){
+  if(!tutti||!tutti.length)return'medi';
+  const totR=tutti.reduce((a,x)=>a+(x.ricavi||0),0);
+  const maxQ=Math.max(...tutti.map(x=>x.qta||0));
+  const pR=totR>0?(s.ricavi||0)/totR:0;
+  const pQ=maxQ>0?(s.qta||0)/maxQ:0;
+  if(pR>=0.25||pQ>=0.40)return'punta';
+  if((s.qta||0)<=1&&pR<0.15)return'rari';
+  return'medi';
+}
+
+// Renderizza le barre del profilo servizi
+function renderServizi(servizi, color){
+  if(!servizi||!servizi.length)
+    return'<div class="no-serv-msg">📋 Profilo servizi disponibile dopo il primo aggiornamento settimanale. I servizi verranno classificati automaticamente in Punta, Regolari e Rari.</div>';
+  const cats={punta:[],medi:[],rari:[]};
+  servizi.forEach(s=>cats[categorizaServizio(s,servizi)].push(s));
+  const totR=servizi.reduce((a,x)=>a+(x.ricavi||0),0);
+  const maxQ=Math.max(...servizi.map(x=>x.qta||0));
+  const catInfo=[
+    {key:'punta',icon:'⭐',lbl:'Servizi di Punta',desc:'Alto valore o alta frequenza'},
+    {key:'medi', icon:'💼',lbl:'Servizi Regolari', desc:'Frequenza media'},
+    {key:'rari', icon:'🔍',lbl:'Servizi Rari',     desc:'Eseguiti raramente'}
+  ];
+  let html='';
+  for(const cat of catInfo){
+    const items=cats[cat.key];
+    if(!items.length)continue;
+    html+=`<div class="serv-cat"><div class="serv-cat-lbl"><span>${cat.icon}</span>${cat.lbl}<span style="font-weight:400;opacity:.55;margin-left:4px;text-transform:none;letter-spacing:0">— ${cat.desc}</span></div>`;
+    for(const s of items){
+      const pctR=totR>0?Math.round((s.ricavi/totR)*100):0;
+      const barW=maxQ>0?Math.round((s.qta/maxQ)*100):0;
+      html+=`<div class="serv-row">
+        <div class="serv-info">
+          <span class="serv-nome">${s.nome}</span>
+          <span class="serv-meta">€${s.ricavi.toLocaleString('it-IT')} · ${pctR}% del fatturato</span>
+        </div>
+        <div class="serv-bar-wrap"><div class="serv-bar-fill" style="width:${barW}%;background:${color}"></div></div>
+        <span class="serv-qty">${s.qta}×</span>
+      </div>`;
+    }
+    html+='</div>';
+  }
+  return html;
+}
+
+// Genera suggerimenti AI personalizzati
+function genSuggerimenti(c, d, servizi){
+  const noData=d.fat===null&&d.pre===null;
+  if(noData)return[{icon:'⏳',cls:'sugg-card-ok',title:'In attesa di dati',text:'Inserisci i dati di questa settimana per ricevere suggerimenti personalizzati basati sui tuoi KPI e sul profilo dei servizi.'}];
+
+  const suggs=[];
+  // Fatturato
+  if(d.fat!==null&&c.fat_tw>0){
+    const p=d.fat/c.fat_tw;
+    if(p<0.8){
+      const gap=Math.round(c.fat_tw-d.fat);
+      let txt=`Mancano €${gap.toLocaleString('it-IT')} al target settimanale. `;
+      if(servizi&&servizi.length){
+        const punta=servizi.filter(s=>categorizaServizio(s,servizi)==='punta');
+        if(punta.length)txt+=`Punta su "${punta[0].nome}" — il tuo servizio di punta per valore. Proponi un servizio aggiuntivo ad ogni appuntamento.`;
+        else txt+='Aumenta il valore medio del ticket proponendo un trattamento complementare ad ogni cliente.';
+      } else txt+='Proponi un trattamento aggiuntivo (es. maschera, trattamento colore) per aumentare il valore medio per cliente.';
+      suggs.push({icon:'💰',cls:'sugg-card-fat',title:'Fatturato sotto target',text:txt});
+    }
+  }
+  // Retail
+  if(d.ret!==null&&c.ret_tw>0&&d.ret/c.ret_tw<0.5)
+    suggs.push({icon:'🛍️',cls:'sugg-card-retail',title:'Retail: alza il ritmo',text:'Meno della metà dei target retail raggiunti. Dopo ogni servizio, consiglia almeno 1 prodotto specifico per il tipo di capello/trattamento. La chiave è la personalizzazione.'});
+  // Richiami
+  if(d.rich!==null&&c.rich_tw>0&&d.rich/c.rich_tw<0.7){
+    const mancano=Math.max(0,Math.ceil(c.rich_tw-(d.rich||0)));
+    suggs.push({icon:'📞',cls:'sugg-card-rich',title:'Aumenta i richiami',text:`Ancora ${mancano} richiami al target. Prima di salutare ogni cliente, fissa già la data del prossimo appuntamento: aumenta fedeltà e fatturato prevedibile.`});
+  }
+  // Nuovi
+  if(d.nuovi!==null&&c.nuovi_tw>0&&d.nuovi/c.nuovi_tw<0.6)
+    suggs.push({icon:'✨',cls:'sugg-card-nuovi',title:'Attira nuovi clienti',text:`Solo ${d.nuovi||0} nuovi su ${c.nuovi_tw} obiettivo. Chiedi ai clienti soddisfatti di portare un amico o di lasciare una recensione su Google Maps — il passaparola resta il canale più efficace.`});
+  // Ritorni
+  if(d.rit!==null&&c.rit_tw>0&&d.rit/c.rit_tw<0.7)
+    suggs.push({icon:'🔄',cls:'sugg-card-fat',title:'Fidelizzazione clienti',text:'I ritorni sono sotto soglia. Crea un momento di follow-up: un messaggio di ringraziamento entro 48h dopo il servizio rafforza il legame e aumenta la probabilità di ritorno.'});
+  // Formazione da profilo servizi
+  if(servizi&&servizi.length){
+    const rari=servizi.filter(s=>categorizaServizio(s,servizi)==='rari');
+    if(rari.length>0&&rari.length<=4){
+      const nomi=rari.slice(0,2).map(s=>`"${s.nome}"`).join(', ');
+      suggs.push({icon:'📚',cls:'sugg-card-form',title:'Opportunità di formazione',text:`${nomi} ${rari.length===1?'è un servizio che esegui raramente':'sono servizi che esegui raramente'}. Valuta se promuoverli attivamente ai clienti o se approfondire la tecnica per valorizzarli meglio.`});
+    }
+  }
+  // Tutto ok
+  if(suggs.length===0)
+    suggs.push({icon:'🌟',cls:'sugg-card-ok',title:'Ottimo lavoro!',text:'Tutti i KPI sono in linea con i target questa settimana. Mantieni il ritmo e punta a chiudere il mese in verde. Continua così!'});
+  return suggs.slice(0,3);
+}
+
+// Toggle espansione card
+function toggleProfilo(id){
+  const wrap=document.getElementById('profilo-'+id);
+  const btn=document.getElementById('btn-profilo-'+id);
+  if(!wrap)return;
+  const open=wrap.style.display!=='none';
+  wrap.style.display=open?'none':'block';
+  btn.classList.toggle('open',!open);
+  btn.innerHTML=open?'▾ Profilo &amp; Suggerimenti':'▴ Nascondi';
+}
+
+// ── v3: STAMPA SCHEDA INDIVIDUALE ──────────────────────────────────────────
+function stampaProfilo(cid){
+  const mk=getMk();const m=MESI[mk];if(!m)return;
+  const c=m.collaboratori.find(x=>x.id===cid);if(!c)return;
+  const sw=getSW(mk);const sid=sw?.id||'S1';
+  const d=STORICO[mk]?.[sid]?.[cid]||{};
+  const color=rc(c.ruolo);
+  const servizi=d.servizi||null;
+  const suggs=genSuggerimenti(c,d,servizi);
+  const SC={g:'#15803d',a:'#b45309',r:'#b91c1c',n:'#6b6055'};
+  const SCD={g:'#15803d',a:'#b45309',r:'#b91c1c',n:'#c8c3bb'};
+  const now=new Date();
+  const ds=now.toLocaleDateString('it-IT',{day:'2-digit',month:'long',year:'numeric'});
+
+  // KPI grid
+  let kpiH='';
+  for(const kpi of KD){
+    const av=d[kpi.k],tv=c[kpi.tw],s=sem(av,tv),p=pct(av,tv);
+    if(tv===null||tv===undefined)continue;
+    kpiH+=`<div style="background:#eeecea;border-radius:10px;padding:10px 6px;text-align:center">
+      <div style="font-size:9px;text-transform:uppercase;letter-spacing:.5px;color:#6b6055;margin-bottom:4px">${kpi.lbl}</div>
+      <div style="font-size:15px;font-weight:800;color:${SC[s]}"><span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:${SCD[s]};margin-right:3px;vertical-align:middle"></span>${kpi.fmt(av)}${p?`<span style="font-size:9px;opacity:.55;margin-left:1px">${p}</span>`:''}</div>
+      <div style="font-size:9px;color:#6b6055;margin-top:2px">▸ ${kpi.fmt(tv)}</div>
+    </div>`;
+  }
+
+  // Extra (fiche + serv)
+  let extraH=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:6px">
+    <div style="background:#fff;border:1px solid #dedad3;border-radius:10px;padding:10px;text-align:center">
+      <div style="font-size:9px;text-transform:uppercase;letter-spacing:.5px;color:#6b6055;margin-bottom:4px">Ticket Medio</div>
+      <div style="font-size:15px;font-weight:800;color:#6b6055">${num(d.fiche,2)}</div>
+      <div style="font-size:9px;color:#6b6055;margin-top:2px">▸ ${num(c.fiche_t,2)}</div>
+    </div>
+    <div style="background:#fff;border:1px solid #dedad3;border-radius:10px;padding:10px;text-align:center">
+      <div style="font-size:9px;text-transform:uppercase;letter-spacing:.5px;color:#6b6055;margin-bottom:4px">Serv/Cliente</div>
+      <div style="font-size:15px;font-weight:800;color:#6b6055">${num(d.serv,1)}</div>
+      <div style="font-size:9px;color:#6b6055;margin-top:2px">▸ ${num(c.serv_t,1)}</div>
+    </div>
+  </div>`;
+
+  // Suggerimenti
+  let suggH='';
+  for(const sg of suggs){
+    suggH+=`<div style="display:flex;gap:10px;align-items:flex-start;background:#eeecea;border-radius:10px;padding:11px 13px;margin-bottom:8px">
+      <span style="font-size:20px;flex-shrink:0">${sg.icon}</span>
+      <div><div style="font-size:12px;font-weight:800;margin-bottom:3px">${sg.title}</div>
+      <div style="font-size:11px;color:#6b6055;line-height:1.55">${sg.text}</div></div>
+    </div>`;
+  }
+
+  // Profilo servizi
+  const serviziH=renderServizi(servizi,color);
+
+  // Sezione cumulato mese
+  const tot=getTot(mk,cid);
+  const nW=['S1','S2','S3','S4'].filter(s=>STORICO[mk]?.[s]?.[cid]?.fat!==null&&STORICO[mk]?.[s]?.[cid]?.fat!==undefined).length;
+  let cumH='';
+  for(const kpi of KD){
+    const av=tot[kpi.k],tv=c[kpi.tm],s=sem(av,tv);
+    if(tv===null||tv===undefined)continue;
+    cumH+=`<div style="background:#eeecea;border-radius:8px;padding:8px 5px;text-align:center">
+      <div style="font-size:9px;text-transform:uppercase;letter-spacing:.5px;color:#6b6055;margin-bottom:3px">${kpi.lbl}</div>
+      <div style="font-size:13px;font-weight:800;color:${SC[s]}">${kpi.fmt(av)}</div>
+      <div style="font-size:9px;color:#6b6055">/ ${kpi.fmt(tv)}</div>
+    </div>`;
+  }
+
+  const salonName=document.querySelector('.hsub')?.textContent||'MIHI';
+  const html=`<!DOCTYPE html><html lang="it"><head><meta charset="UTF-8">
+<title>MIHI · ${c.nome} · Scheda Personale</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Segoe UI',sans-serif;background:#f5f4ef;color:#1a1510;padding:0}
+.page{max-width:520px;margin:0 auto;padding:0 0 32px}
+.sec-lbl{font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:1.2px;color:#6b6055;margin:18px 0 8px;padding-bottom:5px;border-bottom:1px solid #dedad3}
+.serv-cat{margin-bottom:10px}
+.serv-cat-lbl{font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.8px;color:#6b6055;margin-bottom:5px;display:flex;align-items:center;gap:4px}
+.serv-row{display:flex;align-items:center;gap:6px;margin-bottom:5px}
+.serv-info{min-width:0;flex:1}
+.serv-nome{display:block;font-size:11px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.serv-meta{display:block;font-size:9px;color:#6b6055;margin-top:1px}
+.serv-bar-wrap{width:55px;flex-shrink:0;background:#dedad3;border-radius:2px;height:5px;overflow:hidden}
+.serv-bar-fill{height:5px;border-radius:2px;opacity:.75}
+.serv-qty{font-size:10px;color:#6b6055;font-weight:700;flex-shrink:0;width:22px;text-align:right}
+.no-serv-msg{font-size:11px;color:#6b6055;padding:8px 0;font-style:italic;line-height:1.5}
+@media print{
+  @page{margin:10mm 12mm;size:A4}
+  body{background:white!important}
+  .no-print{display:none!important}
+}
+</style>
+</head>
+<body>
+<div class="page">
+  <!-- HEADER -->
+  <div style="background:#1a1510;padding:22px 22px 18px;margin-bottom:0">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start">
+      <div>
+        <div style="font-size:22px;font-weight:900;letter-spacing:5px;color:#a67318">MIHI</div>
+        <div style="font-size:11px;color:#a09080;letter-spacing:1.5px;text-transform:uppercase;margin-top:3px">${salonName}</div>
+      </div>
+      <div style="text-align:right">
+        <div style="font-size:10px;color:#a09080">${sw?.label||'Settimana'}</div>
+        <div style="font-size:10px;color:#6b5f54;margin-top:2px">${MESI[mk]?.label||''}</div>
+      </div>
+    </div>
+  </div>
+  <!-- COLLABORATORE -->
+  <div style="background:#fff;padding:18px 22px;border-bottom:1px solid #dedad3">
+    <div style="display:flex;align-items:center;gap:14px">
+      <div style="width:52px;height:52px;border-radius:50%;background:${color}18;color:${color};display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:800;flex-shrink:0">${ini(c.nome)}</div>
+      <div>
+        <div style="font-size:22px;font-weight:900;color:#1a1510">${c.nome}</div>
+        <div style="font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;background:${color}18;color:${color};display:inline-block;margin-top:4px">${c.ruolo}</div>
+      </div>
+    </div>
+  </div>
+  <!-- BODY -->
+  <div style="padding:16px 22px">
+    <!-- KPI settimana -->
+    <div class="sec-lbl">📊 KPI Settimana vs Target</div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px">${kpiH}</div>
+    ${extraH}
+    <!-- Cumulato mese -->
+    <div class="sec-lbl">📈 Cumulato ${MESI[mk]?.label||''} (${nW}/4 settimane)</div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px">${cumH}</div>
+    <!-- Suggerimenti -->
+    <div class="sec-lbl">💡 Suggerimenti Personalizzati</div>
+    ${suggH}
+    <!-- Profilo Servizi -->
+    <div class="sec-lbl">📊 Profilo Servizi</div>
+    ${serviziH}
+  </div>
+  <!-- FOOTER -->
+  <div style="margin:0 22px;padding:14px 0;border-top:1px solid #dedad3;display:flex;justify-content:space-between;align-items:center">
+    <span style="font-size:9px;color:#6b6055;letter-spacing:.5px;text-transform:uppercase">MIHI · Uso riservato — solo per ${c.nome}</span>
+    <span style="font-size:9px;color:#6b6055">${ds}</span>
+  </div>
+  <!-- PULSANTE STAMPA (sparisce in stampa) -->
+  <div class="no-print" style="text-align:center;padding:16px 0">
+    <button onclick="window.print()" style="background:#1a1510;color:#a67318;border:none;padding:12px 28px;border-radius:10px;font-size:13px;font-weight:800;cursor:pointer;font-family:inherit;letter-spacing:.5px">🖨 Stampa / Salva PDF</button>
+  </div>
+</div>
+</body></html>`;
+
+  const win=window.open('','_blank','width=560,height=800');
+  win.document.write(html);
+  win.document.close();
+}
+
+// ╔══════════════════════════════════════════════════════════════╗
+// ║  NAVIGATION                                                  ║
+// ╚══════════════════════════════════════════════════════════════╝
 function goHome(){
   document.getElementById('view-cover').style.display='flex';
   document.getElementById('view-app').style.display='none';
@@ -320,141 +1164,220 @@ function showModule(mod){
   }
   const ua=STORICO[getMk()]?.ultimo_aggiornamento;
   document.getElementById('last-upd').textContent=ua||'mai';
-  document.getElementById('cover-update').textContent=ua?'Aggiornato: '+ua:'';
+  document.getElementById('cover-update').textContent=ua?`Aggiornato: ${ua}`:'';
 }
 function switchTab(name){
   document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
   document.querySelectorAll('.tab-pane').forEach(p=>p.style.display='none');
-  document.querySelector('.tab-btn[onclick="switchTab(\''+name+'\')"]').classList.add('active');
-  document.getElementById('pane-'+name).style.display='block';
+  document.querySelector(`.tab-btn[onclick="switchTab('${name}')"]`).classList.add('active');
+  document.getElementById(`pane-${name}`).style.display='block';
   if(name==='mese')renderMese();
   if(name==='storico')renderStorico();
 }
+
+// ╔══════════════════════════════════════════════════════════════╗
+// ║  SUMMARY BAR                                                 ║
+// ╚══════════════════════════════════════════════════════════════╝
 function renderSumbar(){
   const mk=getMk();const m=MESI[mk];if(!m)return;
-  const sw=getSW(mk);const sid=sw?sw.id:'S1';
+  const sw=getSW(mk);const sid=sw?.id||'S1';
   const st=STORICO[mk]?.[sid]||{};
   let fatW=null,fatM=null,tgW=0,tgM=0;
   for(const c of m.collaboratori){
-    const dw=st[c.id];if(dw&&dw.fat!==null&&dw.fat!==undefined)fatW=(fatW||0)+dw.fat;
+    const dw=st[c.id];if(dw?.fat!==null&&dw?.fat!==undefined)fatW=(fatW||0)+dw.fat;
     const dm=getTot(mk,c.id);if(dm.fat!==null)fatM=(fatM||0)+dm.fat;
-    tgW+=c.fat_tw;tgM+=c.fat_tm;
+    tgW+=c.fat_tw||0;tgM+=c.fat_tm||0;
   }
   const items=[
     {v:eur(fatW),l:'Fatturato Sett.'},{v:eur(tgW),l:'Target Sett.'},{v:pct(fatW,tgW)||'–',l:'% Sett.'},
     {v:eur(fatM),l:'Cumul. Mese'},{v:eur(tgM),l:'Target Mese'},{v:pct(fatM,tgM)||'–',l:'% Mese'}
   ];
-  document.getElementById('sumbar').innerHTML=items.map(i=>'<div class="ss"><div class="sv">'+i.v+'</div><div class="sl">'+i.l+'</div></div>').join('');
-  const sw2=getSW(mk);
-  document.getElementById('hdr-week').textContent=sw2?sw2.label:'–';
+  document.getElementById('sumbar').innerHTML=items.map(i=>`<div class="ss"><div class="sv">${i.v}</div><div class="sl">${i.l}</div></div>`).join('');
+  document.getElementById('hdr-week').textContent=sw?.label||'–';
   document.getElementById('hdr-month').textContent=m.label;
 }
+
+// ╔══════════════════════════════════════════════════════════════╗
+// ║  TAB 1: SETTIMANA LIVE (v3)                                 ║
+// ╚══════════════════════════════════════════════════════════════╝
 function renderLive(){
   const mk=getMk();const m=MESI[mk];
   if(!m){document.getElementById('pane-live').innerHTML='<p class="no-data">Nessun dato configurato.</p>';return;}
-  const sw=getSW(mk);const sid=sw?sw.id:'S1';
+  const sw=getSW(mk);const sid=sw?.id||'S1';
   const st=STORICO[mk]?.[sid]||{};
   let html='';
-  html+='<div class="sec-lbl">📊 '+(sw?sw.label:'Settimana')+' · Semaforo vs Target</div>';
+  html+=`<div class="sec-lbl">📊 ${sw?.label||'Settimana'} · Semaforo vs Target</div>`;
+
   for(const c of m.collaboratori){
     const color=rc(c.ruolo);const d=st[c.id]||{};
-    html+='<div class="ccard" style="border-left-color:'+color+'">';
-    html+='<div class="ccard-hdr"><div class="cav" style="background:'+color+'18;color:'+color+'">'+ini(c.nome)+'</div>';
-    html+='<div><div class="cname">'+c.nome+'</div><div class="crole" style="background:'+color+'18;color:'+color+'">'+c.ruolo+'</div></div></div>';
-    html+='<div class="kpi-grid">';
+    const servizi=d.servizi||null;
+    const suggs=genSuggerimenti(c,d,servizi);
+
+    html+=`<div class="ccard" style="border-left-color:${color}">
+      <div class="ccard-hdr">
+        <div class="cav" style="background:${color}18;color:${color}">${ini(c.nome)}</div>
+        <div><div class="cname">${c.nome}</div><div class="crole" style="background:${color}18;color:${color}">${c.ruolo}</div></div>
+      </div>
+      <div class="kpi-grid">`;
     for(const kpi of KD){
       const av=d[kpi.k],tv=c[kpi.tw],s=sem(av,tv),p=pct(av,tv);
-      html+='<div class="kc"><div class="kl">'+kpi.lbl+'</div>';
-      html+='<div class="kv '+s+'"><span class="dot d'+s+'"></span>'+kpi.fmt(av)+(p?'<span class="kp">'+p+'</span>':'')+'</div>';
-      html+='<div class="kt">▸ '+kpi.fmt(tv)+'</div></div>';
+      if(tv===null||tv===undefined)continue;
+      html+=`<div class="kc"><div class="kl">${kpi.lbl}</div>
+        <div class="kv ${s}"><span class="dot d${s}"></span>${kpi.fmt(av)}${p?`<span class="kp">${p}</span>`:''}</div>
+        <div class="kt">▸ ${kpi.fmt(tv)}</div></div>`;
     }
-    html+='</div>';
-    html+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-top:5px">';
-    html+='<div class="kc" style="background:transparent;border:1px solid var(--bord)"><div class="kl">Ticket Medio</div><div class="kv n">'+num(d.fiche,2)+'</div><div class="kt">▸ '+num(c.fiche_t,2)+'</div></div>';
-    html+='<div class="kc" style="background:transparent;border:1px solid var(--bord)"><div class="kl">Serv/Cliente</div><div class="kv n">'+num(d.serv,1)+'</div><div class="kt">▸ '+num(c.serv_t,1)+'</div></div>';
-    html+='</div></div>';
+    html+=`</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-top:5px">
+        <div class="kc" style="background:transparent;border:1px solid var(--bord)">
+          <div class="kl">Ticket Medio</div><div class="kv n">${num(d.fiche,2)}</div><div class="kt">▸ ${num(c.fiche_t,2)}</div>
+        </div>
+        <div class="kc" style="background:transparent;border:1px solid var(--bord)">
+          <div class="kl">Serv/Cliente</div><div class="kv n">${num(d.serv,1)}</div><div class="kt">▸ ${num(c.serv_t,1)}</div>
+        </div>
+      </div>
+      <button class="expand-btn" id="btn-profilo-${c.id}" onclick="toggleProfilo('${c.id}')">▾ Profilo &amp; Suggerimenti</button>
+      <div id="profilo-${c.id}" class="profilo-wrap" style="display:none">
+        <button onclick="stampaProfilo('${c.id}')" style="width:100%;margin-bottom:12px;padding:9px;background:#1a1510;border:none;border-radius:9px;color:#a67318;font-size:11px;font-weight:800;cursor:pointer;font-family:inherit;letter-spacing:.5px;display:flex;align-items:center;justify-content:center;gap:6px">📄 Esporta scheda personale</button>
+        <div class="psec-lbl">💡 Suggerimenti personalizzati</div>`;
+
+    for(const sg of suggs){
+      html+=`<div class="sugg-card ${sg.cls}"><span class="sugg-icon">${sg.icon}</span><div><div class="sugg-title">${sg.title}</div><div class="sugg-text">${sg.text}</div></div></div>`;
+    }
+
+    html+=`<div class="psec-lbl" style="margin-top:14px">📊 Profilo Servizi</div>`;
+    html+=renderServizi(servizi, color);
+    html+=`</div></div>`;
   }
-  html+='<div class="sec-lbl" style="margin-top:18px">📈 Cumulato '+m.label+'</div>';
+
+  html+=`<div class="sec-lbl" style="margin-top:18px">📈 Cumulato ${m.label}</div>`;
   for(const c of m.collaboratori){
     const color=rc(c.ruolo);const tot=getTot(mk,c.id);
     const nW=['S1','S2','S3','S4'].filter(s=>STORICO[mk]?.[s]?.[c.id]?.fat!==null&&STORICO[mk]?.[s]?.[c.id]?.fat!==undefined).length;
-    html+='<div class="ccard" style="border-left-color:'+color+';padding:11px 13px">';
-    html+='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><span style="font-weight:800;font-size:14px">'+c.nome+'</span><span style="font-size:10px;color:var(--text2)">'+nW+'/4 settimane</span></div>';
-    html+='<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:5px">';
+    html+=`<div class="ccard" style="border-left-color:${color};padding:11px 13px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+        <span style="font-weight:800;font-size:14px">${c.nome}</span>
+        <span style="font-size:10px;color:var(--text2)">${nW}/4 settimane</span>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:5px">`;
     for(const kpi of KD){
       const av=tot[kpi.k],tv=c[kpi.tm],s=sem(av,tv);
-      html+='<div class="kc" style="padding:6px 4px"><div class="kl">'+kpi.lbl+'</div><div class="kv '+s+'" style="font-size:12px">'+kpi.fmt(av)+'</div><div class="kt">/ '+kpi.fmt(tv)+'</div></div>';
+      if(tv===null||tv===undefined)continue;
+      html+=`<div class="kc" style="padding:6px 4px"><div class="kl">${kpi.lbl}</div>
+        <div class="kv ${s}" style="font-size:12px">${kpi.fmt(av)}</div>
+        <div class="kt">/ ${kpi.fmt(tv)}</div></div>`;
     }
-    html+='</div><div style="background:var(--bg2);border-radius:3px;height:4px;margin-top:8px;overflow:hidden"><div style="height:4px;border-radius:3px;width:'+Math.round((nW/4)*100)+'%;background:'+color+';transition:width .3s"></div></div></div>';
+    html+=`</div>
+      <div style="background:var(--bg2);border-radius:3px;height:4px;margin-top:8px;overflow:hidden">
+        <div style="height:4px;border-radius:3px;width:${Math.round((nW/4)*100)}%;background:${color};transition:width .3s"></div>
+      </div></div>`;
   }
   document.getElementById('pane-live').innerHTML=html;
 }
+
+// ╔══════════════════════════════════════════════════════════════╗
+// ║  TAB 2: IL MESE                                              ║
+// ╚══════════════════════════════════════════════════════════════╝
 let meseKpi='fat';
 function renderMese(){
   const mk=getMk();const m=MESI[mk];
   if(!m){document.getElementById('pane-mese').innerHTML='<p class="no-data">Nessun dato.</p>';return;}
   const sw=getSW(mk);const kd=KD.find(k=>k.k===meseKpi)||KD[0];
   const icons={fat:'💰',pre:'👥',ret:'🛍️',rit:'🔄',nuovi:'✨',rich:'📞'};
-  let html='<div class="kpi-sel">';
-  KD.forEach(k=>{html+='<button class="kbtn'+(k.k===meseKpi?' active':'')+'" onclick="meseKpi=\''+k.k+'\';renderMese()">'+icons[k.k]+' '+k.lbl+'</button>';});
-  html+='</div><div class="tbl-wrap"><table><thead><tr><th>Collaboratore</th>';
-  m.settimane.forEach(s=>{const live=s.id===(sw?sw.id:'');html+='<th>'+s.label+(live?'<br><span class="badge-live">live</span>':'')+'</th>';});
-  html+='<th>TOT</th><th>TARGET</th><th>%</th></tr></thead><tbody>';
+  let html=`<div class="kpi-sel">`;
+  KD.forEach(k=>html+=`<button class="kbtn${k.k===meseKpi?' active':''}" onclick="meseKpi='${k.k}';renderMese()">${icons[k.k]} ${k.lbl}</button>`);
+  html+=`</div><div class="tbl-wrap"><table><thead><tr><th>Collaboratore</th>`;
+  m.settimane.forEach(s=>{
+    const live=s.id===sw?.id;
+    html+=`<th>${s.label}${live?'<br><span class="badge-live">live</span>':''}</th>`;
+  });
+  html+=`<th>TOT</th><th>TARGET</th><th>%</th></tr></thead><tbody>`;
   for(const c of m.collaboratori){
     const color=rc(c.ruolo);const tm=c[kd.tm];const tot=getTot(mk,c.id);const sf=sem(tot[meseKpi],tm);
-    html+='<tr><td><span style="color:'+color+';font-weight:800">'+c.nome+'</span></td>';
-    m.settimane.forEach(s=>{const v=STORICO[mk]?.[s.id]?.[c.id]?.[meseKpi];const sv=sem(v,c[kd.tw]);const p=pct(v,c[kd.tw]);html+='<td class="'+sv+'">'+kd.fmt(v)+(p?'<br><small style="opacity:.5;font-size:9px">'+p+'</small>':'')+'</td>';});
-    html+='<td class="'+sf+'" style="font-weight:800">'+kd.fmt(tot[meseKpi])+'</td><td style="color:var(--text2)">'+kd.fmt(tm)+'</td><td class="'+sf+'">'+( pct(tot[meseKpi],tm)||'–')+'</td></tr>';
+    if(tm===null||tm===undefined)continue;
+    html+=`<tr><td><span style="color:${color};font-weight:800">${c.nome}</span></td>`;
+    m.settimane.forEach(s=>{
+      const v=STORICO[mk]?.[s.id]?.[c.id]?.[meseKpi];const sv=sem(v,c[kd.tw]);const p=pct(v,c[kd.tw]);
+      html+=`<td class="${sv}">${kd.fmt(v)}${p?`<br><small style="opacity:.5;font-size:9px">${p}</small>`:''}</td>`;
+    });
+    html+=`<td class="${sf}" style="font-weight:800">${kd.fmt(tot[meseKpi])}</td>
+      <td style="color:var(--text2)">${kd.fmt(tm)}</td>
+      <td class="${sf}">${pct(tot[meseKpi],tm)||'–'}</td></tr>`;
   }
   let totAll=null,tgTot=0;const sums={};
-  for(const sid of['S1','S2','S3','S4']){let sv=null;m.collaboratori.forEach(c=>{const v=STORICO[mk]?.[sid]?.[c.id]?.[meseKpi];if(v!==null&&v!==undefined)sv=(sv||0)+v;});sums[sid]=sv;}
-  m.collaboratori.forEach(c=>{const t=getTot(mk,c.id);if(t[meseKpi]!==null)totAll=(totAll||0)+t[meseKpi];tgTot+=c[kd.tm]||0;});
-  html+='<tr class="tot-row"><td>TOTALE SALONE</td>';
-  m.settimane.forEach(s=>html+='<td>'+kd.fmt(sums[s.id])+'</td>');
+  for(const sid of['S1','S2','S3','S4']){
+    let sv=null;
+    m.collaboratori.forEach(c=>{const v=STORICO[mk]?.[sid]?.[c.id]?.[meseKpi];if(v!==null&&v!==undefined)sv=(sv||0)+v;});
+    sums[sid]=sv;
+  }
+  m.collaboratori.forEach(c=>{const t=getTot(mk,c.id);if(t[meseKpi]!==null)totAll=(totAll||0)+t[meseKpi];if(c[kd.tm])tgTot+=c[kd.tm];});
+  html+=`<tr class="tot-row"><td>TOTALE SALONE</td>`;
+  m.settimane.forEach(s=>html+=`<td>${kd.fmt(sums[s.id])}</td>`);
   const sf2=sem(totAll,tgTot);
-  html+='<td class="'+sf2+'">'+kd.fmt(totAll)+'</td><td style="color:var(--text2)">'+kd.fmt(tgTot)+'</td><td class="'+sf2+'">'+(pct(totAll,tgTot)||'–')+'</td></tr>';
-  html+='</tbody></table></div>';
+  html+=`<td class="${sf2}">${kd.fmt(totAll)}</td><td style="color:var(--text2)">${kd.fmt(tgTot)}</td><td class="${sf2}">${pct(totAll,tgTot)||'–'}</td></tr>`;
+  html+=`</tbody></table></div>`;
   document.getElementById('pane-mese').innerHTML=html;
 }
+
+// ╔══════════════════════════════════════════════════════════════╗
+// ║  TAB 3: STORICO                                              ║
+// ╚══════════════════════════════════════════════════════════════╝
 let stMk=getMk(),stKpi='fat';
 function renderStorico(){
   const keys=Object.keys(STORICO).sort().reverse();
   if(!keys.length){document.getElementById('pane-storico').innerHTML='<p class="no-data">Nessuno storico disponibile.</p>';return;}
   const kd=KD.find(k=>k.k===stKpi)||KD[0];
   const icons={fat:'💰',pre:'👥',ret:'🛍️',rit:'🔄',nuovi:'✨',rich:'📞'};
-  let html='<div class="msel-wrap"><select onchange="stMk=this.value;renderStorico()">';
-  keys.forEach(mk=>{const lbl=MESI[mk]?MESI[mk].label:mk;const cl=STORICO[mk]&&STORICO[mk].chiuso?' ✅':'';html+='<option value="'+mk+'"'+(mk===stMk?' selected':'')+'>'+lbl+cl+'</option>';});
-  html+='</select>';
-  if(STORICO[stMk]&&STORICO[stMk].chiuso)html+='<span class="badge-chiuso">Mese chiuso ✅</span>';
-  html+='</div><div class="kpi-sel">';
-  KD.forEach(k=>{html+='<button class="kbtn'+(k.k===stKpi?' active':'')+'" onclick="stKpi=\''+k.k+'\';renderStorico()">'+icons[k.k]+' '+k.lbl+'</button>';});
-  html+='</div>';
+  let html=`<div class="msel-wrap"><select onchange="stMk=this.value;renderStorico()">`;
+  keys.forEach(mk=>{
+    const lbl=MESI[mk]?.label||mk;const cl=STORICO[mk]?.chiuso?' ✅':'';
+    html+=`<option value="${mk}"${mk===stMk?' selected':''}>${lbl}${cl}</option>`;
+  });
+  html+=`</select>`;
+  if(STORICO[stMk]?.chiuso)html+=`<span class="badge-chiuso">Mese chiuso ✅</span>`;
+  html+=`</div><div class="kpi-sel">`;
+  KD.forEach(k=>html+=`<button class="kbtn${k.k===stKpi?' active':''}" onclick="stKpi='${k.k}';renderStorico()">${icons[k.k]} ${k.lbl}</button>`);
+  html+=`</div>`;
   const m=MESI[stMk];const st=STORICO[stMk];
   if(!m||!st){html+='<p class="no-data">Dati non disponibili.</p>';document.getElementById('pane-storico').innerHTML=html;return;}
-  html+='<div class="tbl-wrap"><table><thead><tr><th>Collaboratore</th>';
-  m.settimane.forEach(s=>html+='<th>'+s.label+'</th>');
-  html+='<th>TOT</th><th>TARGET</th><th>%</th></tr></thead><tbody>';
+  html+=`<div class="tbl-wrap"><table><thead><tr><th>Collaboratore</th>`;
+  m.settimane.forEach(s=>html+=`<th>${s.label}</th>`);
+  html+=`<th>TOT</th><th>TARGET</th><th>%</th></tr></thead><tbody>`;
   for(const c of m.collaboratori){
     const color=rc(c.ruolo);const tm=c[kd.tm];const tot=getTot(stMk,c.id);const sf=sem(tot[stKpi],tm);
-    html+='<tr><td><span style="color:'+color+';font-weight:800">'+c.nome+'</span></td>';
-    m.settimane.forEach(s=>{const v=st[s.id]?.[c.id]?.[stKpi];html+='<td class="'+sem(v,c[kd.tw])+'">'+kd.fmt(v)+'</td>';});
-    html+='<td class="'+sf+'" style="font-weight:800">'+kd.fmt(tot[stKpi])+'</td><td style="color:var(--text2)">'+kd.fmt(tm)+'</td><td class="'+sf+'">'+(pct(tot[stKpi],tm)||'–')+'</td></tr>';
+    if(tm===null||tm===undefined)continue;
+    html+=`<tr><td><span style="color:${color};font-weight:800">${c.nome}</span></td>`;
+    m.settimane.forEach(s=>{const v=st?.[s.id]?.[c.id]?.[stKpi];html+=`<td class="${sem(v,c[kd.tw])}">${kd.fmt(v)}</td>`;});
+    html+=`<td class="${sf}" style="font-weight:800">${kd.fmt(tot[stKpi])}</td>
+      <td style="color:var(--text2)">${kd.fmt(tm)}</td>
+      <td class="${sf}">${pct(tot[stKpi],tm)||'–'}</td></tr>`;
   }
   let totAll=null,tgTot=0;const sums={};
-  for(const sid of['S1','S2','S3','S4']){let sv=null;m.collaboratori.forEach(c=>{const v=st[sid]?.[c.id]?.[stKpi];if(v!==null&&v!==undefined)sv=(sv||0)+v;});sums[sid]=sv;}
-  m.collaboratori.forEach(c=>{const t=getTot(stMk,c.id);if(t[stKpi]!==null)totAll=(totAll||0)+t[stKpi];tgTot+=c[kd.tm]||0;});
-  html+='<tr class="tot-row"><td>TOTALE SALONE</td>';
-  m.settimane.forEach(s=>html+='<td>'+kd.fmt(sums[s.id])+'</td>');
+  for(const sid of['S1','S2','S3','S4']){
+    let sv=null;
+    m.collaboratori.forEach(c=>{const v=st?.[sid]?.[c.id]?.[stKpi];if(v!==null&&v!==undefined)sv=(sv||0)+v;});
+    sums[sid]=sv;
+  }
+  m.collaboratori.forEach(c=>{const t=getTot(stMk,c.id);if(t[stKpi]!==null)totAll=(totAll||0)+t[stKpi];if(c[kd.tm])tgTot+=c[kd.tm];});
+  html+=`<tr class="tot-row"><td>TOTALE SALONE</td>`;
+  m.settimane.forEach(s=>html+=`<td>${kd.fmt(sums[s.id])}</td>`);
   const sf3=sem(totAll,tgTot);
-  html+='<td class="'+sf3+'">'+kd.fmt(totAll)+'</td><td style="color:var(--text2)">'+kd.fmt(tgTot)+'</td><td class="'+sf3+'">'+(pct(totAll,tgTot)||'–')+'</td></tr>';
-  html+='</tbody></table></div>';
+  html+=`<td class="${sf3}">${kd.fmt(totAll)}</td><td style="color:var(--text2)">${kd.fmt(tgTot)}</td><td class="${sf3}">${pct(totAll,tgTot)||'–'}</td></tr>`;
+  html+=`</tbody></table></div>`;
   document.getElementById('pane-storico').innerHTML=html;
 }
-let cmpA=null;
+
+// ╔══════════════════════════════════════════════════════════════╗
+// ║  CONFRONTA                                                   ║
+// ╚══════════════════════════════════════════════════════════════╝
+let cmpA=null,cmpB=null;
 const SCcol={g:'#15803d',a:'#b45309',r:'#b91c1c',n:'#c8c3bb'};
 function showComparePicker(){
   const mk=getMk();const m=MESI[mk];if(!m)return;
-  document.getElementById('cpicker-list').innerHTML=m.collaboratori.map(c=>'<div class="cpicker-item" onclick="startCompare(\''+c.id+'\',\''+mk+'\')"><div class="cpicker-av" style="background:'+rc(c.ruolo)+'18;color:'+rc(c.ruolo)+'">'+ini(c.nome)+'</div><div><div style="font-size:13px;font-weight:700">'+c.nome+'</div><div style="font-size:11px;color:var(--text2)">'+c.ruolo+'</div></div></div>').join('');
+  document.getElementById('cpicker-list').innerHTML=m.collaboratori.map(c=>`
+    <div class="cpicker-item" onclick="startCompare('${c.id}','${mk}')">
+      <div class="cpicker-av" style="background:${rc(c.ruolo)}18;color:${rc(c.ruolo)}">${ini(c.nome)}</div>
+      <div><div style="font-size:13px;font-weight:700">${c.nome}</div><div style="font-size:11px;color:var(--text2)">${c.ruolo}</div></div>
+    </div>`).join('');
   document.getElementById('cpicker').style.display='flex';
 }
 function closeComparePicker(){document.getElementById('cpicker').style.display='none';}
@@ -463,8 +1386,12 @@ function startCompare(idA,mk){
   const m=MESI[mk];if(!m)return;
   cmpA=m.collaboratori.find(c=>c.id===idA);
   const remaining=m.collaboratori.filter(c=>c.id!==idA);
-  document.getElementById('cpicker-list').innerHTML='<p style="font-size:12px;color:var(--text2);margin-bottom:10px">Confronta <strong>'+cmpA.nome+'</strong> con:</p>'+
-    remaining.map(c=>'<div class="cpicker-item" onclick="renderCompare(\''+idA+'\',\''+c.id+'\',\''+mk+'\')"><div class="cpicker-av" style="background:'+rc(c.ruolo)+'18;color:'+rc(c.ruolo)+'">'+ini(c.nome)+'</div><div><div style="font-size:13px;font-weight:700">'+c.nome+'</div><div style="font-size:11px;color:var(--text2)">'+c.ruolo+'</div></div></div>').join('');
+  document.getElementById('cpicker-list').innerHTML=`<p style="font-size:12px;color:var(--text2);margin-bottom:10px">Confronta <strong>${cmpA.nome}</strong> con:</p>`+
+    remaining.map(c=>`
+    <div class="cpicker-item" onclick="renderCompare('${idA}','${c.id}','${mk}')">
+      <div class="cpicker-av" style="background:${rc(c.ruolo)}18;color:${rc(c.ruolo)}">${ini(c.nome)}</div>
+      <div><div style="font-size:13px;font-weight:700">${c.nome}</div><div style="font-size:11px;color:var(--text2)">${c.ruolo}</div></div>
+    </div>`).join('');
   document.getElementById('cpicker').style.display='flex';
 }
 function renderCompare(idA,idB,mk){
@@ -480,16 +1407,42 @@ function renderCompare(idA,idB,mk){
     const aBar=aA!==null&&aT?Math.min((aA/aT)*100,120):0;
     const bBar=bA!==null&&bT?Math.min((bA/bT)*100,120):0;
     const winner=aPct!==null&&bPct!==null?(aPct>bPct?a.nome:bPct>aPct?b.nome:'Pari'):null;
-    return '<div class="cmp-card"><div class="cmp-lbl">'+lbl+'</div><div class="cmp-cols"><div class="cmp-col"><div class="cmp-cname">'+a.nome+'</div><div class="cmp-val '+sA+'">'+fmt(aA)+'</div><div class="cmp-pct '+sA+'">'+(aPct!==null?aPct+'%':'–')+'</div><div class="cmp-bar"><div class="cmp-fill" style="width:'+aBar+'%;background:'+(SCcol[sA]||'#ccc')+'"></div></div></div><div class="cmp-sep">VS</div><div class="cmp-col"><div class="cmp-cname">'+b.nome+'</div><div class="cmp-val '+sB+'">'+fmt(bA)+'</div><div class="cmp-pct '+sB+'">'+(bPct!==null?bPct+'%':'–')+'</div><div class="cmp-bar"><div class="cmp-fill" style="width:'+bBar+'%;background:'+(SCcol[sB]||'#ccc')+'"></div></div></div></div>'+(winner?'<div class="cmp-winner">✦ '+winner+' in vantaggio</div>':'')+'</div>';
+    return `<div class="cmp-card">
+      <div class="cmp-lbl">${lbl}</div>
+      <div class="cmp-cols">
+        <div class="cmp-col">
+          <div class="cmp-cname">${a.nome}</div>
+          <div class="cmp-val ${sA}">${fmt(aA)}</div>
+          <div class="cmp-pct ${sA}">${aPct!==null?aPct+'%':'–'}</div>
+          <div class="cmp-bar"><div class="cmp-fill" style="width:${aBar}%;background:${SCcol[sA]||'#ccc'}"></div></div>
+        </div>
+        <div class="cmp-sep">VS</div>
+        <div class="cmp-col">
+          <div class="cmp-cname">${b.nome}</div>
+          <div class="cmp-val ${sB}">${fmt(bA)}</div>
+          <div class="cmp-pct ${sB}">${bPct!==null?bPct+'%':'–'}</div>
+          <div class="cmp-bar"><div class="cmp-fill" style="width:${bBar}%;background:${SCcol[sB]||'#ccc'}"></div></div>
+        </div>
+      </div>
+      ${winner?`<div class="cmp-winner">✦ ${winner} in vantaggio</div>`:''}
+    </div>`;
   }
-  let html='<div class="cmp-hdr"><div class="cmp-av" style="background:'+rc(a.ruolo)+'18;color:'+rc(a.ruolo)+'">'+ini(a.nome)+'</div><div><div class="cmp-name">'+a.nome+'</div><div class="cmp-role">'+a.ruolo+'</div></div><div class="cmp-vs">VS</div><div class="cmp-av" style="background:'+rc(b.ruolo)+'18;color:'+rc(b.ruolo)+'">'+ini(b.nome)+'</div><div><div class="cmp-name">'+b.nome+'</div><div class="cmp-role">'+b.ruolo+'</div></div></div><div class="cmp-grid"><p style="font-size:11px;color:var(--text2);margin-bottom:0">Confronto cumulato '+(MESI[mk]?MESI[mk].label:mk)+'</p>';
+  let html=`<div class="cmp-hdr">
+    <div class="cmp-av" style="background:${rc(a.ruolo)}18;color:${rc(a.ruolo)}">${ini(a.nome)}</div>
+    <div><div class="cmp-name">${a.nome}</div><div class="cmp-role">${a.ruolo}</div></div>
+    <div class="cmp-vs">VS</div>
+    <div class="cmp-av" style="background:${rc(b.ruolo)}18;color:${rc(b.ruolo)}">${ini(b.nome)}</div>
+    <div><div class="cmp-name">${b.nome}</div><div class="cmp-role">${b.ruolo}</div></div>
+  </div>
+  <div class="cmp-grid">
+    <p style="font-size:11px;color:var(--text2);margin-bottom:0">Confronto cumulato ${MESI[mk]?.label||mk}</p>`;
   html+=row('💰 Fatturato',totA.fat,a.fat_tm,totB.fat,b.fat_tm,eur);
   html+=row('👥 Presenze',totA.pre,a.pre_tm,totB.pre,b.pre_tm,num);
   html+=row('🔄 Ritorni',totA.rit,a.rit_tm,totB.rit,b.rit_tm,num);
-  html+=row('✨ Nuovi',totA.nuovi,a.nuovi_tm,totB.nuovi,b.nuovi_tm,num);
+  html+=row('✨ Nuovi Clienti',totA.nuovi,a.nuovi_tm,totB.nuovi,b.nuovi_tm,num);
   html+=row('🛍️ Retail',totA.ret,a.ret_tm,totB.ret,b.ret_tm,num);
   html+=row('📞 Richiami',totA.rich,a.rich_tm,totB.rich,b.rich_tm,num);
-  html+='</div>';
+  html+=`</div>`;
   document.getElementById('cmp-wrap').innerHTML=html;
   document.getElementById('view-cmp').style.display='block';
   document.getElementById('tabs-nav').style.display='none';
@@ -508,8 +1461,12 @@ function closeCompare(){
   document.getElementById('nav-label').textContent='Target Team';
   window.scrollTo(0,0);
 }
-const ua=STORICO[getMk()]?STORICO[getMk()].ultimo_aggiornamento:null;
-document.getElementById('cover-update').textContent=ua?'Aggiornato: '+ua:'';
+
+// ╔══════════════════════════════════════════════════════════════╗
+// ║  INIT                                                        ║
+// ╚══════════════════════════════════════════════════════════════╝
+const ua=STORICO[getMk()]?.ultimo_aggiornamento;
+document.getElementById('cover-update').textContent=ua?`Aggiornato: ${ua}`:'';
 </script>
 </body>
 </html>

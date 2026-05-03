@@ -73,7 +73,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Segoe UI',sa
 /* SECTION LABEL */
 .sec-lbl{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1.2px;color:var(--text2);margin:16px 0 9px;padding-bottom:5px;border-bottom:1px solid var(--bord)}
 
-/* COLLAB CARD (Live tab) */
+/* COLLAB CARD */
 .ccard{background:var(--card);border:1px solid var(--bord);border-radius:14px;padding:13px 14px;margin-bottom:9px;border-left:4px solid var(--bord2)}
 .ccard-hdr{display:flex;align-items:center;gap:10px;margin-bottom:11px}
 .cav{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;flex-shrink:0}
@@ -93,6 +93,41 @@ body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Segoe UI',sa
 /* semaforo */
 .g{color:var(--green)}.a{color:var(--amber)}.r{color:var(--red)}.n{color:var(--text2)}
 .dg{background:var(--green)}.da{background:var(--amber)}.dr{background:var(--red)}.dn{background:var(--bord2)}
+
+/* ── v3: EXPAND BUTTON ── */
+.expand-btn{width:100%;margin-top:10px;padding:8px;background:none;border:1px dashed var(--bord2);border-radius:8px;color:var(--text2);font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;letter-spacing:.3px;transition:all .18s;text-align:center}
+.expand-btn:hover{border-color:var(--gold);color:var(--gold);background:rgba(166,115,24,.04)}
+.expand-btn.open{border-style:solid;border-color:var(--bord2)}
+
+/* ── v3: PROFILO WRAP ── */
+.profilo-wrap{margin-top:12px;border-top:1px solid var(--bord);padding-top:12px}
+
+/* ── v3: SUGG SECTION LABEL ── */
+.psec-lbl{font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--text2);margin-bottom:8px;margin-top:0}
+
+/* ── v3: SUGGESTION CARDS ── */
+.sugg-card{display:flex;gap:9px;align-items:flex-start;background:var(--bg2);border-radius:9px;padding:9px 10px;margin-bottom:6px;border-left:3px solid transparent}
+.sugg-card-fat{border-left-color:var(--amber)}
+.sugg-card-retail{border-left-color:#0369a1}
+.sugg-card-rich{border-left-color:var(--green)}
+.sugg-card-nuovi{border-left-color:var(--pur)}
+.sugg-card-ok{border-left-color:var(--green)}
+.sugg-card-form{border-left-color:#92400e}
+.sugg-icon{font-size:17px;flex-shrink:0;margin-top:1px}
+.sugg-title{font-size:11px;font-weight:800;margin-bottom:2px}
+.sugg-text{font-size:11px;color:var(--text2);line-height:1.5}
+
+/* ── v3: SERVICE PROFILE ── */
+.serv-cat{margin-bottom:10px}
+.serv-cat-lbl{font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.8px;color:var(--text2);margin-bottom:5px;display:flex;align-items:center;gap:4px}
+.serv-row{display:flex;align-items:center;gap:6px;margin-bottom:5px}
+.serv-info{min-width:0;flex:1}
+.serv-nome{display:block;font-size:11px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.serv-meta{display:block;font-size:9px;color:var(--text2);margin-top:1px}
+.serv-bar-wrap{width:55px;flex-shrink:0;background:var(--bord);border-radius:2px;height:5px;overflow:hidden}
+.serv-bar-fill{height:5px;border-radius:2px;opacity:.75;transition:width .5s ease}
+.serv-qty{font-size:10px;color:var(--text2);font-weight:700;flex-shrink:0;width:22px;text-align:right}
+.no-serv-msg{font-size:11px;color:var(--text2);padding:8px 0;font-style:italic;line-height:1.5}
 
 /* MESE/STORICO TABLE */
 .kpi-sel{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
@@ -155,7 +190,7 @@ select{background:var(--card);color:var(--text);border:1px solid var(--bord2);pa
 /* PRINT */
 @media print{
   @page{margin:14mm 12mm}
-  #view-cover,#view-analisi,.tabs-nav,.sumbar,.nav-bc,.hdr,.cpicker,#view-cmp{display:none!important}
+  #view-cover,#view-analisi,.tabs-nav,.sumbar,.nav-bc,.hdr,.cpicker,#view-cmp,.expand-btn,.profilo-wrap{display:none!important}
   body{background:white!important;color:#111!important}
   .tab-pane{display:block!important;padding:0!important}
   .sec-lbl{color:#333!important}
@@ -173,7 +208,7 @@ select{background:var(--card);color:var(--text);border:1px solid var(--bord2);pa
 <div id="view-cover" class="cover">
   <div class="cover-hero">
     <div class="cover-logo">MIHI</div>
-    <div class="cover-salon">Mihi Isola · Alserio 3</div>
+    <div class="cover-salon">Mihi Isola · Via Alserio 3</div>
     <div class="cover-title">Management System</div>
     <div class="cover-update" id="cover-update">—</div>
   </div>
@@ -183,7 +218,7 @@ select{background:var(--card);color:var(--text);border:1px solid var(--bord2);pa
       <div class="mod-body">
         <div class="mod-num">Modulo 01</div>
         <div class="mod-name">Target Team</div>
-        <div class="mod-desc">KPI individuali, semafori, storico settimanale e confronto collaboratori</div>
+        <div class="mod-desc">KPI individuali, semafori, profilo servizi, suggerimenti AI e confronto collaboratori</div>
       </div>
       <span class="mod-status mod-live">Live</span>
       <span class="mod-chev">›</span>
@@ -201,7 +236,7 @@ select{background:var(--card);color:var(--text);border:1px solid var(--bord2);pa
   <div class="cover-footer"><div class="cover-footer-txt">MIHI Milano · Uso interno riservato</div></div>
 </div>
 
-<!-- MAIN APP (hidden until showModule) -->
+<!-- MAIN APP -->
 <div id="view-app" style="display:none">
 
   <!-- HEADER -->
@@ -213,7 +248,6 @@ select{background:var(--card);color:var(--text);border:1px solid var(--bord2);pa
     <div class="hmeta"><span id="hdr-week">–</span><br><b id="hdr-month">–</b></div>
     <div class="hdr-btns">
       <button class="btn-hdr" onclick="showComparePicker()">⇄ Confronta</button>
-      <button class="btn-hdr" onclick="window.print()">🖨 PDF</button>
     </div>
   </div>
 
@@ -234,19 +268,17 @@ select{background:var(--card);color:var(--text);border:1px solid var(--bord2);pa
   <!-- SUMMARY BAR -->
   <div class="sumbar" id="sumbar"></div>
 
-  <!-- TAB: LIVE -->
+  <!-- TAB PANES -->
   <div class="tab-pane active" id="pane-live"></div>
-  <!-- TAB: MESE -->
   <div class="tab-pane" id="pane-mese"></div>
-  <!-- TAB: STORICO -->
   <div class="tab-pane" id="pane-storico"></div>
 
-  <!-- ANALISI SALONE (hidden, future) -->
+  <!-- ANALISI SALONE (coming soon) -->
   <div id="view-analisi" style="display:none">
     <div class="as-wrap">
       <div class="as-icon">📊</div>
       <div class="as-title">Analisi Salone</div>
-      <div class="as-sub">Il modulo di analisi economica del salone è in fase di sviluppo. Sarà disponibile a breve con conto economico completo, benchmark di settore e analisi delle potenzialità.</div>
+      <div class="as-sub">Il modulo di analisi economica è in fase di sviluppo. Sarà disponibile a breve con conto economico completo, benchmark di settore e analisi delle potenzialità.</div>
       <div class="as-badge">⏳ In sviluppo — disponibile a breve</div>
       <div class="as-modules">
         <div class="as-mod"><div class="as-mod-title">Conto Economico</div>Fatturato, costi fissi e variabili, margine operativo</div>
@@ -267,7 +299,7 @@ select{background:var(--card);color:var(--text);border:1px solid var(--bord2);pa
     <div id="cmp-wrap"></div>
   </div>
 
-  <div class="foot">MIHI Milano · Aggiornato: <span id="last-upd">mai</span></div>
+  <div class="foot">MIHI Milano · Uso interno riservato · Aggiornato: <span id="last-upd">mai</span></div>
 </div>
 
 <!-- COMPARE PICKER OVERLAY -->
@@ -286,51 +318,184 @@ select{background:var(--card);color:var(--text);border:1px solid var(--bord2);pa
 // ╚══════════════════════════════════════════════════════════════╝
 const MESI = {
   "2026-05": {
-    label: "Maggio 2026",
-    settimane: [
-      { id:"S1", da:"2026-05-02", a:"2026-05-09",  label:"S1 · 2-9 mag"   },
-      { id:"S2", da:"2026-05-12", a:"2026-05-16",  label:"S2 · 12-16 mag" },
-      { id:"S3", da:"2026-05-19", a:"2026-05-23",  label:"S3 · 19-23 mag" },
-      { id:"S4", da:"2026-05-26", a:"2026-05-30",  label:"S4 · 26-30 mag" }
+    "label": "Maggio 2026",
+    "settimane": [
+      {
+        "id": "S1",
+        "da": "2026-05-02",
+        "a": "2026-05-09",
+        "label": "S1 · 2-9 mag"
+      },
+      {
+        "id": "S2",
+        "da": "2026-05-12",
+        "a": "2026-05-16",
+        "label": "S2 · 12-16 mag"
+      },
+      {
+        "id": "S3",
+        "da": "2026-05-19",
+        "a": "2026-05-23",
+        "label": "S3 · 19-23 mag"
+      },
+      {
+        "id": "S4",
+        "da": "2026-05-26",
+        "a": "2026-05-30",
+        "label": "S4 · 26-30 mag"
+      }
     ],
-    collaboratori: [
-      { id:"stefano", nome:"Stefano", ruolo:"Stilista", costo_m:3509,
-        fat_tw:1781,fat_tm:7708, pre_tw:50,pre_tm:200, ret_tw:2,ret_tm:8,
-        rit_tw:32,rit_tm:128, nuovi_tw:17,nuovi_tm:68, rich_tw:15,rich_tm:59,
-        serv_t:2, fiche_t:40, sat_t:71.9 },
-      { id:"simona",  nome:"Simona",  ruolo:"Phonista", costo_m:2447,
-        fat_tw:1235,fat_tm:5347, pre_tw:29,pre_tm:115, ret_tw:2,ret_tm:8,
-        rit_tw:15,rit_tm:58,  nuovi_tw:17,nuovi_tm:68, rich_tw:3, rich_tm:13,
-        serv_t:2, fiche_t:40, sat_t:51.0 }
+    "collaboratori": [
+      {
+        "id": "stefano",
+        "nome": "Stefano",
+        "ruolo": "Stilista",
+        "costo_m": 3509,
+        "fat_tw": 1781,
+        "fat_tm": 7708,
+        "pre_tw": 50,
+        "pre_tm": 200,
+        "ret_tw": 2,
+        "ret_tm": 8,
+        "rit_tw": 32,
+        "rit_tm": 128,
+        "nuovi_tw": 17,
+        "nuovi_tm": 68,
+        "rich_tw": 15,
+        "rich_tm": 59,
+        "serv_t": 2,
+        "fiche_t": 40,
+        "sat_t": 71.9
+      },
+      {
+        "id": "simona",
+        "nome": "Simona",
+        "ruolo": "Phonista",
+        "costo_m": 2447,
+        "fat_tw": 1235,
+        "fat_tm": 5347,
+        "pre_tw": 29,
+        "pre_tm": 115,
+        "ret_tw": 2,
+        "ret_tm": 8,
+        "rit_tw": 15,
+        "rit_tm": 58,
+        "nuovi_tw": 17,
+        "nuovi_tm": 68,
+        "rich_tw": 3,
+        "rich_tm": 13,
+        "serv_t": 2,
+        "fiche_t": 40,
+        "sat_t": 51.0
+      }
     ]
   }
 };
 
 // ╔══════════════════════════════════════════════════════════════╗
 // ║  SEZIONE 2 — STORICO DATI REALI                             ║
-// ║  ⚠️  AGGIORNATO AUTOMATICAMENTE DAL TASK NOTTURNO           ║
-// ║  Non modificare manualmente                                  ║
+// ║  ⚠️  AGGIORNATO AUTOMATICAMENTE — Non modificare manualmente ║
 // ╚══════════════════════════════════════════════════════════════╝
 // === BEGIN_STORICO ===
 const STORICO = {
   "2026-05": {
-    chiuso: false,
-    ultimo_aggiornamento: null,
-    S1: {
-      stefano:{fat:null,pre:null,ret:null,rit:null,nuovi:null,rich:null,serv:null,fiche:null},
-      simona: {fat:null,pre:null,ret:null,rit:null,nuovi:null,rich:null,serv:null,fiche:null}
+    "chiuso": false,
+    "ultimo_aggiornamento": null,
+    "S1": {
+      "stefano": {
+        "fat": null,
+        "pre": null,
+        "ret": null,
+        "rit": null,
+        "nuovi": null,
+        "rich": null,
+        "serv": null,
+        "fiche": null,
+        "servizi": null
+      },
+      "simona": {
+        "fat": null,
+        "pre": null,
+        "ret": null,
+        "rit": null,
+        "nuovi": null,
+        "rich": null,
+        "serv": null,
+        "fiche": null,
+        "servizi": null
+      }
     },
-    S2: {
-      stefano:{fat:null,pre:null,ret:null,rit:null,nuovi:null,rich:null,serv:null,fiche:null},
-      simona: {fat:null,pre:null,ret:null,rit:null,nuovi:null,rich:null,serv:null,fiche:null}
+    "S2": {
+      "stefano": {
+        "fat": null,
+        "pre": null,
+        "ret": null,
+        "rit": null,
+        "nuovi": null,
+        "rich": null,
+        "serv": null,
+        "fiche": null,
+        "servizi": null
+      },
+      "simona": {
+        "fat": null,
+        "pre": null,
+        "ret": null,
+        "rit": null,
+        "nuovi": null,
+        "rich": null,
+        "serv": null,
+        "fiche": null,
+        "servizi": null
+      }
     },
-    S3: {
-      stefano:{fat:null,pre:null,ret:null,rit:null,nuovi:null,rich:null,serv:null,fiche:null},
-      simona: {fat:null,pre:null,ret:null,rit:null,nuovi:null,rich:null,serv:null,fiche:null}
+    "S3": {
+      "stefano": {
+        "fat": null,
+        "pre": null,
+        "ret": null,
+        "rit": null,
+        "nuovi": null,
+        "rich": null,
+        "serv": null,
+        "fiche": null,
+        "servizi": null
+      },
+      "simona": {
+        "fat": null,
+        "pre": null,
+        "ret": null,
+        "rit": null,
+        "nuovi": null,
+        "rich": null,
+        "serv": null,
+        "fiche": null,
+        "servizi": null
+      }
     },
-    S4: {
-      stefano:{fat:null,pre:null,ret:null,rit:null,nuovi:null,rich:null,serv:null,fiche:null},
-      simona: {fat:null,pre:null,ret:null,rit:null,nuovi:null,rich:null,serv:null,fiche:null}
+    "S4": {
+      "stefano": {
+        "fat": null,
+        "pre": null,
+        "ret": null,
+        "rit": null,
+        "nuovi": null,
+        "rich": null,
+        "serv": null,
+        "fiche": null,
+        "servizi": null
+      },
+      "simona": {
+        "fat": null,
+        "pre": null,
+        "ret": null,
+        "rit": null,
+        "nuovi": null,
+        "rich": null,
+        "serv": null,
+        "fiche": null,
+        "servizi": null
+      }
     }
   }
 };
@@ -339,12 +504,10 @@ const STORICO = {
 // ╔══════════════════════════════════════════════════════════════╗
 // ║  UTILITY                                                     ║
 // ╚══════════════════════════════════════════════════════════════╝
-const RC = {Stilista:'#6d28d9',Estetista:'#be185d',Manager:'#92400e',Barbiere:'#0369a1',Phonista:'#0891b2'};
+const RC = {"Stilista":"#6d28d9","Estetista":"#be185d","Manager":"#92400e","Barbiere":"#0369a1","Phonista":"#0891b2"};
 function rc(r){return RC[r]||'#64748b'}
 function ini(n){return n.charAt(0)}
-
 function getMk(){const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`}
-
 function getSW(mk){
   const m=MESI[mk];if(!m)return null;
   const t=new Date();t.setHours(12,0,0,0);
@@ -355,7 +518,6 @@ function getSW(mk){
   }
   return [...m.settimane].reverse().find(s=>new Date(s.da)<=t)||m.settimane[0];
 }
-
 function sem(a,t){
   if(a===null||a===undefined)return'n';
   if(!t)return'n';
@@ -364,7 +526,6 @@ function sem(a,t){
 function eur(v){if(v===null||v===undefined)return'–';return'€'+Math.round(v).toLocaleString('it-IT')}
 function num(v,d=0){if(v===null||v===undefined)return'–';return d?v.toFixed(d):String(Math.round(v))}
 function pct(a,t){if(a===null||!t)return'';return Math.round((a/t)*100)+'%'}
-
 const KD=[
   {k:'fat',lbl:'Fatturato',tw:'fat_tw',tm:'fat_tm',fmt:eur},
   {k:'pre',lbl:'Presenze', tw:'pre_tw',tm:'pre_tm',fmt:num},
@@ -373,7 +534,6 @@ const KD=[
   {k:'nuovi',lbl:'Nuovi',  tw:'nuovi_tw',tm:'nuovi_tm',fmt:num},
   {k:'rich',lbl:'Richiami',tw:'rich_tw',tm:'rich_tm',fmt:num}
 ];
-
 function getTot(mk,cid){
   const st=STORICO[mk];if(!st)return{};
   const t={fat:null,pre:null,ret:null,rit:null,nuovi:null,rich:null,serv:null,fiche:null};
@@ -390,13 +550,272 @@ function getTot(mk,cid){
 }
 
 // ╔══════════════════════════════════════════════════════════════╗
+// ║  v3: PROFILO SERVIZI & SUGGERIMENTI                         ║
+// ╚══════════════════════════════════════════════════════════════╝
+
+// Classifica un servizio in: punta / medi / rari
+function categorizaServizio(s, tutti){
+  if(!tutti||!tutti.length)return'medi';
+  const totR=tutti.reduce((a,x)=>a+(x.ricavi||0),0);
+  const maxQ=Math.max(...tutti.map(x=>x.qta||0));
+  const pR=totR>0?(s.ricavi||0)/totR:0;
+  const pQ=maxQ>0?(s.qta||0)/maxQ:0;
+  if(pR>=0.25||pQ>=0.40)return'punta';
+  if((s.qta||0)<=1&&pR<0.15)return'rari';
+  return'medi';
+}
+
+// Renderizza le barre del profilo servizi
+function renderServizi(servizi, color){
+  if(!servizi||!servizi.length)
+    return'<div class="no-serv-msg">📋 Profilo servizi disponibile dopo il primo aggiornamento settimanale. I servizi verranno classificati automaticamente in Punta, Regolari e Rari.</div>';
+  const cats={punta:[],medi:[],rari:[]};
+  servizi.forEach(s=>cats[categorizaServizio(s,servizi)].push(s));
+  const totR=servizi.reduce((a,x)=>a+(x.ricavi||0),0);
+  const maxQ=Math.max(...servizi.map(x=>x.qta||0));
+  const catInfo=[
+    {key:'punta',icon:'⭐',lbl:'Servizi di Punta',desc:'Alto valore o alta frequenza'},
+    {key:'medi', icon:'💼',lbl:'Servizi Regolari', desc:'Frequenza media'},
+    {key:'rari', icon:'🔍',lbl:'Servizi Rari',     desc:'Eseguiti raramente'}
+  ];
+  let html='';
+  for(const cat of catInfo){
+    const items=cats[cat.key];
+    if(!items.length)continue;
+    html+=`<div class="serv-cat"><div class="serv-cat-lbl"><span>${cat.icon}</span>${cat.lbl}<span style="font-weight:400;opacity:.55;margin-left:4px;text-transform:none;letter-spacing:0">— ${cat.desc}</span></div>`;
+    for(const s of items){
+      const pctR=totR>0?Math.round((s.ricavi/totR)*100):0;
+      const barW=maxQ>0?Math.round((s.qta/maxQ)*100):0;
+      html+=`<div class="serv-row">
+        <div class="serv-info">
+          <span class="serv-nome">${s.nome}</span>
+          <span class="serv-meta">€${s.ricavi.toLocaleString('it-IT')} · ${pctR}% del fatturato</span>
+        </div>
+        <div class="serv-bar-wrap"><div class="serv-bar-fill" style="width:${barW}%;background:${color}"></div></div>
+        <span class="serv-qty">${s.qta}×</span>
+      </div>`;
+    }
+    html+='</div>';
+  }
+  return html;
+}
+
+// Genera suggerimenti AI personalizzati
+function genSuggerimenti(c, d, servizi){
+  const noData=d.fat===null&&d.pre===null;
+  if(noData)return[{icon:'⏳',cls:'sugg-card-ok',title:'In attesa di dati',text:'Inserisci i dati di questa settimana per ricevere suggerimenti personalizzati basati sui tuoi KPI e sul profilo dei servizi.'}];
+
+  const suggs=[];
+  // Fatturato
+  if(d.fat!==null&&c.fat_tw>0){
+    const p=d.fat/c.fat_tw;
+    if(p<0.8){
+      const gap=Math.round(c.fat_tw-d.fat);
+      let txt=`Mancano €${gap.toLocaleString('it-IT')} al target settimanale. `;
+      if(servizi&&servizi.length){
+        const punta=servizi.filter(s=>categorizaServizio(s,servizi)==='punta');
+        if(punta.length)txt+=`Punta su "${punta[0].nome}" — il tuo servizio di punta per valore. Proponi un servizio aggiuntivo ad ogni appuntamento.`;
+        else txt+='Aumenta il valore medio del ticket proponendo un trattamento complementare ad ogni cliente.';
+      } else txt+='Proponi un trattamento aggiuntivo (es. maschera, trattamento colore) per aumentare il valore medio per cliente.';
+      suggs.push({icon:'💰',cls:'sugg-card-fat',title:'Fatturato sotto target',text:txt});
+    }
+  }
+  // Retail
+  if(d.ret!==null&&c.ret_tw>0&&d.ret/c.ret_tw<0.5)
+    suggs.push({icon:'🛍️',cls:'sugg-card-retail',title:'Retail: alza il ritmo',text:'Meno della metà dei target retail raggiunti. Dopo ogni servizio, consiglia almeno 1 prodotto specifico per il tipo di capello/trattamento. La chiave è la personalizzazione.'});
+  // Richiami
+  if(d.rich!==null&&c.rich_tw>0&&d.rich/c.rich_tw<0.7){
+    const mancano=Math.max(0,Math.ceil(c.rich_tw-(d.rich||0)));
+    suggs.push({icon:'📞',cls:'sugg-card-rich',title:'Aumenta i richiami',text:`Ancora ${mancano} richiami al target. Prima di salutare ogni cliente, fissa già la data del prossimo appuntamento: aumenta fedeltà e fatturato prevedibile.`});
+  }
+  // Nuovi
+  if(d.nuovi!==null&&c.nuovi_tw>0&&d.nuovi/c.nuovi_tw<0.6)
+    suggs.push({icon:'✨',cls:'sugg-card-nuovi',title:'Attira nuovi clienti',text:`Solo ${d.nuovi||0} nuovi su ${c.nuovi_tw} obiettivo. Chiedi ai clienti soddisfatti di portare un amico o di lasciare una recensione su Google Maps — il passaparola resta il canale più efficace.`});
+  // Ritorni
+  if(d.rit!==null&&c.rit_tw>0&&d.rit/c.rit_tw<0.7)
+    suggs.push({icon:'🔄',cls:'sugg-card-fat',title:'Fidelizzazione clienti',text:'I ritorni sono sotto soglia. Crea un momento di follow-up: un messaggio di ringraziamento entro 48h dopo il servizio rafforza il legame e aumenta la probabilità di ritorno.'});
+  // Formazione da profilo servizi
+  if(servizi&&servizi.length){
+    const rari=servizi.filter(s=>categorizaServizio(s,servizi)==='rari');
+    if(rari.length>0&&rari.length<=4){
+      const nomi=rari.slice(0,2).map(s=>`"${s.nome}"`).join(', ');
+      suggs.push({icon:'📚',cls:'sugg-card-form',title:'Opportunità di formazione',text:`${nomi} ${rari.length===1?'è un servizio che esegui raramente':'sono servizi che esegui raramente'}. Valuta se promuoverli attivamente ai clienti o se approfondire la tecnica per valorizzarli meglio.`});
+    }
+  }
+  // Tutto ok
+  if(suggs.length===0)
+    suggs.push({icon:'🌟',cls:'sugg-card-ok',title:'Ottimo lavoro!',text:'Tutti i KPI sono in linea con i target questa settimana. Mantieni il ritmo e punta a chiudere il mese in verde. Continua così!'});
+  return suggs.slice(0,3);
+}
+
+// Toggle espansione card
+function toggleProfilo(id){
+  const wrap=document.getElementById('profilo-'+id);
+  const btn=document.getElementById('btn-profilo-'+id);
+  if(!wrap)return;
+  const open=wrap.style.display!=='none';
+  wrap.style.display=open?'none':'block';
+  btn.classList.toggle('open',!open);
+  btn.innerHTML=open?'▾ Profilo &amp; Suggerimenti':'▴ Nascondi';
+}
+
+// ── v3: STAMPA SCHEDA INDIVIDUALE ──────────────────────────────────────────
+function stampaProfilo(cid){
+  const mk=getMk();const m=MESI[mk];if(!m)return;
+  const c=m.collaboratori.find(x=>x.id===cid);if(!c)return;
+  const sw=getSW(mk);const sid=sw?.id||'S1';
+  const d=STORICO[mk]?.[sid]?.[cid]||{};
+  const color=rc(c.ruolo);
+  const servizi=d.servizi||null;
+  const suggs=genSuggerimenti(c,d,servizi);
+  const SC={g:'#15803d',a:'#b45309',r:'#b91c1c',n:'#6b6055'};
+  const SCD={g:'#15803d',a:'#b45309',r:'#b91c1c',n:'#c8c3bb'};
+  const now=new Date();
+  const ds=now.toLocaleDateString('it-IT',{day:'2-digit',month:'long',year:'numeric'});
+
+  // KPI grid
+  let kpiH='';
+  for(const kpi of KD){
+    const av=d[kpi.k],tv=c[kpi.tw],s=sem(av,tv),p=pct(av,tv);
+    if(tv===null||tv===undefined)continue;
+    kpiH+=`<div style="background:#eeecea;border-radius:10px;padding:10px 6px;text-align:center">
+      <div style="font-size:9px;text-transform:uppercase;letter-spacing:.5px;color:#6b6055;margin-bottom:4px">${kpi.lbl}</div>
+      <div style="font-size:15px;font-weight:800;color:${SC[s]}"><span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:${SCD[s]};margin-right:3px;vertical-align:middle"></span>${kpi.fmt(av)}${p?`<span style="font-size:9px;opacity:.55;margin-left:1px">${p}</span>`:''}</div>
+      <div style="font-size:9px;color:#6b6055;margin-top:2px">▸ ${kpi.fmt(tv)}</div>
+    </div>`;
+  }
+
+  // Extra (fiche + serv)
+  let extraH=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:6px">
+    <div style="background:#fff;border:1px solid #dedad3;border-radius:10px;padding:10px;text-align:center">
+      <div style="font-size:9px;text-transform:uppercase;letter-spacing:.5px;color:#6b6055;margin-bottom:4px">Ticket Medio</div>
+      <div style="font-size:15px;font-weight:800;color:#6b6055">${num(d.fiche,2)}</div>
+      <div style="font-size:9px;color:#6b6055;margin-top:2px">▸ ${num(c.fiche_t,2)}</div>
+    </div>
+    <div style="background:#fff;border:1px solid #dedad3;border-radius:10px;padding:10px;text-align:center">
+      <div style="font-size:9px;text-transform:uppercase;letter-spacing:.5px;color:#6b6055;margin-bottom:4px">Serv/Cliente</div>
+      <div style="font-size:15px;font-weight:800;color:#6b6055">${num(d.serv,1)}</div>
+      <div style="font-size:9px;color:#6b6055;margin-top:2px">▸ ${num(c.serv_t,1)}</div>
+    </div>
+  </div>`;
+
+  // Suggerimenti
+  let suggH='';
+  for(const sg of suggs){
+    suggH+=`<div style="display:flex;gap:10px;align-items:flex-start;background:#eeecea;border-radius:10px;padding:11px 13px;margin-bottom:8px">
+      <span style="font-size:20px;flex-shrink:0">${sg.icon}</span>
+      <div><div style="font-size:12px;font-weight:800;margin-bottom:3px">${sg.title}</div>
+      <div style="font-size:11px;color:#6b6055;line-height:1.55">${sg.text}</div></div>
+    </div>`;
+  }
+
+  // Profilo servizi
+  const serviziH=renderServizi(servizi,color);
+
+  // Sezione cumulato mese
+  const tot=getTot(mk,cid);
+  const nW=['S1','S2','S3','S4'].filter(s=>STORICO[mk]?.[s]?.[cid]?.fat!==null&&STORICO[mk]?.[s]?.[cid]?.fat!==undefined).length;
+  let cumH='';
+  for(const kpi of KD){
+    const av=tot[kpi.k],tv=c[kpi.tm],s=sem(av,tv);
+    if(tv===null||tv===undefined)continue;
+    cumH+=`<div style="background:#eeecea;border-radius:8px;padding:8px 5px;text-align:center">
+      <div style="font-size:9px;text-transform:uppercase;letter-spacing:.5px;color:#6b6055;margin-bottom:3px">${kpi.lbl}</div>
+      <div style="font-size:13px;font-weight:800;color:${SC[s]}">${kpi.fmt(av)}</div>
+      <div style="font-size:9px;color:#6b6055">/ ${kpi.fmt(tv)}</div>
+    </div>`;
+  }
+
+  const salonName=document.querySelector('.hsub')?.textContent||'MIHI';
+  const html=`<!DOCTYPE html><html lang="it"><head><meta charset="UTF-8">
+<title>MIHI · ${c.nome} · Scheda Personale</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Segoe UI',sans-serif;background:#f5f4ef;color:#1a1510;padding:0}
+.page{max-width:520px;margin:0 auto;padding:0 0 32px}
+.sec-lbl{font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:1.2px;color:#6b6055;margin:18px 0 8px;padding-bottom:5px;border-bottom:1px solid #dedad3}
+.serv-cat{margin-bottom:10px}
+.serv-cat-lbl{font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.8px;color:#6b6055;margin-bottom:5px;display:flex;align-items:center;gap:4px}
+.serv-row{display:flex;align-items:center;gap:6px;margin-bottom:5px}
+.serv-info{min-width:0;flex:1}
+.serv-nome{display:block;font-size:11px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.serv-meta{display:block;font-size:9px;color:#6b6055;margin-top:1px}
+.serv-bar-wrap{width:55px;flex-shrink:0;background:#dedad3;border-radius:2px;height:5px;overflow:hidden}
+.serv-bar-fill{height:5px;border-radius:2px;opacity:.75}
+.serv-qty{font-size:10px;color:#6b6055;font-weight:700;flex-shrink:0;width:22px;text-align:right}
+.no-serv-msg{font-size:11px;color:#6b6055;padding:8px 0;font-style:italic;line-height:1.5}
+@media print{
+  @page{margin:10mm 12mm;size:A4}
+  body{background:white!important}
+  .no-print{display:none!important}
+}
+</style>
+</head>
+<body>
+<div class="page">
+  <!-- HEADER -->
+  <div style="background:#1a1510;padding:22px 22px 18px;margin-bottom:0">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start">
+      <div>
+        <div style="font-size:22px;font-weight:900;letter-spacing:5px;color:#a67318">MIHI</div>
+        <div style="font-size:11px;color:#a09080;letter-spacing:1.5px;text-transform:uppercase;margin-top:3px">${salonName}</div>
+      </div>
+      <div style="text-align:right">
+        <div style="font-size:10px;color:#a09080">${sw?.label||'Settimana'}</div>
+        <div style="font-size:10px;color:#6b5f54;margin-top:2px">${MESI[mk]?.label||''}</div>
+      </div>
+    </div>
+  </div>
+  <!-- COLLABORATORE -->
+  <div style="background:#fff;padding:18px 22px;border-bottom:1px solid #dedad3">
+    <div style="display:flex;align-items:center;gap:14px">
+      <div style="width:52px;height:52px;border-radius:50%;background:${color}18;color:${color};display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:800;flex-shrink:0">${ini(c.nome)}</div>
+      <div>
+        <div style="font-size:22px;font-weight:900;color:#1a1510">${c.nome}</div>
+        <div style="font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;background:${color}18;color:${color};display:inline-block;margin-top:4px">${c.ruolo}</div>
+      </div>
+    </div>
+  </div>
+  <!-- BODY -->
+  <div style="padding:16px 22px">
+    <!-- KPI settimana -->
+    <div class="sec-lbl">📊 KPI Settimana vs Target</div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px">${kpiH}</div>
+    ${extraH}
+    <!-- Cumulato mese -->
+    <div class="sec-lbl">📈 Cumulato ${MESI[mk]?.label||''} (${nW}/4 settimane)</div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px">${cumH}</div>
+    <!-- Suggerimenti -->
+    <div class="sec-lbl">💡 Suggerimenti Personalizzati</div>
+    ${suggH}
+    <!-- Profilo Servizi -->
+    <div class="sec-lbl">📊 Profilo Servizi</div>
+    ${serviziH}
+  </div>
+  <!-- FOOTER -->
+  <div style="margin:0 22px;padding:14px 0;border-top:1px solid #dedad3;display:flex;justify-content:space-between;align-items:center">
+    <span style="font-size:9px;color:#6b6055;letter-spacing:.5px;text-transform:uppercase">MIHI · Uso riservato — solo per ${c.nome}</span>
+    <span style="font-size:9px;color:#6b6055">${ds}</span>
+  </div>
+  <!-- PULSANTE STAMPA (sparisce in stampa) -->
+  <div class="no-print" style="text-align:center;padding:16px 0">
+    <button onclick="window.print()" style="background:#1a1510;color:#a67318;border:none;padding:12px 28px;border-radius:10px;font-size:13px;font-weight:800;cursor:pointer;font-family:inherit;letter-spacing:.5px">🖨 Stampa / Salva PDF</button>
+  </div>
+</div>
+</body></html>`;
+
+  const win=window.open('','_blank','width=560,height=800');
+  win.document.write(html);
+  win.document.close();
+}
+
+// ╔══════════════════════════════════════════════════════════════╗
 // ║  NAVIGATION                                                  ║
 // ╚══════════════════════════════════════════════════════════════╝
 function goHome(){
   document.getElementById('view-cover').style.display='flex';
   document.getElementById('view-app').style.display='none';
 }
-
 function showModule(mod){
   document.getElementById('view-cover').style.display='none';
   document.getElementById('view-app').style.display='block';
@@ -405,8 +824,7 @@ function showModule(mod){
   const tabs=document.getElementById('tabs-nav');
   const sumbar=document.getElementById('sumbar');
   if(mod==='team'){
-    tabs.style.display='flex';
-    sumbar.style.display='flex';
+    tabs.style.display='flex';sumbar.style.display='flex';
     document.querySelectorAll('.tab-pane').forEach(p=>p.style.display='none');
     document.querySelector('#pane-live').style.display='block';
     document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
@@ -414,8 +832,7 @@ function showModule(mod){
     document.getElementById('nav-label').textContent='Target Team';
     renderSumbar();renderLive();
   } else {
-    tabs.style.display='none';
-    sumbar.style.display='none';
+    tabs.style.display='none';sumbar.style.display='none';
     document.querySelectorAll('.tab-pane').forEach(p=>p.style.display='none');
     document.getElementById('view-analisi').style.display='block';
     document.getElementById('nav-label').textContent='Analisi Salone';
@@ -424,7 +841,6 @@ function showModule(mod){
   document.getElementById('last-upd').textContent=ua||'mai';
   document.getElementById('cover-update').textContent=ua?`Aggiornato: ${ua}`:'';
 }
-
 function switchTab(name){
   document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
   document.querySelectorAll('.tab-pane').forEach(p=>p.style.display='none');
@@ -445,20 +861,19 @@ function renderSumbar(){
   for(const c of m.collaboratori){
     const dw=st[c.id];if(dw?.fat!==null&&dw?.fat!==undefined)fatW=(fatW||0)+dw.fat;
     const dm=getTot(mk,c.id);if(dm.fat!==null)fatM=(fatM||0)+dm.fat;
-    tgW+=c.fat_tw;tgM+=c.fat_tm;
+    tgW+=c.fat_tw||0;tgM+=c.fat_tm||0;
   }
   const items=[
     {v:eur(fatW),l:'Fatturato Sett.'},{v:eur(tgW),l:'Target Sett.'},{v:pct(fatW,tgW)||'–',l:'% Sett.'},
     {v:eur(fatM),l:'Cumul. Mese'},{v:eur(tgM),l:'Target Mese'},{v:pct(fatM,tgM)||'–',l:'% Mese'}
   ];
   document.getElementById('sumbar').innerHTML=items.map(i=>`<div class="ss"><div class="sv">${i.v}</div><div class="sl">${i.l}</div></div>`).join('');
-  const sw2=getSW(mk);
-  document.getElementById('hdr-week').textContent=sw2?.label||'–';
+  document.getElementById('hdr-week').textContent=sw?.label||'–';
   document.getElementById('hdr-month').textContent=m.label;
 }
 
 // ╔══════════════════════════════════════════════════════════════╗
-// ║  TAB 1: SETTIMANA LIVE                                       ║
+// ║  TAB 1: SETTIMANA LIVE (v3)                                 ║
 // ╚══════════════════════════════════════════════════════════════╝
 function renderLive(){
   const mk=getMk();const m=MESI[mk];
@@ -466,11 +881,13 @@ function renderLive(){
   const sw=getSW(mk);const sid=sw?.id||'S1';
   const st=STORICO[mk]?.[sid]||{};
   let html='';
-
   html+=`<div class="sec-lbl">📊 ${sw?.label||'Settimana'} · Semaforo vs Target</div>`;
 
   for(const c of m.collaboratori){
     const color=rc(c.ruolo);const d=st[c.id]||{};
+    const servizi=d.servizi||null;
+    const suggs=genSuggerimenti(c,d,servizi);
+
     html+=`<div class="ccard" style="border-left-color:${color}">
       <div class="ccard-hdr">
         <div class="cav" style="background:${color}18;color:${color}">${ini(c.nome)}</div>
@@ -479,8 +896,9 @@ function renderLive(){
       <div class="kpi-grid">`;
     for(const kpi of KD){
       const av=d[kpi.k],tv=c[kpi.tw],s=sem(av,tv),p=pct(av,tv);
+      if(tv===null||tv===undefined)continue;
       html+=`<div class="kc"><div class="kl">${kpi.lbl}</div>
-        <div class="kv ${s}"><span class="dot d${s}"></span>${kpi.fmt(av)}${p?`<span class="kp">${p}</span>`:''}  </div>
+        <div class="kv ${s}"><span class="dot d${s}"></span>${kpi.fmt(av)}${p?`<span class="kp">${p}</span>`:''}</div>
         <div class="kt">▸ ${kpi.fmt(tv)}</div></div>`;
     }
     html+=`</div>
@@ -491,7 +909,19 @@ function renderLive(){
         <div class="kc" style="background:transparent;border:1px solid var(--bord)">
           <div class="kl">Serv/Cliente</div><div class="kv n">${num(d.serv,1)}</div><div class="kt">▸ ${num(c.serv_t,1)}</div>
         </div>
-      </div></div>`;
+      </div>
+      <button class="expand-btn" id="btn-profilo-${c.id}" onclick="toggleProfilo('${c.id}')">▾ Profilo &amp; Suggerimenti</button>
+      <div id="profilo-${c.id}" class="profilo-wrap" style="display:none">
+        <button onclick="stampaProfilo('${c.id}')" style="width:100%;margin-bottom:12px;padding:9px;background:#1a1510;border:none;border-radius:9px;color:#a67318;font-size:11px;font-weight:800;cursor:pointer;font-family:inherit;letter-spacing:.5px;display:flex;align-items:center;justify-content:center;gap:6px">📄 Esporta scheda personale</button>
+        <div class="psec-lbl">💡 Suggerimenti personalizzati</div>`;
+
+    for(const sg of suggs){
+      html+=`<div class="sugg-card ${sg.cls}"><span class="sugg-icon">${sg.icon}</span><div><div class="sugg-title">${sg.title}</div><div class="sugg-text">${sg.text}</div></div></div>`;
+    }
+
+    html+=`<div class="psec-lbl" style="margin-top:14px">📊 Profilo Servizi</div>`;
+    html+=renderServizi(servizi, color);
+    html+=`</div></div>`;
   }
 
   html+=`<div class="sec-lbl" style="margin-top:18px">📈 Cumulato ${m.label}</div>`;
@@ -506,6 +936,7 @@ function renderLive(){
       <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:5px">`;
     for(const kpi of KD){
       const av=tot[kpi.k],tv=c[kpi.tm],s=sem(av,tv);
+      if(tv===null||tv===undefined)continue;
       html+=`<div class="kc" style="padding:6px 4px"><div class="kl">${kpi.lbl}</div>
         <div class="kv ${s}" style="font-size:12px">${kpi.fmt(av)}</div>
         <div class="kt">/ ${kpi.fmt(tv)}</div></div>`;
@@ -527,36 +958,33 @@ function renderMese(){
   if(!m){document.getElementById('pane-mese').innerHTML='<p class="no-data">Nessun dato.</p>';return;}
   const sw=getSW(mk);const kd=KD.find(k=>k.k===meseKpi)||KD[0];
   const icons={fat:'💰',pre:'👥',ret:'🛍️',rit:'🔄',nuovi:'✨',rich:'📞'};
-
   let html=`<div class="kpi-sel">`;
   KD.forEach(k=>html+=`<button class="kbtn${k.k===meseKpi?' active':''}" onclick="meseKpi='${k.k}';renderMese()">${icons[k.k]} ${k.lbl}</button>`);
   html+=`</div><div class="tbl-wrap"><table><thead><tr><th>Collaboratore</th>`;
   m.settimane.forEach(s=>{
     const live=s.id===sw?.id;
-    html+=`<th>${s.label}${live?'<br><span class="badge-live">live</span>':''}  </th>`;
+    html+=`<th>${s.label}${live?'<br><span class="badge-live">live</span>':''}</th>`;
   });
   html+=`<th>TOT</th><th>TARGET</th><th>%</th></tr></thead><tbody>`;
-
   for(const c of m.collaboratori){
     const color=rc(c.ruolo);const tm=c[kd.tm];const tot=getTot(mk,c.id);const sf=sem(tot[meseKpi],tm);
+    if(tm===null||tm===undefined)continue;
     html+=`<tr><td><span style="color:${color};font-weight:800">${c.nome}</span></td>`;
     m.settimane.forEach(s=>{
       const v=STORICO[mk]?.[s.id]?.[c.id]?.[meseKpi];const sv=sem(v,c[kd.tw]);const p=pct(v,c[kd.tw]);
-      html+=`<td class="${sv}">${kd.fmt(v)}${p?`<br><small style="opacity:.5;font-size:9px">${p}</small>`:''}  </td>`;
+      html+=`<td class="${sv}">${kd.fmt(v)}${p?`<br><small style="opacity:.5;font-size:9px">${p}</small>`:''}</td>`;
     });
     html+=`<td class="${sf}" style="font-weight:800">${kd.fmt(tot[meseKpi])}</td>
       <td style="color:var(--text2)">${kd.fmt(tm)}</td>
       <td class="${sf}">${pct(tot[meseKpi],tm)||'–'}</td></tr>`;
   }
-
   let totAll=null,tgTot=0;const sums={};
   for(const sid of['S1','S2','S3','S4']){
     let sv=null;
     m.collaboratori.forEach(c=>{const v=STORICO[mk]?.[sid]?.[c.id]?.[meseKpi];if(v!==null&&v!==undefined)sv=(sv||0)+v;});
     sums[sid]=sv;
   }
-  m.collaboratori.forEach(c=>{const t=getTot(mk,c.id);if(t[meseKpi]!==null)totAll=(totAll||0)+t[meseKpi];tgTot+=c[kd.tm]||0;});
-
+  m.collaboratori.forEach(c=>{const t=getTot(mk,c.id);if(t[meseKpi]!==null)totAll=(totAll||0)+t[meseKpi];if(c[kd.tm])tgTot+=c[kd.tm];});
   html+=`<tr class="tot-row"><td>TOTALE SALONE</td>`;
   m.settimane.forEach(s=>html+=`<td>${kd.fmt(sums[s.id])}</td>`);
   const sf2=sem(totAll,tgTot);
@@ -571,12 +999,10 @@ function renderMese(){
 let stMk=getMk(),stKpi='fat';
 function renderStorico(){
   const keys=Object.keys(STORICO).sort().reverse();
-  if(!keys.length){document.getElementById('pane-storico').innerHTML='<p class="no-data">Nessuno storico disponibile. Verrà popolato automaticamente ogni mese.</p>';return;}
+  if(!keys.length){document.getElementById('pane-storico').innerHTML='<p class="no-data">Nessuno storico disponibile.</p>';return;}
   const kd=KD.find(k=>k.k===stKpi)||KD[0];
   const icons={fat:'💰',pre:'👥',ret:'🛍️',rit:'🔄',nuovi:'✨',rich:'📞'};
-
-  let html=`<div class="msel-wrap">
-    <select onchange="stMk=this.value;renderStorico()">`;
+  let html=`<div class="msel-wrap"><select onchange="stMk=this.value;renderStorico()">`;
   keys.forEach(mk=>{
     const lbl=MESI[mk]?.label||mk;const cl=STORICO[mk]?.chiuso?' ✅':'';
     html+=`<option value="${mk}"${mk===stMk?' selected':''}>${lbl}${cl}</option>`;
@@ -586,34 +1012,27 @@ function renderStorico(){
   html+=`</div><div class="kpi-sel">`;
   KD.forEach(k=>html+=`<button class="kbtn${k.k===stKpi?' active':''}" onclick="stKpi='${k.k}';renderStorico()">${icons[k.k]} ${k.lbl}</button>`);
   html+=`</div>`;
-
   const m=MESI[stMk];const st=STORICO[stMk];
   if(!m||!st){html+='<p class="no-data">Dati non disponibili.</p>';document.getElementById('pane-storico').innerHTML=html;return;}
-
   html+=`<div class="tbl-wrap"><table><thead><tr><th>Collaboratore</th>`;
   m.settimane.forEach(s=>html+=`<th>${s.label}</th>`);
   html+=`<th>TOT</th><th>TARGET</th><th>%</th></tr></thead><tbody>`;
-
   for(const c of m.collaboratori){
     const color=rc(c.ruolo);const tm=c[kd.tm];const tot=getTot(stMk,c.id);const sf=sem(tot[stKpi],tm);
+    if(tm===null||tm===undefined)continue;
     html+=`<tr><td><span style="color:${color};font-weight:800">${c.nome}</span></td>`;
-    m.settimane.forEach(s=>{
-      const v=st?.[s.id]?.[c.id]?.[stKpi];
-      html+=`<td class="${sem(v,c[kd.tw])}">${kd.fmt(v)}</td>`;
-    });
+    m.settimane.forEach(s=>{const v=st?.[s.id]?.[c.id]?.[stKpi];html+=`<td class="${sem(v,c[kd.tw])}">${kd.fmt(v)}</td>`;});
     html+=`<td class="${sf}" style="font-weight:800">${kd.fmt(tot[stKpi])}</td>
       <td style="color:var(--text2)">${kd.fmt(tm)}</td>
       <td class="${sf}">${pct(tot[stKpi],tm)||'–'}</td></tr>`;
   }
-
   let totAll=null,tgTot=0;const sums={};
   for(const sid of['S1','S2','S3','S4']){
     let sv=null;
     m.collaboratori.forEach(c=>{const v=st?.[sid]?.[c.id]?.[stKpi];if(v!==null&&v!==undefined)sv=(sv||0)+v;});
     sums[sid]=sv;
   }
-  m.collaboratori.forEach(c=>{const t=getTot(stMk,c.id);if(t[stKpi]!==null)totAll=(totAll||0)+t[stKpi];tgTot+=c[kd.tm]||0;});
-
+  m.collaboratori.forEach(c=>{const t=getTot(stMk,c.id);if(t[stKpi]!==null)totAll=(totAll||0)+t[stKpi];if(c[kd.tm])tgTot+=c[kd.tm];});
   html+=`<tr class="tot-row"><td>TOTALE SALONE</td>`;
   m.settimane.forEach(s=>html+=`<td>${kd.fmt(sums[s.id])}</td>`);
   const sf3=sem(totAll,tgTot);
@@ -625,9 +1044,8 @@ function renderStorico(){
 // ╔══════════════════════════════════════════════════════════════╗
 // ║  CONFRONTA                                                   ║
 // ╚══════════════════════════════════════════════════════════════╝
-let cmpA=null;
+let cmpA=null,cmpB=null;
 const SCcol={g:'#15803d',a:'#b45309',r:'#b91c1c',n:'#c8c3bb'};
-
 function showComparePicker(){
   const mk=getMk();const m=MESI[mk];if(!m)return;
   document.getElementById('cpicker-list').innerHTML=m.collaboratori.map(c=>`
@@ -638,12 +1056,11 @@ function showComparePicker(){
   document.getElementById('cpicker').style.display='flex';
 }
 function closeComparePicker(){document.getElementById('cpicker').style.display='none';}
-
 function startCompare(idA,mk){
   closeComparePicker();
   const m=MESI[mk];if(!m)return;
-  const remaining=m.collaboratori.filter(c=>c.id!==idA);
   cmpA=m.collaboratori.find(c=>c.id===idA);
+  const remaining=m.collaboratori.filter(c=>c.id!==idA);
   document.getElementById('cpicker-list').innerHTML=`<p style="font-size:12px;color:var(--text2);margin-bottom:10px">Confronta <strong>${cmpA.nome}</strong> con:</p>`+
     remaining.map(c=>`
     <div class="cpicker-item" onclick="renderCompare('${idA}','${c.id}','${mk}')">
@@ -652,14 +1069,12 @@ function startCompare(idA,mk){
     </div>`).join('');
   document.getElementById('cpicker').style.display='flex';
 }
-
 function renderCompare(idA,idB,mk){
   closeComparePicker();
   const m=MESI[mk];if(!m)return;
   const a=m.collaboratori.find(c=>c.id===idA);
   const b=m.collaboratori.find(c=>c.id===idB);
   const totA=getTot(mk,idA),totB=getTot(mk,idB);
-
   function row(lbl,aA,aT,bA,bT,fmt){
     const aPct=aA!==null&&aT?Math.round((aA/aT)*100):null;
     const bPct=bA!==null&&bT?Math.round((bA/bT)*100):null;
@@ -687,7 +1102,6 @@ function renderCompare(idA,idB,mk){
       ${winner?`<div class="cmp-winner">✦ ${winner} in vantaggio</div>`:''}
     </div>`;
   }
-
   let html=`<div class="cmp-hdr">
     <div class="cmp-av" style="background:${rc(a.ruolo)}18;color:${rc(a.ruolo)}">${ini(a.nome)}</div>
     <div><div class="cmp-name">${a.nome}</div><div class="cmp-role">${a.ruolo}</div></div>
@@ -697,7 +1111,6 @@ function renderCompare(idA,idB,mk){
   </div>
   <div class="cmp-grid">
     <p style="font-size:11px;color:var(--text2);margin-bottom:0">Confronto cumulato ${MESI[mk]?.label||mk}</p>`;
-
   html+=row('💰 Fatturato',totA.fat,a.fat_tm,totB.fat,b.fat_tm,eur);
   html+=row('👥 Presenze',totA.pre,a.pre_tm,totB.pre,b.pre_tm,num);
   html+=row('🔄 Ritorni',totA.rit,a.rit_tm,totB.rit,b.rit_tm,num);
@@ -705,7 +1118,6 @@ function renderCompare(idA,idB,mk){
   html+=row('🛍️ Retail',totA.ret,a.ret_tm,totB.ret,b.ret_tm,num);
   html+=row('📞 Richiami',totA.rich,a.rich_tm,totB.rich,b.rich_tm,num);
   html+=`</div>`;
-
   document.getElementById('cmp-wrap').innerHTML=html;
   document.getElementById('view-cmp').style.display='block';
   document.getElementById('tabs-nav').style.display='none';
@@ -714,7 +1126,6 @@ function renderCompare(idA,idB,mk){
   document.getElementById('nav-label').textContent='Confronto';
   window.scrollTo(0,0);
 }
-
 function closeCompare(){
   document.getElementById('view-cmp').style.display='none';
   document.getElementById('tabs-nav').style.display='flex';
