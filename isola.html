@@ -86,7 +86,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Segoe UI',sa
 .kc{background:var(--bg2);border-radius:9px;padding:8px 5px;text-align:center}
 .kl{font-size:9px;text-transform:uppercase;letter-spacing:.5px;color:var(--text2);margin-bottom:3px}
 .kv{font-size:14px;font-weight:800}
-.kt{font-size:9px;color:var(--text2);margin-top:2px}
+.kt{font-size:11px;color:var(--text);margin-top:3px;font-weight:700;opacity:.65}
 .kp{font-size:9px;opacity:.6;margin-left:1px}
 .dot{width:6px;height:6px;border-radius:50%;display:inline-block;margin-right:2px;vertical-align:middle}
 
@@ -402,7 +402,7 @@ const MESI = {
 const STORICO = {
   "2026-05": {
     "chiuso": false,
-    "ultimo_aggiornamento": "2 mag 2026 · 03/05/2026",
+    "ultimo_aggiornamento": "2 mag 2026",
     "S1": {
       "stefano": {
         "fat": 429,
@@ -596,13 +596,37 @@ function pct(a,t){if(a===null||!t)return'';return Math.round((a/t)*100)+'%'}
 function pctVal(v){if(v===null||v===undefined)return'–';return v.toFixed(1)+'%'}
 function semSat(v){if(v===null||v===undefined)return'n';if(v>=70)return'g';if(v>=60)return'a';return'r';}
 function semKpi(k,av,tv){return k==='sat'?semSat(av):sem(av,tv);}
+function getPaceRatio(sw){
+  if(!sw)return 1;
+  const today=new Date();today.setHours(12,0,0,0);
+  const da=new Date(sw.da);da.setHours(0,0,0,0);
+  const a=new Date(sw.a);a.setHours(23,59,59,0);
+  if(today>a)return 1;
+  if(today<da)return 0;
+  let total=0,elapsed=0;
+  const cur=new Date(da);
+  while(cur<=a){
+    const wd=cur.getDay();
+    if(wd!==0&&wd!==1){total++;if(cur<=today)elapsed++;}
+    cur.setDate(cur.getDate()+1);
+  }
+  return total>0?Math.min(elapsed/total,1):1;
+}
+function semPace(k,av,tv,pace){
+  if(k==='sat')return semSat(av);
+  return sem(av,tv!==null&&tv!==undefined?tv*Math.max(pace,0.01):tv);
+}
+function pctPace(av,tv,pace){
+  if(av===null||av===undefined||!tv||pace===0)return'';
+  return'('+Math.round((av/(tv*pace))*100)+'%)';
+}
 const KD=[
   {k:'fat',  lbl:'Fatturato', tw:'fat_tw',   tm:'fat_tm',   fmt:eur,    sum:true},
   {k:'pre',  lbl:'Presenze',  tw:'pre_tw',   tm:'pre_tm',   fmt:num,    sum:true},
   {k:'ret',  lbl:'Retail',    tw:'ret_tw',   tm:'ret_tm',   fmt:num,    sum:true},
   {k:'rit',  lbl:'Ritorni',   tw:'rit_tw',   tm:'rit_tm',   fmt:num,    sum:true},
   {k:'nuovi',lbl:'Nuovi',     tw:'nuovi_tw', tm:'nuovi_tm', fmt:num,    sum:true},
-  {k:'rich', lbl:'Richiami',  tw:'rich_tw',  tm:'rich_tm',  fmt:num,    sum:true},
+  {k:'rich', lbl:'Preferenze',tw:'rich_tw',  tm:'rich_tm',  fmt:num,    sum:true},
   {k:'sat',  lbl:'Saturaz.',  tw:'sat_tw',   tm:'sat_tm',   fmt:pctVal, sum:false}
 ];
 function getTot(mk,cid){
@@ -645,15 +669,15 @@ function renderServizi(servizi, color){
   const totR=servizi.reduce((a,x)=>a+(x.ricavi||0),0);
   const maxQ=Math.max(...servizi.map(x=>x.qta||0));
   const catInfo=[
-    {key:'punta',icon:'⭐',lbl:'Servizi di Punta',desc:'Alto valore o alta frequenza'},
-    {key:'medi', icon:'💼',lbl:'Servizi Regolari', desc:'Frequenza media'},
-    {key:'rari', icon:'🔍',lbl:'Servizi Rari',     desc:'Eseguiti raramente'}
+    {key:'punta',icon:'⭐',lbl:'Servizi di Punta', desc:'Alto valore o alta frequenza',color:'#a67318'},
+    {key:'medi', icon:'💼',lbl:'Servizi Regolari', desc:'Frequenza media',             color:'#0369a1'},
+    {key:'rari', icon:'🔍',lbl:'Servizi Rari',     desc:'Eseguiti raramente',           color:'#7c3aed'}
   ];
   let html='';
   for(const cat of catInfo){
     const items=cats[cat.key];
     if(!items.length)continue;
-    html+=`<div class="serv-cat"><div class="serv-cat-lbl"><span>${cat.icon}</span>${cat.lbl}<span style="font-weight:400;opacity:.55;margin-left:4px;text-transform:none;letter-spacing:0">— ${cat.desc}</span></div>`;
+    html+=`<div class="serv-cat"><div class="serv-cat-lbl" style="font-size:12px;font-weight:800;color:${cat.color};background:${cat.color}18;border-left:3px solid ${cat.color};padding:6px 10px;border-radius:6px;margin-bottom:8px"><span>${cat.icon}</span> ${cat.lbl}<span style="font-weight:500;opacity:.6;margin-left:6px;text-transform:none;letter-spacing:0;font-size:10px">— ${cat.desc}</span></div>`;
     for(const s of items){
       const pctR=totR>0?Math.round((s.ricavi/totR)*100):0;
       const barW=maxQ>0?Math.round((s.qta/maxQ)*100):0;
@@ -662,7 +686,7 @@ function renderServizi(servizi, color){
           <span class="serv-nome">${s.nome}</span>
           <span class="serv-meta">€${s.ricavi.toLocaleString('it-IT')} · ${pctR}% del fatturato</span>
         </div>
-        <div class="serv-bar-wrap"><div class="serv-bar-fill" style="width:${barW}%;background:${color}"></div></div>
+        <div class="serv-bar-wrap"><div class="serv-bar-fill" style="width:${barW}%;background:${cat.color}"></div></div>
         <span class="serv-qty">${s.qta}×</span>
       </div>`;
     }
@@ -673,49 +697,52 @@ function renderServizi(servizi, color){
 
 // Genera suggerimenti AI personalizzati
 function genSuggerimenti(c, d, servizi){
-  const noData=d.fat===null&&d.pre===null;
-  if(noData)return[{icon:'⏳',cls:'sugg-card-ok',title:'In attesa di dati',text:'Inserisci i dati di questa settimana per ricevere suggerimenti personalizzati basati sui tuoi KPI e sul profilo dei servizi.'}];
+  if(d.fat===null&&d.pre===null&&d.serv===null&&d.fiche===null)
+    return[{icon:'⏳',cls:'sugg-card-ok',title:'In attesa di dati',text:'Inserisci i dati di questa settimana per ricevere suggerimenti personalizzati.'}];
 
   const suggs=[];
-  // Fatturato
-  if(d.fat!==null&&c.fat_tw>0){
-    const p=d.fat/c.fat_tw;
-    if(p<0.8){
-      const gap=Math.round(c.fat_tw-d.fat);
-      let txt=`Mancano €${gap.toLocaleString('it-IT')} al target settimanale. `;
-      if(servizi&&servizi.length){
-        const punta=servizi.filter(s=>categorizaServizio(s,servizi)==='punta');
-        if(punta.length)txt+=`Punta su "${punta[0].nome}" — il tuo servizio di punta per valore. Proponi un servizio aggiuntivo ad ogni appuntamento.`;
-        else txt+='Aumenta il valore medio del ticket proponendo un trattamento complementare ad ogni cliente.';
-      } else txt+='Proponi un trattamento aggiuntivo (es. maschera, trattamento colore) per aumentare il valore medio per cliente.';
-      suggs.push({icon:'💰',cls:'sugg-card-fat',title:'Fatturato sotto target',text:txt});
-    }
+
+  // 1. Serv/Cliente sotto target (priorità alta)
+  if(d.serv!==null&&d.serv!==undefined&&c.serv_t>0&&d.serv<c.serv_t){
+    const gap=(c.serv_t-d.serv).toFixed(1);
+    suggs.push({icon:'➕',cls:'sugg-card-fat',title:'Aumenta i servizi per cliente',
+      text:`Media attuale ${d.serv.toFixed(1)} vs target ${c.serv_t}. Proponi almeno 1 servizio aggiuntivo per ogni cliente: un trattamento, un finish, una cura specifica. Anche +${gap} serv/cliente fa la differenza sul ticket finale.`});
   }
-  // Retail
-  if(d.ret!==null&&c.ret_tw>0&&d.ret/c.ret_tw<0.5)
-    suggs.push({icon:'🛍️',cls:'sugg-card-retail',title:'Retail: alza il ritmo',text:'Meno della metà dei target retail raggiunti. Dopo ogni servizio, consiglia almeno 1 prodotto specifico per il tipo di capello/trattamento. La chiave è la personalizzazione.'});
-  // Richiami
-  if(d.rich!==null&&c.rich_tw>0&&d.rich/c.rich_tw<0.7){
-    const mancano=Math.max(0,Math.ceil(c.rich_tw-(d.rich||0)));
-    suggs.push({icon:'📞',cls:'sugg-card-rich',title:'Aumenta i richiami',text:`Ancora ${mancano} richiami al target. Prima di salutare ogni cliente, fissa già la data del prossimo appuntamento: aumenta fedeltà e fatturato prevedibile.`});
+
+  // 2. Fiche media sotto target (priorità alta)
+  if(suggs.length<2&&d.fiche!==null&&d.fiche!==undefined&&c.fiche_t>0&&d.fiche<c.fiche_t){
+    const gap=Math.round(c.fiche_t-d.fiche);
+    let txt=`Ticket medio €${d.fiche.toFixed(2)} vs target €${c.fiche_t}. `;
+    if(servizi&&servizi.length){
+      const prem=servizi.filter(s=>s.qta>0&&(s.ricavi/s.qta)>=(c.fiche_t||0)).sort((a,b)=>(b.ricavi/b.qta)-(a.ricavi/a.qta));
+      if(prem.length)txt+=`Valorizza "${prem[0].nome}" e proponi upgrade: ogni €${gap} in più per cliente chiude il gap.`;
+      else txt+=`Proponi trattamenti ad alto valore — ogni €${gap} in più per cliente chiude il gap.`;
+    } else txt+=`Proponi upgrade e trattamenti ad alto valore — ogni €${gap} in più per cliente chiude il gap.`;
+    suggs.push({icon:'💎',cls:'sugg-card-fat',title:'Alza il ticket medio',text:txt});
   }
-  // Nuovi
-  if(d.nuovi!==null&&c.nuovi_tw>0&&d.nuovi/c.nuovi_tw<0.6)
-    suggs.push({icon:'✨',cls:'sugg-card-nuovi',title:'Attira nuovi clienti',text:`Solo ${d.nuovi||0} nuovi su ${c.nuovi_tw} obiettivo. Chiedi ai clienti soddisfatti di portare un amico o di lasciare una recensione su Google Maps — il passaparola resta il canale più efficace.`});
-  // Ritorni
-  if(d.rit!==null&&c.rit_tw>0&&d.rit/c.rit_tw<0.7)
-    suggs.push({icon:'🔄',cls:'sugg-card-fat',title:'Fidelizzazione clienti',text:'I ritorni sono sotto soglia. Crea un momento di follow-up: un messaggio di ringraziamento entro 48h dopo il servizio rafforza il legame e aumenta la probabilità di ritorno.'});
-  // Formazione da profilo servizi
-  if(servizi&&servizi.length){
-    const rari=servizi.filter(s=>categorizaServizio(s,servizi)==='rari');
-    if(rari.length>0&&rari.length<=4){
-      const nomi=rari.slice(0,2).map(s=>`"${s.nome}"`).join(', ');
-      suggs.push({icon:'📚',cls:'sugg-card-form',title:'Opportunità di formazione',text:`${nomi} ${rari.length===1?'è un servizio che esegui raramente':'sono servizi che esegui raramente'}. Valuta se promuoverli attivamente ai clienti o se approfondire la tecnica per valorizzarli meglio.`});
-    }
-  }
-  // Tutto ok
+
+  // 3. KPI secondari se c'è spazio
+  if(suggs.length<2&&d.rit!==null&&c.rit_tw>0&&d.rit/c.rit_tw<0.7)
+    suggs.push({icon:'🔄',cls:'sugg-card-fat',title:'Fidelizza i clienti',
+      text:'I ritorni sono sotto soglia. Un messaggio di ringraziamento entro 48h rafforza il legame e aumenta la probabilità di ritorno.'});
+  if(suggs.length<2&&d.rich!==null&&c.rich_tw>0&&d.rich/c.rich_tw<0.7)
+    suggs.push({icon:'⭐',cls:'sugg-card-rich',title:'Aumenta le preferenze',
+      text:`Solo ${d.rich||0} clienti ti hanno scelto specificatamente. Personalizza il servizio e crea un'esperienza riconoscibile.`});
+
+  // Se tutto ok
   if(suggs.length===0)
-    suggs.push({icon:'🌟',cls:'sugg-card-ok',title:'Ottimo lavoro!',text:'Tutti i KPI sono in linea con i target questa settimana. Mantieni il ritmo e punta a chiudere il mese in verde. Continua così!'});
+    suggs.push({icon:'🌟',cls:'sugg-card-ok',title:'KPI in linea — ottimo!',
+      text:'Serv/cliente e ticket medio sono in target. Mantieni il ritmo e punta a chiudere la settimana in verde!'});
+
+  // SEMPRE: Retail motivazionale
+  const retOk=d.ret!==null&&c.ret_tw>0&&d.ret>=c.ret_tw*0.8;
+  suggs.push({icon:'🛍️',cls:'sugg-card-retail',
+    title:retOk?'Mantieni il ritmo sui prodotti':'Spingi i prodotti',
+    text:retOk
+      ?'Ottimo sui prodotti! Continua a consigliare 1 prodotto personalizzato per ogni cliente: rafforza la fidelizzazione e aumenta il fatturato in modo naturale.'
+      :'Non vendere — consiglia. Dopo ogni servizio scegli 1 prodotto specifico per quel cliente e spiegagli perché è perfetto per lui. Un consiglio personalizzato vale più di qualsiasi promozione.'
+  });
+
   return suggs.slice(0,3);
 }
 
@@ -747,7 +774,7 @@ function stampaProfilo(cid){
   // KPI grid
   let kpiH='';
   for(const kpi of KD){
-    const av=d[kpi.k],tv=c[kpi.tw],s=semKpi(kpi.k,av,tv),p=kpi.k==='sat'?'':pct(av,tv);
+    const av=d[kpi.k],tv=c[kpi.tw],s=semPace(kpi.k,av,tv,getPaceRatio(sw)),p=kpi.k==='sat'?'':pctPace(av,tv,getPaceRatio(sw));
     if(tv===null||tv===undefined)continue;
     kpiH+=`<div style="background:#eeecea;border-radius:10px;padding:10px 6px;text-align:center">
       <div style="font-size:9px;text-transform:uppercase;letter-spacing:.5px;color:#6b6055;margin-bottom:4px">${kpi.lbl}</div>
@@ -757,16 +784,17 @@ function stampaProfilo(cid){
   }
 
   // Extra (fiche + serv)
+  const sf_fi=sem(d.fiche,c.fiche_t),sf_se=sem(d.serv,c.serv_t);
   let extraH=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:6px">
     <div style="background:#fff;border:1px solid #dedad3;border-radius:10px;padding:10px;text-align:center">
       <div style="font-size:9px;text-transform:uppercase;letter-spacing:.5px;color:#6b6055;margin-bottom:4px">Ticket Medio</div>
-      <div style="font-size:15px;font-weight:800;color:#6b6055">${num(d.fiche,2)}</div>
-      <div style="font-size:9px;color:#6b6055;margin-top:2px">▸ ${num(c.fiche_t,2)}</div>
+      <div style="font-size:15px;font-weight:800;color:${SC[sf_fi]}"><span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:${SCD[sf_fi]};margin-right:3px;vertical-align:middle"></span>${num(d.fiche,2)}</div>
+      <div style="font-size:10px;font-weight:700;color:#3a3028;margin-top:2px;opacity:.75">▸ ${num(c.fiche_t,2)}</div>
     </div>
     <div style="background:#fff;border:1px solid #dedad3;border-radius:10px;padding:10px;text-align:center">
       <div style="font-size:9px;text-transform:uppercase;letter-spacing:.5px;color:#6b6055;margin-bottom:4px">Serv/Cliente</div>
-      <div style="font-size:15px;font-weight:800;color:#6b6055">${num(d.serv,1)}</div>
-      <div style="font-size:9px;color:#6b6055;margin-top:2px">▸ ${num(c.serv_t,1)}</div>
+      <div style="font-size:15px;font-weight:800;color:${SC[sf_se]}"><span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:${SCD[sf_se]};margin-right:3px;vertical-align:middle"></span>${num(d.serv,1)}</div>
+      <div style="font-size:10px;font-weight:700;color:#3a3028;margin-top:2px;opacity:.75">▸ ${num(c.serv_t,1)}</div>
     </div>
   </div>`;
 
@@ -954,6 +982,7 @@ function renderLive(){
   let html='';
   html+=`<div class="sec-lbl">📊 ${sw?.label||'Settimana'} · Semaforo vs Target</div>`;
 
+  const pace=getPaceRatio(sw);
   for(const c of m.collaboratori){
     const color=rc(c.ruolo);const d=st[c.id]||{};
     const servizi=d.servizi||null;
@@ -966,21 +995,26 @@ function renderLive(){
       </div>
       <div class="kpi-grid">`;
     for(const kpi of KD){
-      const av=d[kpi.k],tv=c[kpi.tw],s=semKpi(kpi.k,av,tv),p=kpi.k==='sat'?'':pct(av,tv);
+      const av=d[kpi.k],tv=c[kpi.tw],s=semPace(kpi.k,av,tv,pace),p=kpi.k==='sat'?'':pctPace(av,tv,pace);
       if(tv===null||tv===undefined)continue;
       html+=`<div class="kc"><div class="kl">${kpi.lbl}</div>
         <div class="kv ${s}"><span class="dot d${s}"></span>${kpi.fmt(av)}${p?`<span class="kp">${p}</span>`:''}</div>
         <div class="kt">▸ ${kpi.fmt(tv)}</div></div>`;
     }
-    html+=`</div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-top:5px">
+    html+=`</div>`;
+    {const sf=sem(d.fiche,c.fiche_t),ss=sem(d.serv,c.serv_t);
+    html+=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-top:5px">
         <div class="kc" style="background:transparent;border:1px solid var(--bord)">
-          <div class="kl">Ticket Medio</div><div class="kv n">${num(d.fiche,2)}</div><div class="kt">▸ ${num(c.fiche_t,2)}</div>
+          <div class="kl">Ticket Medio</div>
+          <div class="kv ${sf}"><span class="dot d${sf}"></span>${num(d.fiche,2)}</div>
+          <div class="kt">▸ ${num(c.fiche_t,2)}</div>
         </div>
         <div class="kc" style="background:transparent;border:1px solid var(--bord)">
-          <div class="kl">Serv/Cliente</div><div class="kv n">${num(d.serv,1)}</div><div class="kt">▸ ${num(c.serv_t,1)}</div>
+          <div class="kl">Serv/Cliente</div>
+          <div class="kv ${ss}"><span class="dot d${ss}"></span>${num(d.serv,1)}</div>
+          <div class="kt">▸ ${num(c.serv_t,1)}</div>
         </div>
-      </div>
+      </div>`;}
       <button class="expand-btn" id="btn-profilo-${c.id}" onclick="toggleProfilo('${c.id}')">▾ Profilo &amp; Suggerimenti</button>
       <div id="profilo-${c.id}" class="profilo-wrap" style="display:none">
         <button onclick="stampaProfilo('${c.id}')" style="width:100%;margin-bottom:12px;padding:9px;background:#1a1510;border:none;border-radius:9px;color:#a67318;font-size:11px;font-weight:800;cursor:pointer;font-family:inherit;letter-spacing:.5px;display:flex;align-items:center;justify-content:center;gap:6px">📄 Esporta scheda personale</button>
