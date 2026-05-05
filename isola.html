@@ -233,8 +233,20 @@ select{background:var(--card);color:var(--text);border:1px solid var(--bord2);pa
       <span class="mod-status mod-soon">In arrivo</span>
     </div>
   </div>
-  <!-- LINK COLLABORATORI -->
-  <div id="cover-links" style="padding:0 20px 16px"></div>
+  <!-- LINK COLLABORATORI (generato staticamente) -->
+  <div style="padding:0 20px 16px">
+  <div style="background:var(--card);border:1px solid var(--bord);border-radius:14px;padding:16px 16px 8px">
+    <div style="font-size:12px;font-weight:800;color:var(--gold);letter-spacing:.5px;margin-bottom:6px">📱 LINK COLLABORATORI</div>
+    <div style="font-size:11px;color:var(--text2);margin-bottom:10px">Invia su WhatsApp — ogni collaboratore vede solo i suoi dati.</div>
+    <div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--bord)">
+      <span style="flex:1;font-size:14px;font-weight:700;color:var(--text)">Stefano</span>
+      <button onclick="navigator.clipboard.writeText('https://mihimilano.github.io/mihi-kpi/isola.html?c=stefano');this.textContent='✅ Copiato!';setTimeout(()=>this.textContent='📋 Copia link',2000)" style="background:var(--card);border:1px solid var(--bord);border-radius:10px;padding:8px 14px;font-size:12px;font-weight:700;color:var(--gold);cursor:pointer;font-family:inherit;white-space:nowrap">📋 Copia link</button>
+    </div><div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--bord)">
+      <span style="flex:1;font-size:14px;font-weight:700;color:var(--text)">Simona</span>
+      <button onclick="navigator.clipboard.writeText('https://mihimilano.github.io/mihi-kpi/isola.html?c=simona');this.textContent='✅ Copiato!';setTimeout(()=>this.textContent='📋 Copia link',2000)" style="background:var(--card);border:1px solid var(--bord);border-radius:10px;padding:8px 14px;font-size:12px;font-weight:700;color:var(--gold);cursor:pointer;font-family:inherit;white-space:nowrap">📋 Copia link</button>
+    </div>
+  </div>
+</div>
 
   <div class="cover-footer"><div class="cover-footer-txt">MIHI Milano · Uso interno riservato</div></div>
 </div>
@@ -1485,28 +1497,6 @@ function closeCompare(){
 // ╚══════════════════════════════════════════════════════════════╝
 const ua=STORICO[getMk()]?.ultimo_aggiornamento;
 document.getElementById('cover-update').textContent=ua?`Aggiornato: ${ua}`:'';
-
-// Popola link collaboratori nella cover (solo in modalità manager)
-(function(){
-  if(getUrlCollab())return;
-  const mk=getMk();const m=MESI[mk];if(!m)return;
-  const baseUrl=window.location.origin+window.location.pathname;
-  let rows='';
-  for(const c of m.collaboratori){
-    const link=baseUrl+'?c='+c.id;
-    rows+=`<div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--bord)">
-      <span style="flex:1;font-size:14px;font-weight:700;color:var(--text)">${c.nome}</span>
-      <button onclick="navigator.clipboard.writeText('${link}');this.textContent='✅ Copiato!';setTimeout(()=>this.textContent='📋 Copia link',2000)"
-        style="background:var(--card);border:1px solid var(--bord);border-radius:10px;padding:8px 14px;font-size:12px;font-weight:700;color:var(--gold);cursor:pointer;font-family:inherit;white-space:nowrap">📋 Copia link</button>
-    </div>`;
-  }
-  document.getElementById('cover-links').innerHTML=`
-    <div style="background:var(--card);border:1px solid var(--bord);border-radius:14px;padding:16px 16px 4px;margin-top:4px">
-      <div style="font-size:12px;font-weight:800;color:var(--gold);letter-spacing:.5px;margin-bottom:12px">📱 LINK COLLABORATORI</div>
-      <div style="font-size:11px;color:var(--text2);margin-bottom:12px">Invia il link WhatsApp — ogni collaboratore vede solo i suoi dati.</div>
-      ${rows}
-    </div>`;
-})();
 
 // Auto-login per collaboratore se ?c= presente
 (function(){
