@@ -342,6 +342,17 @@ select{background:var(--card);color:var(--text);border:1px solid var(--bord2);pa
 </div>
 
 <script>
+// MODALITÀ COLLABORATORE — eseguito prima di tutto il resto
+(function(){
+  var c=new URLSearchParams(location.search).get('c');
+  if(!c)return;
+  var st=document.createElement('style');
+  st.textContent='#view-cover{display:none!important}#view-app{display:block!important}#tabs-nav,#sumbar,.hdr-btns,.nav-bc{display:none!important}#pane-live{display:block!important}';
+  document.head.appendChild(st);
+})();
+</script>
+
+<script>
 // ╔══════════════════════════════════════════════════════════════╗
 // ║  SEZIONE 1 — TARGET MENSILI                                  ║
 // ║  Aggiornare all'inizio di ogni mese                         ║
