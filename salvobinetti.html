@@ -1561,19 +1561,19 @@ function renderLive(){
   }
   if(!urlCollab){
     const baseUrl=window.location.origin+window.location.pathname;
-    let linkH=`<div class="sec-lbl" style="margin-top:18px">📱 Link collaboratori</div>
-      <div style="background:var(--card);border-radius:14px;padding:12px 14px;margin-bottom:8px">
-        <div style="font-size:11px;color:var(--text2);margin-bottom:10px;line-height:1.5">Invia il link su WhatsApp — ogni collaboratore vede solo i suoi dati, sempre aggiornati.</div>`;
+    let rows='';
     for(const c of m.collaboratori){
       const link=`${baseUrl}?c=${c.id}`;
-      linkH+=`<div style="display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--bord)">
-        <span style="flex:1;font-size:13px;font-weight:700">${c.nome}</span>
-        <button onclick="navigator.clipboard.writeText('${link}');this.textContent='✅ Copiato!';setTimeout(()=>this.textContent='📋 Copia',2000)"
-          style="padding:6px 12px;background:var(--bg2);border:1px solid var(--bord);border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap">📋 Copia link</button>
+      rows+=`<div style="display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--bord)">
+        <span style="flex:1;font-size:14px;font-weight:700">${c.nome}</span>
+        <button onclick="navigator.clipboard.writeText('${link}');this.textContent='✅';setTimeout(()=>this.textContent='📋',1800)"
+          style="width:36px;height:36px;background:var(--bg2);border:1px solid var(--bord);border-radius:10px;font-size:16px;cursor:pointer;font-family:inherit">📋</button>
       </div>`;
     }
-    linkH+=`</div>`;
-    html+=linkH;
+    document.getElementById('modal-links-body').innerHTML=`
+      <div style="font-size:11px;color:var(--text2);margin-bottom:12px">Ogni collaboratore vede solo i suoi dati, sempre aggiornati.</div>
+      ${rows}`;
+    document.getElementById('fab-links').style.display='flex';
   }
   document.getElementById('pane-live').innerHTML=html;
 }
