@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Dashboard · MIHI</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#0d0d0d;color:#f5f0e8;min-height:100vh}
+.loading{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;gap:16px}
+.loading .logo{font-size:14px;font-weight:800;letter-spacing:3px;color:#a67318}
+.loading .msg{font-size:14px;color:#8a7a60}
+.spinner{width:32px;height:32px;border:3px solid #2a2218;border-top:3px solid #a67318;border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.hdr{background:#1a1510;border-bottom:1px solid #2a2218;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:10}
+.hdr-logo{font-size:12px;font-weight:800;letter-spacing:2px;color:#a67318}
+.hdr-info{font-size:11px;color:#8a7a60;text-align:right}
+.content{padding:16px;max-width:540px;margin:0 auto}
+.welcome{background:linear-gradient(135deg,#a6731820,#a6731808);border:1px solid #a6731840;border-radius:16px;padding:18px;margin-bottom:16px;text-align:center}
+.welcome-name{font-size:22px;font-weight:800;color:#a67318;margin-bottom:4px}
+.welcome-sub{font-size:13px;color:#8a7a60}
+.week-label{background:#a6731820;border:1px solid #a6731840;border-radius:10px;padding:6px 14px;font-size:12px;font-weight:700;color:#a67318;display:inline-block;margin-bottom:16px}
+.kpi-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.kpi-card{background:#1a1510;border:1px solid #2a2218;border-radius:14px;padding:14px}
+.kpi-label{font-size:10px;font-weight:700;color:#8a7a60;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
+.kpi-value{font-size:24px;font-weight:800;color:#f5f0e8}
+.kpi-target{font-size:11px;color:#8a7a60;margin-top:2px}
+.kpi-bar{height:4px;background:#2a2218;border-radius:2px;margin-top:8px;overflow:hidden}
+.kpi-bar-fill{height:100%;border-radius:2px}
+.g{color:#22c55e}.y{color:#f59e0b}.r{color:#ef4444}
+.bg{background:#22c55e}.by{background:#f59e0b}.br{background:#ef4444}
+.no-data{color:#8a7a60;font-size:13px;font-style:italic;margin-top:6px}
+.error-box{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;gap:12px;padding:24px;text-align:center}
+.error-box h2{color:#ef4444;font-size:18px}
+.error-box p{color:#8a7a60;font-size:14px;line-height:1.6}
+</style>
+</head>
+<body>
+<div class="loading" id="loading">
+  <div class="logo">MIHI</div>
+  <div class="spinner"></div>
+  <div class="msg">Caricamento...</div>
+</div>
+<div id="app" style="display:none"></div>
+<script>
+const SALONI_CFG=[{"salone": "nolo", "nome_salone": "Mihi Nolo", "collaboratori": [{"id": "gloria", "nome": "Gloria"}, {"id": "kenny", "nome": "Kenny"}, {"id": "carolina", "nome": "Carolina"}, {"id": "valeria", "nome": "Valeria"}, {"id": "mattia", "nome": "Mattia"}, {"id": "nicola", "nome": "Nicola"}, {"id": "mariangela", "nome": "Mariangela"}, {"id": "katia_t", "nome": "Katia T."}, {"id": "katia_b", "nome": "Katia B."}]}, {"salone": "rembrandt47", "nome_salone": "Mihi Rembrandt", "collaboratori": [{"id": "simona_balzano", "nome": "Simona B."}, {"id": "debora", "nome": "Debora"}, {"id": "romina", "nome": "Romina"}, {"id": "alex", "nome": "Alex"}, {"id": "simona_cecilia", "nome": "Simona C."}, {"id": "helin", "nome": "Helin"}]}, {"salone": "isola", "nome_salone": "Mihi Isola", "collaboratori": [{"id": "stefano", "nome": "Stefano"}, {"id": "simona", "nome": "Simona"}]}, {"salone": "salvobinetti", "nome_salone": "Salvo Binetti", "collaboratori": [{"id": "salvo", "nome": "Salvo"}, {"id": "valeria", "nome": "Valeria"}, {"id": "roberta", "nome": "Roberta"}]}];
+const BASE='https://mihimilano.github.io/mihi-kpi/';
+
+function params(){const p=new URLSearchParams(window.location.search);return{s:p.get('s'),c:p.get('c')};}
+function getMk(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');}
+function eur(v){return v==null?'—':'€'+Number(v).toLocaleString('it-IT',{maximumFractionDigits:0});}
+function sem(p){return p==null?'y':p>=85?'g':p>=60?'y':'r';}
+
+function showError(msg){
+  document.getElementById('loading').style.display='none';
+  const app=document.getElementById('app');app.style.display='block';
+  app.innerHTML='<div class="error-box"><h2>⚠️</h2><p>'+msg+'</p></div>';
+}
+
+function extractJson(text, varName){
+  // Trova "const VARNAME = " e poi bilanciamo le parentesi graffe
+  const start = text.indexOf('const '+varName+' = {');
+  if(start===-1) return null;
+  const from = text.indexOf('{', start);
+  let depth=0, i=from;
+  for(;i<text.length;i++){
+    if(text[i]==='{')depth++;
+    else if(text[i]==='}'){depth--;if(depth===0)break;}
+  }
+  try{return JSON.parse(text.slice(from,i+1));}catch(e){return null;}
+}
+
+async function init(){
+  const {s,c}=params();
+  if(!s||!c){showError('Link non valido. Contatta il tuo responsabile.');return;}
+  const salone=SALONI_CFG.find(x=>x.salone===s);
+  if(!salone){showError('Salone non riconosciuto.');return;}
+  const collab=salone.collaboratori.find(x=>x.id===c);
+  if(!collab){showError('Collaboratore non riconosciuto.');return;}
+
+  let text;
+  try{
+    const res=await fetch(BASE+s+'.html?t='+Date.now(),{cache:'no-store'});
+    text=await res.text();
+  }catch(e){showError('Errore di rete: '+e.message);return;}
+
+  const mesi=extractJson(text,'MESI');
+  const storico=extractJson(text,'STORICO');
+  if(!mesi){showError('Dati non disponibili. Riprova tra qualche minuto.');return;}
+
+  const mk=getMk();
+  const m=mesi[mk];
+  if(!m){showError('Nessun dato per il mese corrente.');return;}
+
+  const oggi=new Date();oggi.setHours(12);
+  let sw=m.settimane[m.settimane.length-1];
+  for(const s2 of m.settimane){
+    if(oggi>=new Date(s2.da)&&oggi<=new Date(s2.a)){sw=s2;break;}
+  }
+
+  const cd=m.collaboratori?.find(x=>x.id===c)||{};
+  const st=(storico||{})[mk]?.[sw.id]?.[c]||{};
+
+  const KPIS=[
+    {icon:'💰',label:'Fatturato',val:st.fat,target:cd.fat_tw,fmt:eur},
+    {icon:'👥',label:'Presenze',val:st.pre,target:cd.pre_tw,fmt:v=>v??'—'},
+    {icon:'🔄',label:'Rifissazioni',val:st.rit,target:cd.rit_tw,fmt:v=>v??'—'},
+    {icon:'🛍️',label:'Vendite',val:st.ret,target:cd.ret_tw,fmt:v=>v??'—'},
+    {icon:'✨',label:'Nuovi clienti',val:st.nuovi,target:cd.nuovi_tw,fmt:v=>v??'—'},
+    {icon:'📅',label:'Saturazione',val:st.sat,target:cd.sat_tw,fmt:v=>v!=null?v+'%':'—'},
+  ];
+
+  let cards='';
+  for(const k of KPIS){
+    const p=k.val!=null&&k.target?Math.min(Math.round(k.val/k.target*100),150):null;
+    const s2=sem(p);
+    const tLabel=p!=null?p+'% del target':'Target: '+(k.target??'—');
+    cards+=`<div class="kpi-card">
+      <div class="kpi-label">${k.icon} ${k.label}</div>
+      <div class="kpi-value ${s2}">${k.fmt(k.val)}</div>
+      <div class="kpi-target">${tLabel}</div>
+      <div class="kpi-bar"><div class="kpi-bar-fill b${s2}" style="width:${Math.min(p||0,100)}%"></div></div>
+    </div>`;
+  }
+
+  document.getElementById('loading').style.display='none';
+  const app=document.getElementById('app');app.style.display='block';
+  app.innerHTML=`
+    <div class="hdr">
+      <div class="hdr-logo">MIHI</div>
+      <div class="hdr-info">${salone.nome_salone}<br>${m.label}</div>
+    </div>
+    <div class="content">
+      <div class="welcome">
+        <div class="welcome-name">Ciao, ${collab.nome}! 👋</div>
+        <div class="welcome-sub">I tuoi KPI di questa settimana</div>
+      </div>
+      <div class="week-label">📅 ${sw.label}</div>
+      <div class="kpi-grid">${cards}</div>
+    </div>`;
+}
+init();
+</script>
+</body>
+</html>
