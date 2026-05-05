@@ -956,9 +956,9 @@ function pctPace(av,tv,pace){
 }
 const KD=[
   {k:'fat',  lbl:'Fatturato', tw:'fat_tw',   tm:'fat_tm',   fmt:eur,    sum:true},
-  {k:'pre',  lbl:'Presenze',  tw:'pre_tw',   tm:'pre_tm',   fmt:num,    sum:true},
+  {k:'pre',  lbl:'Clienti fatti',  tw:'pre_tw',   tm:'pre_tm',   fmt:num,    sum:true},
   {k:'ret',  lbl:'Retail',    tw:'ret_tw',   tm:'ret_tm',   fmt:num,    sum:true},
-  {k:'rit',  lbl:'Ritorni',   tw:'rit_tw',   tm:'rit_tm',   fmt:num,    sum:true},
+  {k:'rit',  lbl:'Clienti di ritorno',   tw:'rit_tw',   tm:'rit_tm',   fmt:num,    sum:true},
   {k:'nuovi',lbl:'Nuovi',     tw:'nuovi_tw', tm:'nuovi_tm', fmt:num,    sum:true},
   {k:'rich', lbl:'Preferenze',tw:'rich_tw',  tm:'rich_tm',  fmt:num,    sum:true},
   {k:'sat',  lbl:'Saturaz.',  tw:'sat_tw',   tm:'sat_tm',   fmt:pctVal, sum:false}
@@ -1067,7 +1067,7 @@ function genSuggerimenti(c, d, servizi){
   // 4. Ritorni bassi se c'è ancora spazio (solo se dato presente e sotto metà target)
   if(suggs.length<2&&d.rit!==null&&c.rit_tw>0&&d.rit/c.rit_tw<0.4)
     suggs.push({icon:'🔄',cls:'sugg-card-fat',title:'Fidelizza i clienti',
-      text:'I ritorni sono sotto soglia. Rifissa sempre l\'appuntamento in cassa prima che il cliente esca — è l\'abitudine più importante per costruire una clientela solida.'});
+      text:'I clienti di ritorno sono sotto soglia. Rifissa sempre l\'appuntamento in cassa prima che il cliente esca — è l\'abitudine più importante per costruire una clientela solida.'});
 
   // Se tutto ok
   if(suggs.length===0)
@@ -1786,8 +1786,8 @@ function renderCompare(idA,idB,mk){
   <div class="cmp-grid">
     <p style="font-size:11px;color:var(--text2);margin-bottom:0">Confronto cumulato ${MESI[mk]?.label||mk}</p>`;
   html+=row('💰 Fatturato',totA.fat,a.fat_tm,totB.fat,b.fat_tm,eur);
-  html+=row('👥 Presenze',totA.pre,a.pre_tm,totB.pre,b.pre_tm,num);
-  html+=row('🔄 Ritorni',totA.rit,a.rit_tm,totB.rit,b.rit_tm,num);
+  html+=row('👥 Clienti fatti',totA.pre,a.pre_tm,totB.pre,b.pre_tm,num);
+  html+=row('🔄 Clienti di ritorno',totA.rit,a.rit_tm,totB.rit,b.rit_tm,num);
   html+=row('✨ Nuovi Clienti',totA.nuovi,a.nuovi_tm,totB.nuovi,b.nuovi_tm,num);
   html+=row('🛍️ Retail',totA.ret,a.ret_tm,totB.ret,b.ret_tm,num);
   html+=row('📞 Richiami',totA.rich,a.rich_tm,totB.rich,b.rich_tm,num);
