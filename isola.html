@@ -312,7 +312,7 @@ select{background:var(--card);color:var(--text);border:1px solid var(--bord2);pa
 </div>
 
 <!-- FAB LINK TEAM -->
-<button id="fab-links" onclick="document.getElementById('modal-links').style.display='flex'" style="display:none;position:fixed;bottom:20px;right:20px;z-index:999;background:#1a1510;color:#a67318;border:2px solid #a67318;border-radius:50px;padding:12px 18px;font-size:13px;font-weight:800;cursor:pointer;font-family:inherit;letter-spacing:.5px;box-shadow:0 4px 16px rgba(0,0,0,.5)">📱 Link team</button>
+<button id="fab-links" onclick="openLinkModal()" style="display:flex;position:fixed;bottom:20px;right:20px;z-index:999;background:#1a1510;color:#a67318;border:2px solid #a67318;border-radius:50px;padding:12px 18px;font-size:13px;font-weight:800;cursor:pointer;font-family:inherit;letter-spacing:.5px;box-shadow:0 4px 16px rgba(0,0,0,.5);align-items:center;gap:6px">📱 Link team</button>
 <div id="modal-links" onclick="if(event.target===this)this.style.display='none'" style="display:none;position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,.6);align-items:flex-end;justify-content:center">
   <div style="background:var(--card);border-radius:20px 20px 0 0;padding:24px 20px 32px;width:100%;max-width:540px;max-height:80vh;overflow-y:auto">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
@@ -1278,23 +1278,23 @@ function renderLive(){
         }).join('')}
       </div></div>`;
   }
-  if(!urlCollab){
-    const baseUrl=window.location.origin+window.location.pathname;
-    let rows='';
-    for(const c of m.collaboratori){
-      const link=`${baseUrl}?c=${c.id}`;
-      rows+=`<div style="display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--bord)">
-        <span style="flex:1;font-size:14px;font-weight:700">${c.nome}</span>
-        <button onclick="navigator.clipboard.writeText('${link}');this.textContent='✅';setTimeout(()=>this.textContent='📋',1800)"
-          style="width:36px;height:36px;background:var(--bg2);border:1px solid var(--bord);border-radius:10px;font-size:16px;cursor:pointer;font-family:inherit">📋</button>
-      </div>`;
-    }
-    document.getElementById('modal-links-body').innerHTML=`
-      <div style="font-size:11px;color:var(--text2);margin-bottom:12px">Ogni collaboratore vede solo i suoi dati, sempre aggiornati.</div>
-      ${rows}`;
-    document.getElementById('fab-links').style.display='flex';
-  }
   document.getElementById('pane-live').innerHTML=html;
+}
+
+function openLinkModal(){
+  const mk=getMk();const m=MESI[mk];
+  if(!m)return;
+  const baseUrl=window.location.origin+window.location.pathname;
+  let rows='';
+  for(const c of m.collaboratori){
+    const link=baseUrl+'?c='+c.id;
+    rows+=`<div style="display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--bord)">
+      <span style="flex:1;font-size:14px;font-weight:700">${c.nome}</span>
+      <button onclick="navigator.clipboard.writeText('${link}');this.textContent='✅';setTimeout(()=>this.textContent='📋',1800)" style="width:36px;height:36px;background:var(--bg2);border:1px solid var(--bord);border-radius:10px;font-size:16px;cursor:pointer;font-family:inherit">📋</button>
+    </div>`;
+  }
+  document.getElementById('modal-links-body').innerHTML='<div style="font-size:11px;color:var(--text2);margin-bottom:12px">Ogni collaboratore vede solo i suoi dati, sempre aggiornati.</div>'+rows;
+  document.getElementById('modal-links').style.display='flex';
 }
 
 // ╔══════════════════════════════════════════════════════════════╗
@@ -1498,6 +1498,8 @@ document.getElementById('cover-update').textContent=ua?`Aggiornato: ${ua}`:'';
 (function(){
   const uc=getUrlCollab();
   if(!uc)return;
+  // Modalità collaboratore: nascondi il FAB link team
+  const fab=document.getElementById('fab-links');if(fab)fab.style.display='none';
   document.getElementById('view-cover').style.display='none';
   document.getElementById('view-app').style.display='block';
   document.getElementById('view-analisi').style.display='none';
