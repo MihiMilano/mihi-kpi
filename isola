@@ -1,0 +1,1534 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>MIHI · Isola · Management System</title>
+<style>
+:root{--bg:#f5f4ef;--bg2:#eeecea;--card:#fff;--card2:#f9f8f5;--bord:#dedad3;--bord2:#c8c3bb;--gold:#a67318;--text:#1a1510;--text2:#6b6055;--green:#15803d;--amber:#b45309;--red:#b91c1c;--pur:#6d28d9;--pink:#be185d}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Segoe UI',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+
+/* COVER */
+.cover{min-height:100vh;display:flex;flex-direction:column;background:var(--bg)}
+.cover-hero{background:#1a1510;padding:48px 24px 40px;text-align:center;border-bottom:1px solid #2e2820}
+.cover-logo{font-size:28px;font-weight:900;letter-spacing:6px;color:var(--gold);margin-bottom:6px}
+.cover-salon{font-size:13px;font-weight:600;letter-spacing:2px;color:#a09080;text-transform:uppercase;margin-bottom:4px}
+.cover-title{font-size:15px;font-weight:700;letter-spacing:1px;color:#c8bfb0;margin-top:12px;text-transform:uppercase}
+.cover-update{font-size:11px;color:#6b5f54;margin-top:8px}
+.cover-modules{display:flex;flex-direction:column;gap:16px;padding:32px 20px;max-width:520px;margin:0 auto;width:100%}
+.mod-card{background:var(--card);border:1px solid var(--bord);border-radius:16px;padding:24px 22px;cursor:pointer;transition:all .25s;display:flex;align-items:center;gap:18px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.mod-card:hover{border-color:var(--gold);background:var(--card2);transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.12)}
+.mod-card.disabled{opacity:.55;cursor:default}.mod-card.disabled:hover{transform:none;border-color:var(--bord);background:var(--card);box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.mod-icon{width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+.mod-icon-tt{background:rgba(166,115,24,.12);border:1px solid rgba(166,115,24,.25)}
+.mod-icon-as{background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.2)}
+.mod-body{flex:1;min-width:0}
+.mod-num{font-size:10px;font-weight:800;letter-spacing:1.5px;color:var(--text2);text-transform:uppercase;margin-bottom:4px}
+.mod-name{font-size:18px;font-weight:800;color:var(--text);margin-bottom:4px}
+.mod-desc{font-size:12px;color:var(--text2);line-height:1.5}
+.mod-status{font-size:10px;font-weight:700;padding:3px 8px;border-radius:5px;text-transform:uppercase;letter-spacing:.5px;flex-shrink:0;align-self:flex-start;margin-top:2px}
+.mod-live{background:#dcfce7;color:#15803d;border:1px solid #86efac}
+.mod-soon{background:#f3f4f6;color:#9ca3af;border:1px solid #e5e7eb}
+.mod-chev{color:var(--bord2);font-size:18px;flex-shrink:0}
+.cover-footer{text-align:center;padding:20px;margin-top:auto}
+.cover-footer-txt{font-size:10px;color:var(--text2);letter-spacing:.5px;text-transform:uppercase}
+
+/* HEADER */
+.hdr{background:#1a1510;border-bottom:1px solid #2e2820;padding:0 14px;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;gap:8px}
+.logo{font-size:17px;font-weight:900;letter-spacing:4px;color:var(--gold)}
+.hdr-left{display:flex;align-items:center;gap:8px}
+.hsep{color:#3a3028;font-size:18px}.hsub{font-size:12px;font-weight:600;letter-spacing:1px;color:#a09080;text-transform:uppercase}
+.hmeta{font-size:10px;color:#a09080;text-align:right;line-height:1.5;display:none}
+@media(min-width:420px){.hmeta{display:block}}
+.hmeta b{color:var(--gold)}
+.hdr-btns{display:flex;gap:6px;flex-shrink:0}
+.btn-hdr{background:none;border:1px solid #3a3028;color:#a09080;padding:5px 10px;border-radius:7px;font-size:11px;font-weight:700;cursor:pointer;transition:all .15s;white-space:nowrap}
+.btn-hdr:hover{border-color:var(--gold);color:var(--gold)}
+
+/* NAV BREADCRUMB */
+.nav-bc{background:#1a1510;padding:8px 16px;display:flex;align-items:center;gap:8px;border-bottom:1px solid #2e2820}
+.nav-home-btn{background:none;border:none;color:#a09080;font-size:11px;font-weight:600;cursor:pointer;padding:0;letter-spacing:.5px;text-transform:uppercase;transition:color .15s}
+.nav-home-btn:hover{color:var(--gold)}
+.nav-sep{color:#3a3028;font-size:12px}
+.nav-current{font-size:11px;font-weight:700;color:var(--gold);letter-spacing:.5px;text-transform:uppercase}
+
+/* TABS NAV */
+.tabs-nav{background:var(--card);border-bottom:2px solid var(--bord);display:flex;overflow-x:auto;position:sticky;top:56px;z-index:90}
+.tab-btn{padding:13px 18px;font-size:13px;font-weight:700;color:var(--text2);cursor:pointer;border-bottom:3px solid transparent;white-space:nowrap;transition:all .2s;letter-spacing:.3px}
+.tab-btn.active{color:var(--gold);border-bottom-color:var(--gold)}
+.tab-btn:hover:not(.active){color:var(--text)}
+
+/* SUMMARY BAR */
+.sumbar{background:var(--card);border-bottom:1px solid var(--bord);padding:10px 16px;display:flex;overflow-x:auto;gap:0}
+.ss{padding:4px 14px;border-right:1px solid var(--bord);flex-shrink:0;text-align:center}
+.ss:first-child{padding-left:0}.ss:last-child{border-right:none;padding-right:0}
+.sv{font-size:17px;font-weight:800;color:var(--gold)}
+.sl{font-size:9px;text-transform:uppercase;letter-spacing:.8px;color:var(--text2);margin-top:2px}
+
+/* TAB CONTENT */
+.tab-pane{display:none;padding:14px 16px;max-width:720px;margin:0 auto}
+.tab-pane.active{display:block}
+
+/* SECTION LABEL */
+.sec-lbl{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1.2px;color:var(--text2);margin:16px 0 9px;padding-bottom:5px;border-bottom:1px solid var(--bord)}
+
+/* COLLAB CARD */
+.ccard{background:var(--card);border:1px solid var(--bord);border-radius:14px;padding:13px 14px;margin-bottom:9px;border-left:4px solid var(--bord2)}
+.ccard-hdr{display:flex;align-items:center;gap:10px;margin-bottom:11px}
+.cav{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;flex-shrink:0}
+.cname{font-size:15px;font-weight:800}
+.crole{font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;letter-spacing:.4px;display:inline-block;margin-top:2px}
+
+/* KPI GRID */
+.kpi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:5px}
+@media(min-width:480px){.kpi-grid{grid-template-columns:repeat(6,1fr)}}
+.kc{background:var(--bg2);border-radius:9px;padding:8px 5px;text-align:center}
+.kl{font-size:9px;text-transform:uppercase;letter-spacing:.5px;color:var(--text2);margin-bottom:3px}
+.kv{font-size:14px;font-weight:800}
+.kt{font-size:11px;color:var(--text);margin-top:3px;font-weight:700;opacity:.65}
+.kp{font-size:9px;opacity:.6;margin-left:1px}
+.dot{width:6px;height:6px;border-radius:50%;display:inline-block;margin-right:2px;vertical-align:middle}
+
+/* semaforo */
+.g{color:var(--green)}.a{color:var(--amber)}.r{color:var(--red)}.n{color:var(--text2)}
+.dg{background:var(--green)}.da{background:var(--amber)}.dr{background:var(--red)}.dn{background:var(--bord2)}
+
+/* ── v3: EXPAND BUTTON ── */
+.expand-btn{width:100%;margin-top:10px;padding:8px;background:none;border:1px dashed var(--bord2);border-radius:8px;color:var(--text2);font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;letter-spacing:.3px;transition:all .18s;text-align:center}
+.expand-btn:hover{border-color:var(--gold);color:var(--gold);background:rgba(166,115,24,.04)}
+.expand-btn.open{border-style:solid;border-color:var(--bord2)}
+
+/* ── v3: PROFILO WRAP ── */
+.profilo-wrap{margin-top:12px;border-top:1px solid var(--bord);padding-top:12px}
+
+/* ── v3: SUGG SECTION LABEL ── */
+.psec-lbl{font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--text2);margin-bottom:8px;margin-top:0}
+
+/* ── v3: SUGGESTION CARDS ── */
+.sugg-card{display:flex;gap:9px;align-items:flex-start;background:var(--bg2);border-radius:9px;padding:9px 10px;margin-bottom:6px;border-left:3px solid transparent}
+.sugg-card-fat{border-left-color:var(--amber)}
+.sugg-card-retail{border-left-color:#0369a1}
+.sugg-card-rich{border-left-color:var(--green)}
+.sugg-card-nuovi{border-left-color:var(--pur)}
+.sugg-card-ok{border-left-color:var(--green)}
+.sugg-card-form{border-left-color:#92400e}
+.sugg-icon{font-size:17px;flex-shrink:0;margin-top:1px}
+.sugg-title{font-size:11px;font-weight:800;margin-bottom:2px}
+.sugg-text{font-size:11px;color:var(--text2);line-height:1.5}
+
+/* ── v3: SERVICE PROFILE ── */
+.serv-cat{margin-bottom:10px}
+.serv-cat-lbl{font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.8px;color:var(--text2);margin-bottom:5px;display:flex;align-items:center;gap:4px}
+.serv-row{display:flex;align-items:center;gap:6px;margin-bottom:5px}
+.serv-info{min-width:0;flex:1}
+.serv-nome{display:block;font-size:11px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.serv-meta{display:block;font-size:9px;color:var(--text2);margin-top:1px}
+.serv-bar-wrap{width:55px;flex-shrink:0;background:var(--bord);border-radius:2px;height:5px;overflow:hidden}
+.serv-bar-fill{height:5px;border-radius:2px;opacity:.75;transition:width .5s ease}
+.serv-qty{font-size:10px;color:var(--text2);font-weight:700;flex-shrink:0;width:22px;text-align:right}
+.no-serv-msg{font-size:11px;color:var(--text2);padding:8px 0;font-style:italic;line-height:1.5}
+
+/* MESE/STORICO TABLE */
+.kpi-sel{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.kbtn{padding:5px 12px;border-radius:20px;border:1px solid var(--bord2);background:transparent;color:var(--text2);cursor:pointer;font-size:11px;font-weight:700;letter-spacing:.3px;font-family:inherit}
+.kbtn.active{background:var(--gold);color:#fff;border-color:var(--gold)}
+.tbl-wrap{overflow-x:auto;border-radius:12px;border:1px solid var(--bord)}
+table{width:100%;border-collapse:collapse;font-size:12px;background:var(--card)}
+th{background:var(--bg2);padding:8px 9px;font-weight:800;font-size:9px;color:var(--text2);text-transform:uppercase;letter-spacing:.6px;white-space:nowrap;text-align:center;border-bottom:1px solid var(--bord)}
+th:first-child{text-align:left;padding-left:12px}
+td{padding:8px 9px;border-bottom:1px solid var(--bg2);text-align:center;font-weight:600;font-size:12px}
+td:first-child{text-align:left;padding-left:12px;font-weight:700}
+tr:last-child td{border-bottom:none}
+.tot-row td{background:rgba(166,115,24,.07);font-weight:800}
+.badge-live{font-size:8px;font-weight:800;padding:1px 5px;border-radius:8px;background:rgba(166,115,24,.15);color:var(--gold);margin-left:3px;vertical-align:middle}
+
+/* STORICO month selector */
+.msel-wrap{display:flex;gap:10px;align-items:center;margin-bottom:12px;flex-wrap:wrap}
+select{background:var(--card);color:var(--text);border:1px solid var(--bord2);padding:7px 12px;border-radius:8px;font-size:13px;font-weight:600;font-family:inherit;cursor:pointer}
+.badge-chiuso{font-size:9px;font-weight:800;padding:2px 8px;border-radius:10px;background:rgba(21,128,61,.12);color:var(--green)}
+
+/* ANALISI SALONE */
+.as-wrap{min-height:50vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 24px;text-align:center}
+.as-icon{font-size:48px;margin-bottom:20px;opacity:.4}
+.as-title{font-size:22px;font-weight:800;margin-bottom:8px}
+.as-sub{font-size:14px;color:var(--text2);line-height:1.6;max-width:380px;margin:0 auto 24px}
+.as-badge{display:inline-flex;align-items:center;gap:6px;background:var(--bg2);border:1px solid var(--bord);border-radius:20px;padding:8px 16px;font-size:12px;font-weight:700;color:var(--text2)}
+.as-modules{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:28px;max-width:480px}
+.as-mod{background:var(--card);border:1px solid var(--bord);border-radius:10px;padding:12px 16px;font-size:12px;color:var(--text2);text-align:left}
+.as-mod-title{font-size:11px;font-weight:800;color:var(--text);margin-bottom:3px;text-transform:uppercase;letter-spacing:.5px}
+
+/* COMPARE PICKER */
+.cpicker{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:200;display:flex;align-items:flex-end;justify-content:center}
+.cpicker-box{background:var(--bg2);border-radius:16px 16px 0 0;width:100%;max-width:680px;padding:20px;max-height:70vh;overflow-y:auto}
+.cpicker-title{font-size:13px;font-weight:700;margin-bottom:14px}
+.cpicker-item{display:flex;align-items:center;gap:12px;padding:12px;border:1px solid var(--bord);border-radius:10px;margin-bottom:8px;cursor:pointer;transition:all .15s}
+.cpicker-item:hover{border-color:var(--gold);background:var(--card)}
+.cpicker-av{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;flex-shrink:0}
+.cpicker-cancel{margin-top:6px;width:100%;padding:12px;background:none;border:1px solid var(--bord2);color:var(--text2);border-radius:10px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit}
+
+/* COMPARE VIEW */
+.cmp-hdr{display:flex;align-items:center;gap:8px;padding:14px 16px;border-bottom:1px solid var(--bord);background:var(--bg2)}
+.cmp-av{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;flex-shrink:0}
+.cmp-name{font-size:14px;font-weight:700}
+.cmp-role{font-size:10px;color:var(--text2)}
+.cmp-vs{font-size:12px;font-weight:900;color:var(--gold);padding:0 6px;flex-shrink:0}
+.cmp-grid{padding:14px 16px;display:flex;flex-direction:column;gap:10px;max-width:700px;margin:0 auto}
+.cmp-card{background:var(--card);border:1px solid var(--bord);border-radius:12px;padding:14px}
+.cmp-lbl{font-size:10px;text-transform:uppercase;letter-spacing:.8px;color:var(--text2);font-weight:700;margin-bottom:12px}
+.cmp-cols{display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:center}
+.cmp-col{text-align:center}
+.cmp-cname{font-size:10px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
+.cmp-val{font-size:20px;font-weight:800;margin-bottom:4px}
+.cmp-pct{font-size:11px;font-weight:700;margin-bottom:6px}
+.cmp-bar{height:4px;background:var(--bord);border-radius:2px;overflow:hidden;margin-bottom:4px}
+.cmp-fill{height:100%;border-radius:2px;transition:width .8s}
+.cmp-sep{font-size:11px;font-weight:900;color:var(--bord2);text-align:center}
+.cmp-winner{margin-top:8px;font-size:10px;text-align:center;color:var(--text2);font-style:italic}
+.cmp-topbar{background:var(--card);border-bottom:1px solid var(--bord);padding:10px 16px;display:flex;align-items:center;justify-content:space-between}
+
+/* PRINT */
+@media print{
+  @page{margin:14mm 12mm}
+  #view-cover,#view-analisi,.tabs-nav,.sumbar,.nav-bc,.hdr,.cpicker,#view-cmp,.expand-btn,.profilo-wrap{display:none!important}
+  body{background:white!important;color:#111!important}
+  .tab-pane{display:block!important;padding:0!important}
+  .sec-lbl{color:#333!important}
+  .ccard{background:white!important;border-color:#ddd!important;break-inside:avoid;page-break-inside:avoid}
+  .kc{background:#f5f5f5!important}
+}
+
+.no-data{text-align:center;padding:40px 20px;color:var(--text2);font-size:14px}
+.foot{text-align:center;padding:20px;color:var(--text2);font-size:11px;opacity:.7}
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<div id="view-cover" class="cover">
+  <div class="cover-hero">
+    <div class="cover-logo">MIHI</div>
+    <div class="cover-salon">Mihi Isola · Via Alserio 3</div>
+    <div class="cover-title">Management System</div>
+    <div class="cover-update" id="cover-update">—</div>
+  </div>
+  <div class="cover-modules">
+    <div class="mod-card" onclick="showModule('team')">
+      <div class="mod-icon mod-icon-tt">👥</div>
+      <div class="mod-body">
+        <div class="mod-num">Modulo 01</div>
+        <div class="mod-name">Target Team</div>
+        <div class="mod-desc">KPI individuali, semafori, profilo servizi, suggerimenti AI e confronto collaboratori</div>
+      </div>
+      <span class="mod-status mod-live">Live</span>
+      <span class="mod-chev">›</span>
+    </div>
+    <div class="mod-card disabled">
+      <div class="mod-icon mod-icon-as">📊</div>
+      <div class="mod-body">
+        <div class="mod-num">Modulo 02</div>
+        <div class="mod-name">Analisi Salone</div>
+        <div class="mod-desc">Conto economico, costi fissi/variabili, margini e benchmark di settore</div>
+      </div>
+      <span class="mod-status mod-soon">In arrivo</span>
+    </div>
+  </div>
+  <!-- LINK COLLABORATORI (generato staticamente) -->
+  <div style="padding:0 20px 16px">
+  <div style="background:var(--card);border:1px solid var(--bord);border-radius:14px;padding:16px 16px 8px">
+    <div style="font-size:12px;font-weight:800;color:var(--gold);letter-spacing:.5px;margin-bottom:6px">📱 LINK COLLABORATORI</div>
+    <div style="font-size:11px;color:var(--text2);margin-bottom:10px">Invia su WhatsApp — ogni collaboratore vede solo i suoi dati.</div>
+    <div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--bord)">
+      <span style="flex:1;font-size:14px;font-weight:700;color:var(--text)">Stefano</span>
+      <button onclick="navigator.clipboard.writeText('https://mihimilano.github.io/mihi-kpi/isola_stefano.html');this.textContent='✅ Copiato!';setTimeout(()=>this.textContent='📋 Copia link',2000)" style="background:var(--card);border:1px solid var(--bord);border-radius:10px;padding:8px 14px;font-size:12px;font-weight:700;color:var(--gold);cursor:pointer;font-family:inherit;white-space:nowrap">📋 Copia link</button>
+    </div><div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--bord)">
+      <span style="flex:1;font-size:14px;font-weight:700;color:var(--text)">Simona</span>
+      <button onclick="navigator.clipboard.writeText('https://mihimilano.github.io/mihi-kpi/isola_simona.html');this.textContent='✅ Copiato!';setTimeout(()=>this.textContent='📋 Copia link',2000)" style="background:var(--card);border:1px solid var(--bord);border-radius:10px;padding:8px 14px;font-size:12px;font-weight:700;color:var(--gold);cursor:pointer;font-family:inherit;white-space:nowrap">📋 Copia link</button>
+    </div>
+  </div>
+</div>
+
+  <div class="cover-footer"><div class="cover-footer-txt">MIHI Milano · Uso interno riservato</div></div>
+</div>
+
+<!-- MAIN APP -->
+<div id="view-app" style="display:none">
+
+  <!-- HEADER -->
+  <div class="hdr">
+    <div class="hdr-left">
+      <span class="logo">MIHI</span><span class="hsep">·</span>
+      <span class="hsub">Isola</span>
+    </div>
+    <div class="hmeta"><span id="hdr-week">–</span><br><b id="hdr-month">–</b></div>
+    <div class="hdr-btns">
+      <button class="btn-hdr" onclick="showComparePicker()">⇄ Confronta</button>
+    </div>
+  </div>
+
+  <!-- NAV BREADCRUMB -->
+  <div class="nav-bc">
+    <button class="nav-home-btn" onclick="goHome()">⌂ Home</button>
+    <span class="nav-sep">›</span>
+    <span class="nav-current" id="nav-label">Target Team</span>
+  </div>
+
+  <!-- TABS -->
+  <div class="tabs-nav" id="tabs-nav">
+    <div class="tab-btn active" onclick="switchTab('live')">📊 Settimana Live</div>
+    <div class="tab-btn" onclick="switchTab('mese')">📅 Il Mese</div>
+    <div class="tab-btn" onclick="switchTab('storico')">🗂️ Storico</div>
+  </div>
+
+  <!-- SUMMARY BAR -->
+  <div class="sumbar" id="sumbar"></div>
+
+  <!-- TAB PANES -->
+  <div class="tab-pane active" id="pane-live"></div>
+  <div class="tab-pane" id="pane-mese"></div>
+  <div class="tab-pane" id="pane-storico"></div>
+
+  <!-- ANALISI SALONE (coming soon) -->
+  <div id="view-analisi" style="display:none">
+    <div class="as-wrap">
+      <div class="as-icon">📊</div>
+      <div class="as-title">Analisi Salone</div>
+      <div class="as-sub">Il modulo di analisi economica è in fase di sviluppo. Sarà disponibile a breve con conto economico completo, benchmark di settore e analisi delle potenzialità.</div>
+      <div class="as-badge">⏳ In sviluppo — disponibile a breve</div>
+      <div class="as-modules">
+        <div class="as-mod"><div class="as-mod-title">Conto Economico</div>Fatturato, costi fissi e variabili, margine operativo</div>
+        <div class="as-mod"><div class="as-mod-title">Benchmark Settore</div>Confronto con medie nazionali saloni italiani</div>
+        <div class="as-mod"><div class="as-mod-title">Potenzialità</div>Saturazione agenda, ore disponibili vs prodotte</div>
+        <div class="as-mod"><div class="as-mod-title">Break-Even Salone</div>Punto di pareggio totale inclusi costi generali</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- COMPARE VIEW -->
+  <div id="view-cmp" style="display:none">
+    <div class="cmp-topbar">
+      <button class="btn-hdr" onclick="closeCompare()" style="border-color:var(--bord2);color:var(--text2)">← Indietro</button>
+      <span style="font-size:12px;font-weight:700;color:var(--text2)">Confronto Collaboratori</span>
+      <span></span>
+    </div>
+    <div id="cmp-wrap"></div>
+  </div>
+
+  <div class="foot">MIHI Milano · Uso interno riservato · Aggiornato: <span id="last-upd">mai</span></div>
+</div>
+
+<!-- COMPARE PICKER OVERLAY -->
+<div id="cpicker" class="cpicker" style="display:none" onclick="if(event.target===this)closeComparePicker()">
+  <div class="cpicker-box">
+    <div class="cpicker-title">Seleziona collaboratore da confrontare</div>
+    <div id="cpicker-list"></div>
+    <button class="cpicker-cancel" onclick="closeComparePicker()">Annulla</button>
+  </div>
+</div>
+
+<script>
+// MODALITÀ COLLABORATORE — eseguito prima di tutto il resto
+(function(){
+  var c=new URLSearchParams(location.search).get('c');
+  if(!c)return;
+  var st=document.createElement('style');
+  st.textContent='#view-cover{display:none!important}#view-app{display:block!important}#tabs-nav,#sumbar,.hdr-btns,.nav-bc{display:none!important}#pane-live{display:block!important}';
+  document.head.appendChild(st);
+})();
+</script>
+
+<script>
+// ╔══════════════════════════════════════════════════════════════╗
+// ║  SEZIONE 1 — TARGET MENSILI                                  ║
+// ║  Aggiornare all'inizio di ogni mese                         ║
+// ╚══════════════════════════════════════════════════════════════╝
+const MESI = {
+  "2026-05": {
+    "label": "Maggio 2026",
+    "settimane": [
+      {
+        "id": "S1",
+        "da": "2026-05-02",
+        "a": "2026-05-09",
+        "label": "S1 · 2-9 mag"
+      },
+      {
+        "id": "S2",
+        "da": "2026-05-12",
+        "a": "2026-05-16",
+        "label": "S2 · 12-16 mag"
+      },
+      {
+        "id": "S3",
+        "da": "2026-05-19",
+        "a": "2026-05-23",
+        "label": "S3 · 19-23 mag"
+      },
+      {
+        "id": "S4",
+        "da": "2026-05-26",
+        "a": "2026-05-30",
+        "label": "S4 · 26-30 mag"
+      }
+    ],
+    "collaboratori": [
+      {
+        "id": "stefano",
+        "nome": "Stefano",
+        "ruolo": "Stilista",
+        "costo_m": 3509,
+        "fat_tw": 1781,
+        "fat_tm": 7708,
+        "pre_tw": 50,
+        "pre_tm": 200,
+        "ret_tw": 2,
+        "ret_tm": 8,
+        "rit_tw": 32,
+        "rit_tm": 128,
+        "nuovi_tw": 17,
+        "nuovi_tm": 68,
+        "rich_tw": 15,
+        "rich_tm": 59,
+        "serv_t": 2,
+        "fiche_t": 40,
+        "sat_tw": 70,
+        "sat_tm": 70
+      },
+      {
+        "id": "simona",
+        "nome": "Simona",
+        "ruolo": "Phonista",
+        "costo_m": 2447,
+        "fat_tw": 1235,
+        "fat_tm": 5347,
+        "pre_tw": 29,
+        "pre_tm": 115,
+        "ret_tw": 2,
+        "ret_tm": 8,
+        "rit_tw": 15,
+        "rit_tm": 58,
+        "nuovi_tw": 17,
+        "nuovi_tm": 68,
+        "rich_tw": 3,
+        "rich_tm": 13,
+        "serv_t": 2,
+        "fiche_t": 40,
+        "sat_tw": 70,
+        "sat_tm": 70
+      }
+    ]
+  }
+};
+
+// ╔══════════════════════════════════════════════════════════════╗
+// ║  SEZIONE 2 — STORICO DATI REALI                             ║
+// ║  ⚠️  AGGIORNATO AUTOMATICAMENTE — Non modificare manualmente ║
+// ╚══════════════════════════════════════════════════════════════╝
+// === BEGIN_STORICO ===
+const STORICO = {
+  "2026-05": {
+    "chiuso": false,
+    "ultimo_aggiornamento": "2 mag 2026",
+    "S1": {
+      "stefano": {
+        "fat": 429,
+        "pre": 12,
+        "ret": 1,
+        "rit": 10,
+        "nuovi": 3,
+        "rich": 7,
+        "serv": 1.5,
+        "fiche": 35.78,
+        "sat": 78.0,
+        "servizi": [
+          {
+            "nome": "Taglio Uomo",
+            "qta": 9,
+            "ricavi": 156.6
+          },
+          {
+            "nome": "Taglio Donna",
+            "qta": 3,
+            "ricavi": 85.0
+          },
+          {
+            "nome": "colpi di sole spatola",
+            "qta": 1,
+            "ricavi": 55.0
+          },
+          {
+            "nome": "Piega classic",
+            "qta": 2,
+            "ricavi": 55.0
+          },
+          {
+            "nome": "Gloss",
+            "qta": 1,
+            "ricavi": 30.0
+          },
+          {
+            "nome": "Regolazione Barba",
+            "qta": 1,
+            "ricavi": 10.8
+          },
+          {
+            "nome": "Finish",
+            "qta": 1,
+            "ricavi": 4.0
+          }
+        ]
+      },
+      "simona": {
+        "fat": 173,
+        "pre": 3,
+        "ret": 0,
+        "rit": 1,
+        "nuovi": 3,
+        "rich": 0,
+        "serv": 2.0,
+        "fiche": 57.67,
+        "sat": 33.0,
+        "servizi": [
+          {
+            "nome": "piega full",
+            "qta": 2,
+            "ricavi": 60.0
+          },
+          {
+            "nome": "Taglio Donna",
+            "qta": 2,
+            "ricavi": 50.0
+          },
+          {
+            "nome": "Colore Base",
+            "qta": 1,
+            "ricavi": 38.0
+          },
+          {
+            "nome": "Piega classic",
+            "qta": 1,
+            "ricavi": 25.0
+          }
+        ]
+      }
+    },
+    "S2": {
+      "stefano": {
+        "fat": null,
+        "pre": null,
+        "ret": null,
+        "rit": null,
+        "nuovi": null,
+        "rich": null,
+        "serv": null,
+        "fiche": null,
+        "servizi": null,
+        "sat": null
+      },
+      "simona": {
+        "fat": null,
+        "pre": null,
+        "ret": null,
+        "rit": null,
+        "nuovi": null,
+        "rich": null,
+        "serv": null,
+        "fiche": null,
+        "servizi": null,
+        "sat": null
+      }
+    },
+    "S3": {
+      "stefano": {
+        "fat": null,
+        "pre": null,
+        "ret": null,
+        "rit": null,
+        "nuovi": null,
+        "rich": null,
+        "serv": null,
+        "fiche": null,
+        "servizi": null,
+        "sat": null
+      },
+      "simona": {
+        "fat": null,
+        "pre": null,
+        "ret": null,
+        "rit": null,
+        "nuovi": null,
+        "rich": null,
+        "serv": null,
+        "fiche": null,
+        "servizi": null,
+        "sat": null
+      }
+    },
+    "S4": {
+      "stefano": {
+        "fat": null,
+        "pre": null,
+        "ret": null,
+        "rit": null,
+        "nuovi": null,
+        "rich": null,
+        "serv": null,
+        "fiche": null,
+        "servizi": null,
+        "sat": null
+      },
+      "simona": {
+        "fat": null,
+        "pre": null,
+        "ret": null,
+        "rit": null,
+        "nuovi": null,
+        "rich": null,
+        "serv": null,
+        "fiche": null,
+        "servizi": null,
+        "sat": null
+      }
+    }
+  }
+};
+// === END_STORICO ===
+
+// ╔══════════════════════════════════════════════════════════════╗
+// ║  UTILITY                                                     ║
+// ╚══════════════════════════════════════════════════════════════╝
+const RC = {"Stilista":"#6d28d9","Estetista":"#be185d","Manager":"#92400e","Barbiere":"#0369a1","Phonista":"#0891b2"};
+function rc(r){return RC[r]||'#64748b'}
+function ini(n){return n.charAt(0)}
+function getMk(){const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`}
+function getSW(mk){
+  const m=MESI[mk];if(!m)return null;
+  const t=new Date();t.setHours(12,0,0,0);
+  for(const s of m.settimane){
+    const da=new Date(s.da);da.setHours(0,0,0,0);
+    const a=new Date(s.a);a.setHours(23,59,59,0);
+    if(t>=da&&t<=a)return s;
+  }
+  return [...m.settimane].reverse().find(s=>new Date(s.da)<=t)||m.settimane[0];
+}
+function sem(a,t){
+  if(a===null||a===undefined)return'n';
+  if(!t)return'n';
+  const p=a/t;return p>=1?'g':p>=0.8?'a':'r';
+}
+function eur(v){if(v===null||v===undefined)return'–';return'€'+Math.round(v).toLocaleString('it-IT')}
+function num(v,d=0){if(v===null||v===undefined)return'–';return d?v.toFixed(d):String(Math.round(v))}
+function pct(a,t){if(a===null||!t)return'';return Math.round((a/t)*100)+'%'}
+function pctVal(v){if(v===null||v===undefined)return'–';return v.toFixed(1)+'%'}
+function semSat(v){if(v===null||v===undefined)return'n';if(v>=70)return'g';if(v>=60)return'a';return'r';}
+function semKpi(k,av,tv){return k==='sat'?semSat(av):sem(av,tv);}
+function getPaceRatio(sw){
+  if(!sw)return 1;
+  const today=new Date();today.setHours(12,0,0,0);
+  const da=new Date(sw.da);da.setHours(0,0,0,0);
+  const a=new Date(sw.a);a.setHours(23,59,59,0);
+  if(today>a)return 1;
+  if(today<da)return 0;
+  let total=0,elapsed=0;
+  const cur=new Date(da);
+  while(cur<=a){
+    const wd=cur.getDay();
+    if(wd!==0&&wd!==1){total++;if(cur<=today)elapsed++;}
+    cur.setDate(cur.getDate()+1);
+  }
+  return total>0?Math.min(elapsed/total,1):1;
+}
+function semPace(k,av,tv,pace){
+  if(k==='sat')return semSat(av);
+  return sem(av,tv!==null&&tv!==undefined?tv*Math.max(pace,0.01):tv);
+}
+function pctPace(av,tv,pace){
+  if(av===null||av===undefined||!tv||pace===0)return'';
+  return'('+Math.round((av/(tv*pace))*100)+'%)';
+}
+const KD=[
+  {k:'fat',  lbl:'Fatturato', tw:'fat_tw',   tm:'fat_tm',   fmt:eur,    sum:true},
+  {k:'pre',  lbl:'Clienti fatti',  tw:'pre_tw',   tm:'pre_tm',   fmt:num,    sum:true},
+  {k:'ret',  lbl:'Retail',    tw:'ret_tw',   tm:'ret_tm',   fmt:num,    sum:true},
+  {k:'rit',  lbl:'Clienti di ritorno',   tw:'rit_tw',   tm:'rit_tm',   fmt:num,    sum:true},
+  {k:'nuovi',lbl:'Nuovi',     tw:'nuovi_tw', tm:'nuovi_tm', fmt:num,    sum:true},
+  {k:'rich', lbl:'Preferenze',tw:'rich_tw',  tm:'rich_tm',  fmt:num,    sum:true},
+  {k:'sat',  lbl:'Saturaz.',  tw:'sat_tw',   tm:'sat_tm',   fmt:pctVal, sum:false}
+];
+function getTot(mk,cid){
+  const st=STORICO[mk];if(!st)return{};
+  const t={fat:null,pre:null,ret:null,rit:null,nuovi:null,rich:null,serv:null,fiche:null};
+  for(const sid of['S1','S2','S3','S4']){
+    const d=st[sid]?.[cid];if(!d)continue;
+    for(const k of['fat','pre','ret','rit','nuovi','rich'])
+      if(d[k]!==null&&d[k]!==undefined)t[k]=(t[k]||0)+d[k];
+  }
+  for(const k of['serv','fiche','sat']){
+    const vs=['S1','S2','S3','S4'].map(s=>STORICO[mk]?.[s]?.[cid]?.[k]).filter(v=>v!==null&&v!==undefined);
+    t[k]=vs.length?vs.reduce((a,b)=>a+b,0)/vs.length:null;
+  }
+  return t;
+}
+
+// ╔══════════════════════════════════════════════════════════════╗
+// ║  v3: PROFILO SERVIZI & SUGGERIMENTI                         ║
+// ╚══════════════════════════════════════════════════════════════╝
+
+// Classifica un servizio in: punta / medi / rari
+function categorizaServizio(s, tutti){
+  if(!tutti||!tutti.length)return'medi';
+  const totR=tutti.reduce((a,x)=>a+(x.ricavi||0),0);
+  const maxQ=Math.max(...tutti.map(x=>x.qta||0));
+  const pR=totR>0?(s.ricavi||0)/totR:0;
+  const pQ=maxQ>0?(s.qta||0)/maxQ:0;
+  if(pR>=0.25||pQ>=0.40)return'punta';
+  if((s.qta||0)<=1&&pR<0.15)return'rari';
+  return'medi';
+}
+
+// Renderizza le barre del profilo servizi
+function renderServizi(servizi, color){
+  if(!servizi||!servizi.length)
+    return'<div class="no-serv-msg">📋 Profilo servizi disponibile dopo il primo aggiornamento settimanale. I servizi verranno classificati automaticamente in Punta, Regolari e Rari.</div>';
+  const cats={punta:[],medi:[],rari:[]};
+  servizi.forEach(s=>cats[categorizaServizio(s,servizi)].push(s));
+  const totR=servizi.reduce((a,x)=>a+(x.ricavi||0),0);
+  const maxQ=Math.max(...servizi.map(x=>x.qta||0));
+  const catInfo=[
+    {key:'punta',icon:'⭐',lbl:'Servizi di Punta', desc:'Alto valore o alta frequenza',color:'#a67318'},
+    {key:'medi', icon:'💼',lbl:'Servizi Regolari', desc:'Frequenza media',             color:'#0369a1'},
+    {key:'rari', icon:'🔍',lbl:'Servizi Rari',     desc:'Eseguiti raramente',           color:'#7c3aed'}
+  ];
+  let html='';
+  for(const cat of catInfo){
+    const items=cats[cat.key];
+    if(!items.length)continue;
+    html+=`<div class="serv-cat"><div class="serv-cat-lbl" style="font-size:12px;font-weight:800;color:${cat.color};background:${cat.color}18;border-left:3px solid ${cat.color};padding:6px 10px;border-radius:6px;margin-bottom:8px"><span>${cat.icon}</span> ${cat.lbl}<span style="font-weight:500;opacity:.6;margin-left:6px;text-transform:none;letter-spacing:0;font-size:10px">— ${cat.desc}</span></div>`;
+    for(const s of items){
+      const pctR=totR>0?Math.round((s.ricavi/totR)*100):0;
+      const barW=maxQ>0?Math.round((s.qta/maxQ)*100):0;
+      html+=`<div class="serv-row">
+        <div class="serv-info">
+          <span class="serv-nome">${s.nome}</span>
+          <span class="serv-meta">€${s.ricavi.toLocaleString('it-IT')} · ${pctR}% del fatturato</span>
+        </div>
+        <div class="serv-bar-wrap"><div class="serv-bar-fill" style="width:${barW}%;background:${cat.color}"></div></div>
+        <span class="serv-qty">${s.qta}×</span>
+      </div>`;
+    }
+    html+='</div>';
+  }
+  return html;
+}
+
+// Genera suggerimenti AI personalizzati
+function genSuggerimenti(c, d, servizi){
+  if(d.fat===null&&d.pre===null&&d.serv===null&&d.fiche===null)
+    return[{icon:'⏳',cls:'sugg-card-ok',title:'In attesa di dati',text:'Inserisci i dati di questa settimana per ricevere suggerimenti personalizzati.'}];
+
+  const suggs=[];
+
+  // 1. Serv/Cliente ≤ target: 2 è il MINIMO, spingiamo sempre oltre
+  if(d.serv!==null&&d.serv!==undefined&&c.serv_t>0&&d.serv<=c.serv_t){
+    const atTarget=d.serv>=c.serv_t;
+    suggs.push({icon:'➕',cls:'sugg-card-fat',title:'Aumenta i servizi per cliente',
+      text:atTarget
+        ?`Sei al minimo di ${c.serv_t} serv/cliente — non fermarti qui. Ogni cliente è un'occasione: proponi un trattamento, un finish, una cura specifica. Punta a ${(c.serv_t+0.5).toFixed(1)}+ e il ticket si alza da solo.`
+        :`Media attuale ${d.serv.toFixed(1)} vs target ${c.serv_t}. Proponi almeno 1 servizio aggiuntivo per ogni cliente: un trattamento, un finish, una cura specifica. Ogni +0.5 serv/cliente si traduce in fatturato reale.`});
+  }
+
+  // 2. Fiche media sotto target
+  if(suggs.length<2&&d.fiche!==null&&d.fiche!==undefined&&c.fiche_t>0&&d.fiche<c.fiche_t){
+    const gap=Math.round(c.fiche_t-d.fiche);
+    let txt=`Ticket medio €${d.fiche.toFixed(2)} vs target €${c.fiche_t}. `;
+    if(servizi&&servizi.length){
+      const prem=servizi.filter(s=>s.qta>0&&(s.ricavi/s.qta)>=(c.fiche_t||0)).sort((a,b)=>(b.ricavi/b.qta)-(a.ricavi/a.qta));
+      if(prem.length)txt+=`Valorizza "${prem[0].nome}" e proponi upgrade: ogni €${gap} in più per cliente chiude il gap.`;
+      else txt+=`Proponi trattamenti ad alto valore — ogni €${gap} in più per cliente chiude il gap.`;
+    } else txt+=`Proponi upgrade e trattamenti ad alto valore — ogni €${gap} in più per cliente chiude il gap.`;
+    suggs.push({icon:'💎',cls:'sugg-card-fat',title:'Alza il ticket medio',text:txt});
+  }
+
+  // 3. Saturazione bassa → esperienza wow + rifissa appuntamento
+  if(suggs.length<2&&d.sat!==null&&d.sat!==undefined&&d.sat<70){
+    const lvl=d.sat<50?'molto bassa':'sotto soglia';
+    suggs.push({icon:'✨',cls:'sugg-card-fat',title:'Crea un\'esperienza wow',
+      text:`Saturazione ${lvl} (${d.sat}%). Ogni cliente che entra deve vivere una consulenza memorabile: analisi del capello, proposta personalizzata, styling finale. Rifissa l'appuntamento prima che esca — è il momento giusto. Un'esperienza wow genera passaparola.`});
+  }
+
+  // 4. Ritorni bassi se c'è ancora spazio (solo se dato presente e sotto metà target)
+  if(suggs.length<2&&d.rit!==null&&c.rit_tw>0&&d.rit/c.rit_tw<0.4)
+    suggs.push({icon:'🔄',cls:'sugg-card-fat',title:'Fidelizza i clienti',
+      text:'I clienti di ritorno sono sotto soglia. Rifissa sempre l\'appuntamento in cassa prima che il cliente esca — è l\'abitudine più importante per costruire una clientela solida.'});
+
+  // Se tutto ok
+  if(suggs.length===0)
+    suggs.push({icon:'🌟',cls:'sugg-card-ok',title:'KPI in linea — ottimo!',
+      text:'Serv/cliente e ticket medio sono in target. Mantieni il ritmo e punta a chiudere la settimana in verde!'});
+
+  // SEMPRE slot 3: Retail motivazionale
+  const retOk=d.ret!==null&&c.ret_tw>0&&d.ret>=c.ret_tw*0.8;
+  suggs.push({icon:'🛍️',cls:'sugg-card-retail',
+    title:retOk?'Mantieni il ritmo sui prodotti':'Spingi i prodotti',
+    text:retOk
+      ?'Ottimo sui prodotti! Continua a consigliare 1 prodotto personalizzato per ogni cliente: rafforza la fidelizzazione e aumenta il fatturato in modo naturale.'
+      :'Non vendere — consiglia. Dopo ogni servizio scegli 1 prodotto specifico per quel cliente e spiegagli perché è perfetto per lui. Un consiglio personalizzato vale più di qualsiasi promozione.'
+  });
+
+  return suggs.slice(0,3);
+}
+
+// Toggle espansione card
+function toggleProfilo(id){
+  const wrap=document.getElementById('profilo-'+id);
+  const btn=document.getElementById('btn-profilo-'+id);
+  if(!wrap)return;
+  const open=wrap.style.display!=='none';
+  wrap.style.display=open?'none':'block';
+  btn.classList.toggle('open',!open);
+  btn.innerHTML=open?'▾ Profilo &amp; Suggerimenti':'▴ Nascondi';
+}
+
+// ── v3: STAMPA SCHEDA INDIVIDUALE ──────────────────────────────────────────
+function stampaProfilo(cid){
+  const mk=getMk();const m=MESI[mk];if(!m)return;
+  const c=m.collaboratori.find(x=>x.id===cid);if(!c)return;
+  const sw=getSW(mk);const sid=sw?.id||'S1';
+  const d=STORICO[mk]?.[sid]?.[cid]||{};
+  const color=rc(c.ruolo);
+  const servizi=d.servizi||null;
+  const suggs=genSuggerimenti(c,d,servizi);
+  const SC={g:'#15803d',a:'#b45309',r:'#b91c1c',n:'#6b6055'};
+  const SCD={g:'#15803d',a:'#b45309',r:'#b91c1c',n:'#c8c3bb'};
+  const now=new Date();
+  const ds=now.toLocaleDateString('it-IT',{day:'2-digit',month:'long',year:'numeric'});
+
+  // KPI grid
+  let kpiH='';
+  for(const kpi of KD){
+    const av=d[kpi.k],tv=c[kpi.tw],s=semPace(kpi.k,av,tv,getPaceRatio(sw)),p=kpi.k==='sat'?'':pctPace(av,tv,getPaceRatio(sw));
+    if(tv===null||tv===undefined)continue;
+    kpiH+=`<div style="background:#eeecea;border-radius:10px;padding:10px 6px;text-align:center">
+      <div style="font-size:9px;text-transform:uppercase;letter-spacing:.5px;color:#6b6055;margin-bottom:4px">${kpi.lbl}</div>
+      <div style="font-size:15px;font-weight:800;color:${SC[s]}"><span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:${SCD[s]};margin-right:3px;vertical-align:middle"></span>${kpi.fmt(av)}${p?`<span style="font-size:9px;opacity:.55;margin-left:1px">${p}</span>`:''}</div>
+      <div style="font-size:9px;color:#6b6055;margin-top:2px">▸ ${kpi.fmt(tv)}</div>
+    </div>`;
+  }
+
+  // Extra (fiche + serv)
+  const sf_fi=sem(d.fiche,c.fiche_t),sf_se=sem(d.serv,c.serv_t);
+  let extraH=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:6px">
+    <div style="background:#fff;border:1px solid #dedad3;border-radius:10px;padding:10px;text-align:center">
+      <div style="font-size:9px;text-transform:uppercase;letter-spacing:.5px;color:#6b6055;margin-bottom:4px">Ticket Medio</div>
+      <div style="font-size:15px;font-weight:800;color:${SC[sf_fi]}"><span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:${SCD[sf_fi]};margin-right:3px;vertical-align:middle"></span>${num(d.fiche,2)}</div>
+      <div style="font-size:10px;font-weight:700;color:#3a3028;margin-top:2px;opacity:.75">▸ ${num(c.fiche_t,2)}</div>
+    </div>
+    <div style="background:#fff;border:1px solid #dedad3;border-radius:10px;padding:10px;text-align:center">
+      <div style="font-size:9px;text-transform:uppercase;letter-spacing:.5px;color:#6b6055;margin-bottom:4px">Serv/Cliente</div>
+      <div style="font-size:15px;font-weight:800;color:${SC[sf_se]}"><span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:${SCD[sf_se]};margin-right:3px;vertical-align:middle"></span>${num(d.serv,1)}</div>
+      <div style="font-size:10px;font-weight:700;color:#3a3028;margin-top:2px;opacity:.75">▸ ${num(c.serv_t,1)}</div>
+    </div>
+  </div>`;
+
+  // Suggerimenti
+  let suggH='';
+  for(const sg of suggs){
+    suggH+=`<div style="display:flex;gap:10px;align-items:flex-start;background:#eeecea;border-radius:10px;padding:11px 13px;margin-bottom:8px">
+      <span style="font-size:20px;flex-shrink:0">${sg.icon}</span>
+      <div><div style="font-size:12px;font-weight:800;margin-bottom:3px">${sg.title}</div>
+      <div style="font-size:11px;color:#6b6055;line-height:1.55">${sg.text}</div></div>
+    </div>`;
+  }
+
+  // Profilo servizi
+  const serviziH=renderServizi(servizi,color);
+
+  // Sezione cumulato mese
+  const tot=getTot(mk,cid);
+  const nW=['S1','S2','S3','S4'].filter(s=>STORICO[mk]?.[s]?.[cid]?.fat!==null&&STORICO[mk]?.[s]?.[cid]?.fat!==undefined).length;
+  let cumH='';
+  for(const kpi of KD){
+    const av=tot[kpi.k],tv=c[kpi.tm],s=semKpi(kpi.k,av,tv);
+    if(tv===null||tv===undefined)continue;
+    cumH+=`<div style="background:#eeecea;border-radius:8px;padding:8px 5px;text-align:center">
+      <div style="font-size:9px;text-transform:uppercase;letter-spacing:.5px;color:#6b6055;margin-bottom:3px">${kpi.lbl}</div>
+      <div style="font-size:13px;font-weight:800;color:${SC[s]}">${kpi.fmt(av)}</div>
+      <div style="font-size:9px;color:#6b6055">/ ${kpi.fmt(tv)}</div>
+    </div>`;
+  }
+
+  const salonName=document.querySelector('.hsub')?.textContent||'MIHI';
+  const html=`<!DOCTYPE html><html lang="it"><head><meta charset="UTF-8">
+<title>MIHI · ${c.nome} · Scheda Personale</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Segoe UI',sans-serif;background:#f5f4ef;color:#1a1510;padding:0}
+.page{max-width:520px;margin:0 auto;padding:0 0 32px}
+.sec-lbl{font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:1.2px;color:#6b6055;margin:18px 0 8px;padding-bottom:5px;border-bottom:1px solid #dedad3}
+.serv-cat{margin-bottom:10px}
+.serv-cat-lbl{font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.8px;color:#6b6055;margin-bottom:5px;display:flex;align-items:center;gap:4px}
+.serv-row{display:flex;align-items:center;gap:6px;margin-bottom:5px}
+.serv-info{min-width:0;flex:1}
+.serv-nome{display:block;font-size:11px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.serv-meta{display:block;font-size:9px;color:#6b6055;margin-top:1px}
+.serv-bar-wrap{width:55px;flex-shrink:0;background:#dedad3;border-radius:2px;height:5px;overflow:hidden}
+.serv-bar-fill{height:5px;border-radius:2px;opacity:.75}
+.serv-qty{font-size:10px;color:#6b6055;font-weight:700;flex-shrink:0;width:22px;text-align:right}
+.no-serv-msg{font-size:11px;color:#6b6055;padding:8px 0;font-style:italic;line-height:1.5}
+@media print{
+  @page{margin:10mm 12mm;size:A4}
+  body{background:white!important}
+  .no-print{display:none!important}
+}
+</style>
+</head>
+<body>
+<div class="page">
+  <!-- HEADER -->
+  <div style="background:#1a1510;padding:22px 22px 18px;margin-bottom:0">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start">
+      <div>
+        <div style="font-size:22px;font-weight:900;letter-spacing:5px;color:#a67318">MIHI</div>
+        <div style="font-size:11px;color:#a09080;letter-spacing:1.5px;text-transform:uppercase;margin-top:3px">${salonName}</div>
+      </div>
+      <div style="text-align:right">
+        <div style="font-size:10px;color:#a09080">${sw?.label||'Settimana'}</div>
+        <div style="font-size:10px;color:#6b5f54;margin-top:2px">${MESI[mk]?.label||''}</div>
+      </div>
+    </div>
+  </div>
+  <!-- COLLABORATORE -->
+  <div style="background:#fff;padding:18px 22px;border-bottom:1px solid #dedad3">
+    <div style="display:flex;align-items:center;gap:14px">
+      <div style="width:52px;height:52px;border-radius:50%;background:${color}18;color:${color};display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:800;flex-shrink:0">${ini(c.nome)}</div>
+      <div>
+        <div style="font-size:22px;font-weight:900;color:#1a1510">${c.nome}</div>
+        <div style="font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;background:${color}18;color:${color};display:inline-block;margin-top:4px">${c.ruolo}</div>
+      </div>
+    </div>
+  </div>
+  <!-- BODY -->
+  <div style="padding:16px 22px">
+    <!-- KPI settimana -->
+    <div class="sec-lbl">📊 KPI Settimana vs Target</div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px">${kpiH}</div>
+    ${extraH}
+    <!-- Cumulato mese -->
+    <div class="sec-lbl">📈 Cumulato ${MESI[mk]?.label||''} (${nW}/4 settimane)</div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px">${cumH}</div>
+    <!-- Suggerimenti -->
+    <div class="sec-lbl">💡 Suggerimenti Personalizzati</div>
+    ${suggH}
+    <!-- Profilo Servizi -->
+    <div class="sec-lbl">📊 Profilo Servizi</div>
+    ${serviziH}
+  </div>
+  <!-- FOOTER -->
+  <div style="margin:0 22px;padding:14px 0;border-top:1px solid #dedad3;display:flex;justify-content:space-between;align-items:center">
+    <span style="font-size:9px;color:#6b6055;letter-spacing:.5px;text-transform:uppercase">MIHI · Uso riservato — solo per ${c.nome}</span>
+    <span style="font-size:9px;color:#6b6055">${ds}</span>
+  </div>
+  <!-- PULSANTE STAMPA (sparisce in stampa) -->
+  <div class="no-print" style="text-align:center;padding:16px 0">
+    <button onclick="window.print()" style="background:#1a1510;color:#a67318;border:none;padding:12px 28px;border-radius:10px;font-size:13px;font-weight:800;cursor:pointer;font-family:inherit;letter-spacing:.5px">🖨 Stampa / Salva PDF</button>
+  </div>
+</div>
+</body></html>`;
+
+  const win=window.open('','_blank','width=560,height=800');
+  win.document.write(html);
+  win.document.close();
+}
+
+// ╔══════════════════════════════════════════════════════════════╗
+// ║  COLLABORATORE URL PARAM                                    ║
+// ╚══════════════════════════════════════════════════════════════╝
+function getUrlCollab(){return new URLSearchParams(window.location.search).get('c');}
+
+// ╔══════════════════════════════════════════════════════════════╗
+// ║  NAVIGATION                                                  ║
+// ╚══════════════════════════════════════════════════════════════╝
+function goHome(){
+  document.getElementById('view-cover').style.display='flex';
+  document.getElementById('view-app').style.display='none';
+}
+function showModule(mod){
+  document.getElementById('view-cover').style.display='none';
+  document.getElementById('view-app').style.display='block';
+  document.getElementById('view-analisi').style.display='none';
+  document.getElementById('view-cmp').style.display='none';
+  const tabs=document.getElementById('tabs-nav');
+  const sumbar=document.getElementById('sumbar');
+  if(mod==='team'){
+    tabs.style.display='flex';sumbar.style.display='flex';
+    document.querySelectorAll('.tab-pane').forEach(p=>p.style.display='none');
+    document.querySelector('#pane-live').style.display='block';
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelector('.tab-btn').classList.add('active');
+    document.getElementById('nav-label').textContent='Target Team';
+    renderSumbar();renderLive();
+  } else {
+    tabs.style.display='none';sumbar.style.display='none';
+    document.querySelectorAll('.tab-pane').forEach(p=>p.style.display='none');
+    document.getElementById('view-analisi').style.display='block';
+    document.getElementById('nav-label').textContent='Analisi Salone';
+  }
+  const ua=STORICO[getMk()]?.ultimo_aggiornamento;
+  document.getElementById('last-upd').textContent=ua||'mai';
+  document.getElementById('cover-update').textContent=ua?`Aggiornato: ${ua}`:'';
+}
+function switchTab(name){
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.tab-pane').forEach(p=>p.style.display='none');
+  document.querySelector(`.tab-btn[onclick="switchTab('${name}')"]`).classList.add('active');
+  document.getElementById(`pane-${name}`).style.display='block';
+  if(name==='mese')renderMese();
+  if(name==='storico')renderStorico();
+}
+
+// ╔══════════════════════════════════════════════════════════════╗
+// ║  SUMMARY BAR                                                 ║
+// ╚══════════════════════════════════════════════════════════════╝
+function renderSumbar(){
+  const mk=getMk();const m=MESI[mk];if(!m)return;
+  const sw=getSW(mk);const sid=sw?.id||'S1';
+  const st=STORICO[mk]?.[sid]||{};
+  let fatW=null,fatM=null,tgW=0,tgM=0;
+  for(const c of m.collaboratori){
+    const dw=st[c.id];if(dw?.fat!==null&&dw?.fat!==undefined)fatW=(fatW||0)+dw.fat;
+    const dm=getTot(mk,c.id);if(dm.fat!==null)fatM=(fatM||0)+dm.fat;
+    tgW+=c.fat_tw||0;tgM+=c.fat_tm||0;
+  }
+  const items=[
+    {v:eur(fatW),l:'Fatturato Sett.'},{v:eur(tgW),l:'Target Sett.'},{v:pct(fatW,tgW)||'–',l:'% Sett.'},
+    {v:eur(fatM),l:'Cumul. Mese'},{v:eur(tgM),l:'Target Mese'},{v:pct(fatM,tgM)||'–',l:'% Mese'}
+  ];
+  document.getElementById('sumbar').innerHTML=items.map(i=>`<div class="ss"><div class="sv">${i.v}</div><div class="sl">${i.l}</div></div>`).join('');
+  document.getElementById('hdr-week').textContent=sw?.label||'–';
+  document.getElementById('hdr-month').textContent=m.label;
+}
+
+// ╔══════════════════════════════════════════════════════════════╗
+// ║  ALERT CRITICI AUTOMATICI                                   ║
+// ╚══════════════════════════════════════════════════════════════╝
+function renderAlert(sw, st, m, pace){
+  const alerts=[];
+  for(const c of m.collaboratori){
+    const d=st[c.id]||{};
+    if(d.fat===null||d.fat===undefined)continue;
+    if(c.fat_tw>0){
+      const expected=c.fat_tw*pace;
+      if(expected>0&&d.fat<expected*0.65)
+        alerts.push({lvl:'r',icon:'🔴',name:c.nome,msg:`Fatturato ${Math.round(d.fat/expected*100)}% del previsto — serve una spinta`});
+    }
+    if(d.pre>0&&d.rit!==null&&d.rit!==undefined){
+      const rifPct=Math.round(d.rit/d.pre*100);
+      if(rifPct<40)
+        alerts.push({lvl:'r',icon:'🔁',name:c.nome,msg:`Rifissazione ${rifPct}% — solo ${d.rit} cliente/i su ${d.pre} rifissati`});
+    }
+    if(d.sat!==null&&d.sat!==undefined&&d.sat<50)
+      alerts.push({lvl:'r',icon:'📅',name:c.nome,msg:`Saturazione ${d.sat}% — agenda poco piena`});
+    if(d.pre>2&&(d.ret===0||d.ret===null)&&c.ret_tw>0)
+      alerts.push({lvl:'a',icon:'🛍️',name:c.nome,msg:`Nessun prodotto venduto questa settimana`});
+  }
+  if(alerts.length===0)return '';
+  const sorted=alerts.sort((a,b)=>a.lvl==='r'&&b.lvl!=='r'?-1:1).slice(0,3);
+  let h=`<div style="margin-bottom:14px">
+    <div style="font-size:10px;font-weight:800;color:var(--text2);letter-spacing:.6px;text-transform:uppercase;margin-bottom:8px">⚠️ Situazioni da monitorare</div>`;
+  for(const al of sorted){
+    const bg=al.lvl==='r'?'#fff5f5':'#fffbf0';
+    const bc=al.lvl==='r'?'var(--red)':'var(--amber)';
+    h+=`<div style="background:${bg};border-left:3px solid ${bc};border-radius:0 10px 10px 0;padding:9px 12px;margin-bottom:6px;display:flex;gap:10px;align-items:flex-start">
+      <span style="font-size:16px;flex-shrink:0">${al.icon}</span>
+      <div>
+        <div style="font-size:12px;font-weight:800;color:${bc}">${al.name}</div>
+        <div style="font-size:11px;color:var(--text);margin-top:2px;line-height:1.4">${al.msg}</div>
+      </div>
+    </div>`;
+  }
+  h+=`</div>`;
+  return h;
+}
+
+// ╔══════════════════════════════════════════════════════════════╗
+// ║  RIEPILOGO SALONE                                           ║
+// ╚══════════════════════════════════════════════════════════════╝
+function renderRiepilogoSalone(sw, st, m, pace){
+  let fatTot=0,fatTgt=0,satSum=0,satCount=0,verde=0,ambra=0,rosso=0,active=0;
+  for(const c of m.collaboratori){
+    const d=st[c.id]||{};
+    if(d.fat===null||d.fat===undefined)continue;
+    active++;
+    fatTot+=d.fat; fatTgt+=c.fat_tw||0;
+    if(d.sat!==null&&d.sat!==undefined){satSum+=d.sat;satCount++;}
+    const s=semPace('fat',d.fat,c.fat_tw,pace);
+    if(s==='gre')verde++; else if(s==='amb')ambra++; else rosso++;
+  }
+  if(active===0)return '';
+  const satM=satCount>0?Math.round(satSum/satCount):null;
+  const pct2=fatTgt>0?Math.round(fatTot/fatTgt*pace*100):null;
+  const sf=semPace('fat',fatTot,fatTgt,pace);
+  const col=sf==='gre'?'var(--green)':sf==='amb'?'var(--amber)':'var(--red)';
+  const ranked=[...m.collaboratori]
+    .map(c=>({nome:c.nome,fat:st[c.id]?.fat??null,color:rc(c.ruolo)}))
+    .filter(x=>x.fat!==null)
+    .sort((a,b)=>b.fat-a.fat);
+  const medals=['🥇','🥈','🥉'];
+  let rankH='';
+  ranked.forEach((x,i)=>{
+    rankH+=`<div style="display:flex;align-items:center;gap:8px;padding:5px 0;${i<ranked.length-1?'border-bottom:1px solid var(--bord)':''}">
+      <span style="font-size:15px;width:22px;text-align:center">${medals[i]||`<span style="font-size:12px;color:var(--text2);font-weight:700">${i+1}</span>`}</span>
+      <span style="flex:1;font-size:13px;font-weight:700">${x.nome}</span>
+      <span style="font-size:13px;font-weight:800;color:${x.color}">${eur(x.fat)}</span>
+    </div>`;
+  });
+  const fatTmTot=m.collaboratori.reduce((s,c)=>s+(c.fat_tm||0),0);
+  const fatCum=['S1','S2','S3','S4'].reduce((s,sid2)=>{
+    const st2=STORICO[getMk()]?.[sid2]||{};
+    return s+m.collaboratori.reduce((ss,c)=>ss+(st2[c.id]?.fat||0),0);
+  },0);
+  const manca=Math.max(fatTmTot-fatCum,0);
+  const oggi2=new Date();const fine=new Date(oggi2.getFullYear(),oggi2.getMonth()+1,0);
+  let giorniRim=0;for(let d=new Date(oggi2);d<=fine;d.setDate(d.getDate()+1)){
+    const wd=d.getDay();if(wd>=2&&wd<=6)giorniRim++;
+  }
+  const perGiorno=giorniRim>0?Math.round(manca/giorniRim):0;
+  const pctCum=fatTmTot>0?Math.round(fatCum/fatTmTot*100):null;
+  const cumCol=pctCum===null?'var(--text2)':pctCum>=80?'var(--green)':pctCum>=50?'var(--amber)':'var(--red)';
+  return `<div style="background:var(--card);border-radius:14px;padding:14px 16px;margin-bottom:14px;border:2px solid ${col}22">
+    <div style="font-size:10px;font-weight:800;color:var(--text2);letter-spacing:.6px;margin-bottom:10px;text-transform:uppercase">📍 Salone · ${sw?.label||'Settimana'}</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;text-align:center;margin-bottom:12px">
+      <div>
+        <div style="font-size:20px;font-weight:900;color:${col}">${eur(fatTot)}</div>
+        <div style="font-size:10px;color:var(--text2);margin-top:2px">Fatturato${pct2?`<br><span style="font-weight:700">(${pct2}% atteso)</span>`:''}</div>
+      </div>
+      <div>
+        <div style="font-size:20px;font-weight:900">${satM!==null?satM+'%':'–'}</div>
+        <div style="font-size:10px;color:var(--text2);margin-top:2px">Saturaz. media</div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px">
+        <div style="font-size:13px;font-weight:800;letter-spacing:2px">
+          <span style="color:var(--green)">●${verde}</span>
+          <span style="color:var(--amber)"> ●${ambra}</span>
+          <span style="color:var(--red)"> ●${rosso}</span>
+        </div>
+        <div style="font-size:10px;color:var(--text2)">Collaboratori</div>
+      </div>
+    </div>
+    ${rankH.length>0?`<div style="border-top:1px solid var(--bord);padding-top:10px">
+      <div style="font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:var(--text2);margin-bottom:6px">🏆 Classifica settimana</div>
+      ${rankH}
+    </div>`:''}
+    ${fatTmTot>0?`<div style="border-top:1px solid var(--bord);padding-top:10px;margin-top:6px">
+      <div style="font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:var(--text2);margin-bottom:8px">⏳ Obiettivo mensile</div>
+      <div style="background:var(--bord);border-radius:4px;height:8px;overflow:hidden;margin-bottom:8px">
+        <div style="height:8px;border-radius:4px;width:${Math.min(pctCum,100)}%;background:${cumCol};transition:width .4s"></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px">
+        <span style="font-size:13px;font-weight:900;color:${cumCol}">${eur(fatCum)}</span>
+        <span style="font-size:11px;color:var(--text2)">su ${eur(fatTmTot)} (${pctCum}%)</span>
+      </div>
+      ${manca>0?`<div style="font-size:11px;color:var(--text);background:var(--bg2);border-radius:8px;padding:7px 10px;line-height:1.5">
+        Mancano <strong>${eur(manca)}</strong> · ${giorniRim} giorni lav. rimasti<br>
+        Serve <strong style="color:${cumCol}">${eur(perGiorno)}/giorno</strong> per chiudere in target
+      </div>`:'<div style="font-size:11px;color:var(--green);font-weight:800">✅ Obiettivo mensile raggiunto!</div>'}
+    </div>`:''}
+  </div>`;
+}
+
+// ╔══════════════════════════════════════════════════════════════╗
+// ║  TREND SETTIMANA SU SETTIMANA                               ║
+// ╚══════════════════════════════════════════════════════════════╝
+function getTrendArrow(mk, sid, cid){
+  const sids=['S1','S2','S3','S4'];
+  const idx=sids.indexOf(sid);
+  if(idx<=0)return '';
+  const prev=sids[idx-1];
+  const curr=STORICO[mk]?.[sid]?.[cid]?.fat;
+  const last=STORICO[mk]?.[prev]?.[cid]?.fat;
+  if(curr===null||curr===undefined||last===null||last===undefined||last===0)return '';
+  const pctT=Math.round((curr-last)/last*100);
+  if(curr>last*1.02)return `<span style="display:inline-flex;align-items:center;gap:2px;background:#e8f5e9;color:var(--green);font-size:11px;font-weight:700;padding:2px 7px;border-radius:20px;margin-left:6px">↑ fat. +${pctT}%</span>`;
+  if(curr<last*0.98)return `<span style="display:inline-flex;align-items:center;gap:2px;background:#fdecea;color:var(--red);font-size:11px;font-weight:700;padding:2px 7px;border-radius:20px;margin-left:6px">↓ fat. ${pctT}%</span>`;
+  return `<span style="display:inline-flex;align-items:center;gap:2px;background:#f5f5f5;color:var(--text2);font-size:11px;font-weight:600;padding:2px 7px;border-radius:20px;margin-left:6px">→ fat. ${pctT>0?'+':''}${pctT}%</span>`;
+}
+
+// ╔══════════════════════════════════════════════════════════════╗
+// ║  NOTA SETTIMANALE (localStorage)                            ║
+// ╚══════════════════════════════════════════════════════════════╝
+function notaKey(){const mk=getMk();const sid=getSW(mk)?.id||'S1';return `nota_mihi_${mk}_${sid}`;}
+function loadNota(){return localStorage.getItem(notaKey())||'';}
+function saveNota(v){localStorage.setItem(notaKey(),v);}
+function renderNota(){
+  const v=loadNota();
+  return `<div style="margin-top:18px">
+    <div class="sec-lbl" style="margin-bottom:8px">📝 Nota settimana</div>
+    <textarea id="nota-week" placeholder="Contesto: assenze, eventi, chiusura anticipata…"
+      style="width:100%;min-height:68px;border:1px solid var(--bord);border-radius:10px;padding:10px 12px;font-family:inherit;font-size:13px;background:var(--card);color:var(--text);resize:none;outline:none"
+      oninput="saveNota(this.value)">${v}</textarea>
+  </div>`;
+}
+
+// ╔══════════════════════════════════════════════════════════════╗
+// ║  TAB 1: SETTIMANA LIVE (v3)                                 ║
+// ╚══════════════════════════════════════════════════════════════╝
+function renderLive(){
+  const mk=getMk();const m=MESI[mk];
+  if(!m){document.getElementById('pane-live').innerHTML='<p class="no-data">Nessun dato configurato.</p>';return;}
+  const sw=getSW(mk);const sid=sw?.id||'S1';
+  const st=STORICO[mk]?.[sid]||{};
+  let html='';
+  const pace=getPaceRatio(sw);
+  const urlCollab=getUrlCollab();
+  if(urlCollab){
+    const myC=m.collaboratori.find(c=>c.id===urlCollab);
+    if(myC){const clr=rc(myC.ruolo);html+=`<div style="background:${clr}14;border-radius:14px;padding:14px 16px;margin-bottom:14px;display:flex;align-items:center;gap:12px">
+      <div style="width:44px;height:44px;border-radius:50%;background:${clr}28;color:${clr};display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:900;flex-shrink:0">${ini(myC.nome)}</div>
+      <div><div style="font-size:17px;font-weight:900">👋 Ciao, ${myC.nome.split(' ')[0]}!</div>
+      <div style="font-size:11px;color:var(--text2);margin-top:2px">I tuoi KPI · ${sw?.label||'Settimana'}</div></div>
+    </div>`;}
+  }
+  html+=renderAlert(sw,st,m,pace);
+  html+=renderRiepilogoSalone(sw,st,m,pace);
+  html+=`<div class="sec-lbl">📊 ${sw?.label||'Settimana'} · Semaforo vs Target</div>`;
+  for(const c of m.collaboratori){
+    if(urlCollab&&c.id!==urlCollab)continue;
+    const color=rc(c.ruolo);const d=st[c.id]||{};
+    const servizi=d.servizi||null;
+    const suggs=genSuggerimenti(c,d,servizi);
+
+    html+=`<div class="ccard" style="border-left-color:${color}">
+      <div class="ccard-hdr">
+        <div class="cav" style="background:${color}18;color:${color}">${ini(c.nome)}</div>
+        <div><div class="cname">${c.nome}${getTrendArrow(mk,sid,c.id)}</div><div class="crole" style="background:${color}18;color:${color}">${c.ruolo}</div></div>
+      </div>
+      <div class="kpi-grid">`;
+    for(const kpi of KD){
+      const av=d[kpi.k],tv=c[kpi.tw],s=semPace(kpi.k,av,tv,pace),p=kpi.k==='sat'?'':pctPace(av,tv,pace);
+      if(tv===null||tv===undefined)continue;
+      html+=`<div class="kc"><div class="kl">${kpi.lbl}</div>
+        <div class="kv ${s}"><span class="dot d${s}"></span>${kpi.fmt(av)}${p?`<span class="kp">${p}</span>`:''}</div>
+        <div class="kt">▸ ${kpi.fmt(tv)}</div></div>`;
+    }
+    html+=`</div>`;
+    {const sf=sem(d.fiche,c.fiche_t),ss=sem(d.serv,c.serv_t);
+    html+=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-top:5px">
+        <div class="kc" style="background:transparent;border:1px solid var(--bord)">
+          <div class="kl">Ticket Medio</div>
+          <div class="kv ${sf}"><span class="dot d${sf}"></span>${num(d.fiche,2)}</div>
+          <div class="kt">▸ ${num(c.fiche_t,2)}</div>
+        </div>
+        <div class="kc" style="background:transparent;border:1px solid var(--bord)">
+          <div class="kl">Serv/Cliente</div>
+          <div class="kv ${ss}"><span class="dot d${ss}"></span>${num(d.serv,1)}</div>
+          <div class="kt">▸ ${num(c.serv_t,1)}</div>
+        </div>
+      </div>`;}
+    {
+      const rifPct=(d.pre&&d.rit!==null&&d.rit!==undefined)?Math.round(d.rit/d.pre*100):null;
+      if(rifPct!==null){
+        const rifCol=rifPct>=70?'var(--green)':rifPct>=50?'var(--amber)':'var(--red)';
+        html+=`<div style="margin-top:8px;background:var(--bg2);border-radius:10px;padding:9px 12px;display:flex;align-items:center;gap:10px">
+          <div style="flex:1">
+            <div style="font-size:9px;text-transform:uppercase;letter-spacing:.6px;color:var(--text2);margin-bottom:4px;font-weight:800">🔁 Rifissazione clienti</div>
+            <div style="background:var(--bord);border-radius:3px;height:6px;overflow:hidden">
+              <div style="height:6px;border-radius:3px;width:${Math.min(rifPct,100)}%;background:${rifCol};transition:width .4s"></div>
+            </div>
+          </div>
+          <div style="font-size:18px;font-weight:900;color:${rifCol};min-width:42px;text-align:right">${rifPct}%</div>
+        </div>`;
+      }
+    }
+    if(urlCollab){
+      html+=`<div class="profilo-wrap">
+        <div class="psec-lbl">💡 Suggerimenti personalizzati</div>`;
+    } else {
+      html+=`<button class="expand-btn" id="btn-profilo-${c.id}" onclick="toggleProfilo('${c.id}')">▾ Profilo &amp; Suggerimenti</button>
+        <div id="profilo-${c.id}" class="profilo-wrap" style="display:none">
+          <button onclick="stampaProfilo('${c.id}')" style="width:100%;margin-bottom:12px;padding:9px;background:#1a1510;border:none;border-radius:9px;color:#a67318;font-size:11px;font-weight:800;cursor:pointer;font-family:inherit;letter-spacing:.5px;display:flex;align-items:center;justify-content:center;gap:6px">📄 Esporta scheda personale</button>
+          <div class="psec-lbl">💡 Suggerimenti personalizzati</div>`;
+    }
+
+    for(const sg of suggs){
+      html+=`<div class="sugg-card ${sg.cls}"><span class="sugg-icon">${sg.icon}</span><div><div class="sugg-title">${sg.title}</div><div class="sugg-text">${sg.text}</div></div></div>`;
+    }
+
+    html+=`<div class="psec-lbl" style="margin-top:14px">📊 Profilo Servizi</div>`;
+    html+=renderServizi(servizi, color);
+    html+=`</div></div>`;
+  }
+
+  if(!urlCollab)html+=renderNota();
+  html+=`<div class="sec-lbl" style="margin-top:18px">📈 Cumulato ${m.label}</div>`;
+  for(const c of m.collaboratori){
+    if(urlCollab&&c.id!==urlCollab)continue;
+    const color=rc(c.ruolo);const tot=getTot(mk,c.id);
+    const nW=['S1','S2','S3','S4'].filter(s=>STORICO[mk]?.[s]?.[c.id]?.fat!==null&&STORICO[mk]?.[s]?.[c.id]?.fat!==undefined).length;
+    html+=`<div class="ccard" style="border-left-color:${color};padding:11px 13px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+        <span style="font-weight:800;font-size:14px">${c.nome}</span>
+        <span style="font-size:10px;color:var(--text2)">${nW}/4 settimane</span>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:5px">`;
+    for(const kpi of KD){
+      const av=tot[kpi.k],tv=c[kpi.tm],s=semKpi(kpi.k,av,tv);
+      if(tv===null||tv===undefined)continue;
+      html+=`<div class="kc" style="padding:6px 4px"><div class="kl">${kpi.lbl}</div>
+        <div class="kv ${s}" style="font-size:12px">${kpi.fmt(av)}</div>
+        <div class="kt">/ ${kpi.fmt(tv)}</div></div>`;
+    }
+    html+=`</div>
+      <div style="margin-top:10px;display:flex;align-items:flex-end;gap:4px;height:36px">
+        ${['S1','S2','S3','S4'].map(sid2=>{
+          const v=STORICO[mk]?.[sid2]?.[c.id]?.fat;
+          const maxV=Math.max(...['S1','S2','S3','S4'].map(s2=>STORICO[mk]?.[s2]?.[c.id]?.fat||0));
+          const h2=v!=null&&maxV>0?Math.round((v/maxV)*32):0;
+          const isAct=getSW(mk)?.id===sid2;
+          return `<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px">
+            <div style="font-size:8px;color:${v!=null?color:'var(--bord)'};font-weight:${isAct?'800':'600'};opacity:${v!=null?1:.4}">${v!=null?eur(v):''}</div>
+            <div style="width:100%;height:${h2}px;background:${v!=null?color+'44':'var(--bord)'};border-radius:3px 3px 0 0;border-bottom:2px solid ${isAct?color:'transparent'};min-height:${v!=null?4:0}px"></div>
+            <div style="font-size:8px;color:var(--text2);font-weight:${isAct?'800':'500'}">${sid2}</div>
+          </div>`;
+        }).join('')}
+      </div></div>`;
+  }
+  document.getElementById('pane-live').innerHTML=html;
+}
+
+function openLinkModal(){
+  const mk=getMk();const m=MESI[mk];
+  if(!m)return;
+  const baseUrl=window.location.origin+window.location.pathname;
+  let rows='';
+  for(const c of m.collaboratori){
+    const link=baseUrl+'?c='+c.id;
+    rows+=`<div style="display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--bord)">
+      <span style="flex:1;font-size:14px;font-weight:700">${c.nome}</span>
+      <button onclick="navigator.clipboard.writeText('${link}');this.textContent='✅';setTimeout(()=>this.textContent='📋',1800)" style="width:36px;height:36px;background:var(--bg2);border:1px solid var(--bord);border-radius:10px;font-size:16px;cursor:pointer;font-family:inherit">📋</button>
+    </div>`;
+  }
+  document.getElementById('modal-links-body').innerHTML='<div style="font-size:11px;color:var(--text2);margin-bottom:12px">Ogni collaboratore vede solo i suoi dati, sempre aggiornati.</div>'+rows;
+  document.getElementById('modal-links').style.display='flex';
+}
+
+// ╔══════════════════════════════════════════════════════════════╗
+// ║  TAB 2: IL MESE                                              ║
+// ╚══════════════════════════════════════════════════════════════╝
+let meseKpi='fat';
+function renderMese(){
+  const mk=getMk();const m=MESI[mk];
+  if(!m){document.getElementById('pane-mese').innerHTML='<p class="no-data">Nessun dato.</p>';return;}
+  const sw=getSW(mk);const kd=KD.find(k=>k.k===meseKpi)||KD[0];
+  const icons={fat:'💰',pre:'👥',ret:'🛍️',rit:'🔄',nuovi:'✨',rich:'📞',sat:'📅'};
+  let html=`<div class="kpi-sel">`;
+  KD.forEach(k=>html+=`<button class="kbtn${k.k===meseKpi?' active':''}" onclick="meseKpi='${k.k}';renderMese()">${icons[k.k]} ${k.lbl}</button>`);
+  html+=`</div><div class="tbl-wrap"><table><thead><tr><th>Collaboratore</th>`;
+  m.settimane.forEach(s=>{
+    const live=s.id===sw?.id;
+    html+=`<th>${s.label}${live?'<br><span class="badge-live">live</span>':''}</th>`;
+  });
+  html+=`<th>TOT</th><th>TARGET</th><th>%</th></tr></thead><tbody>`;
+  for(const c of m.collaboratori){
+    const color=rc(c.ruolo);const tm=c[kd.tm];const tot=getTot(mk,c.id);const sf=semKpi(kd.k,tot[meseKpi],tm);
+    if(tm===null||tm===undefined)continue;
+    html+=`<tr><td><span style="color:${color};font-weight:800">${c.nome}</span></td>`;
+    m.settimane.forEach(s=>{
+      const v=STORICO[mk]?.[s.id]?.[c.id]?.[meseKpi];const sv=semKpi(kd.k,v,c[kd.tw]);const p=kd.k==='sat'?'':pct(v,c[kd.tw]);
+      html+=`<td class="${sv}">${kd.fmt(v)}${p?`<br><small style="opacity:.5;font-size:9px">${p}</small>`:''}</td>`;
+    });
+    html+=`<td class="${sf}" style="font-weight:800">${kd.fmt(tot[meseKpi])}</td>
+      <td style="color:var(--text2)">${kd.fmt(tm)}</td>
+      <td class="${sf}">${pct(tot[meseKpi],tm)||'–'}</td></tr>`;
+  }
+  let totAll=null,tgTot=0;const sums={};
+  const isAvg=!kd.sum;
+  for(const sid of['S1','S2','S3','S4']){
+    let sv=null,cnt=0;
+    m.collaboratori.forEach(c=>{const v=STORICO[mk]?.[sid]?.[c.id]?.[meseKpi];if(v!==null&&v!==undefined){sv=(sv||0)+v;cnt++;}});
+    sums[sid]=isAvg?(cnt>0?sv/cnt:null):sv;
+  }
+  if(isAvg){let cnt=0;m.collaboratori.forEach(c=>{const t=getTot(mk,c.id);if(t[meseKpi]!==null){totAll=(totAll||0)+t[meseKpi];cnt++;}});if(cnt)totAll/=cnt;tgTot=70;}
+  else{m.collaboratori.forEach(c=>{const t=getTot(mk,c.id);if(t[meseKpi]!==null)totAll=(totAll||0)+t[meseKpi];if(c[kd.tm])tgTot+=c[kd.tm];});}
+  html+=`<tr class="tot-row"><td>${isAvg?'MEDIA SALONE':'TOTALE SALONE'}</td>`;
+  m.settimane.forEach(s=>html+=`<td>${kd.fmt(sums[s.id])}</td>`);
+  const sf2=semKpi(kd.k,totAll,tgTot);
+  html+=`<td class="${sf2}">${kd.fmt(totAll)}</td><td style="color:var(--text2)">${isAvg?'70%':kd.fmt(tgTot)}</td><td class="${sf2}">${isAvg?'':pct(totAll,tgTot)||'–'}</td></tr>`;
+  html+=`</tbody></table></div>`;
+  document.getElementById('pane-mese').innerHTML=html;
+}
+
+// ╔══════════════════════════════════════════════════════════════╗
+// ║  TAB 3: STORICO                                              ║
+// ╚══════════════════════════════════════════════════════════════╝
+let stMk=getMk(),stKpi='fat';
+function renderStorico(){
+  const keys=Object.keys(STORICO).sort().reverse();
+  if(!keys.length){document.getElementById('pane-storico').innerHTML='<p class="no-data">Nessuno storico disponibile.</p>';return;}
+  const kd=KD.find(k=>k.k===stKpi)||KD[0];
+  const icons={fat:'💰',pre:'👥',ret:'🛍️',rit:'🔄',nuovi:'✨',rich:'📞',sat:'📅'};
+  let html=`<div class="msel-wrap"><select onchange="stMk=this.value;renderStorico()">`;
+  keys.forEach(mk=>{
+    const lbl=MESI[mk]?.label||mk;const cl=STORICO[mk]?.chiuso?' ✅':'';
+    html+=`<option value="${mk}"${mk===stMk?' selected':''}>${lbl}${cl}</option>`;
+  });
+  html+=`</select>`;
+  if(STORICO[stMk]?.chiuso)html+=`<span class="badge-chiuso">Mese chiuso ✅</span>`;
+  html+=`</div><div class="kpi-sel">`;
+  KD.forEach(k=>html+=`<button class="kbtn${k.k===stKpi?' active':''}" onclick="stKpi='${k.k}';renderStorico()">${icons[k.k]} ${k.lbl}</button>`);
+  html+=`</div>`;
+  const m=MESI[stMk];const st=STORICO[stMk];
+  if(!m||!st){html+='<p class="no-data">Dati non disponibili.</p>';document.getElementById('pane-storico').innerHTML=html;return;}
+  html+=`<div class="tbl-wrap"><table><thead><tr><th>Collaboratore</th>`;
+  m.settimane.forEach(s=>html+=`<th>${s.label}</th>`);
+  html+=`<th>TOT</th><th>TARGET</th><th>%</th></tr></thead><tbody>`;
+  for(const c of m.collaboratori){
+    const color=rc(c.ruolo);const tm=c[kd.tm];const tot=getTot(stMk,c.id);const sf=semKpi(kd.k,tot[stKpi],tm);
+    if(tm===null||tm===undefined)continue;
+    html+=`<tr><td><span style="color:${color};font-weight:800">${c.nome}</span></td>`;
+    m.settimane.forEach(s=>{const v=st?.[s.id]?.[c.id]?.[stKpi];html+=`<td class="${semKpi(kd.k,v,c[kd.tw])}"> ${kd.fmt(v)}</td>`;});
+    html+=`<td class="${sf}" style="font-weight:800">${kd.fmt(tot[stKpi])}</td>
+      <td style="color:var(--text2)">${kd.fmt(tm)}</td>
+      <td class="${sf}">${pct(tot[stKpi],tm)||'–'}</td></tr>`;
+  }
+  let totAll=null,tgTot=0;const sums={};
+  const isAvgS=!kd.sum;
+  for(const sid of['S1','S2','S3','S4']){
+    let sv=null,cnt=0;
+    m.collaboratori.forEach(c=>{const v=st?.[sid]?.[c.id]?.[stKpi];if(v!==null&&v!==undefined){sv=(sv||0)+v;cnt++;}});
+    sums[sid]=isAvgS?(cnt>0?sv/cnt:null):sv;
+  }
+  if(isAvgS){let cnt=0;m.collaboratori.forEach(c=>{const t=getTot(stMk,c.id);if(t[stKpi]!==null){totAll=(totAll||0)+t[stKpi];cnt++;}});if(cnt)totAll/=cnt;tgTot=70;}
+  else{m.collaboratori.forEach(c=>{const t=getTot(stMk,c.id);if(t[stKpi]!==null)totAll=(totAll||0)+t[stKpi];if(c[kd.tm])tgTot+=c[kd.tm];});}
+  html+=`<tr class="tot-row"><td>${isAvgS?'MEDIA SALONE':'TOTALE SALONE'}</td>`;
+  m.settimane.forEach(s=>html+=`<td>${kd.fmt(sums[s.id])}</td>`);
+  const sf3=semKpi(kd.k,totAll,tgTot);
+  html+=`<td class="${sf3}">${kd.fmt(totAll)}</td><td style="color:var(--text2)">${isAvgS?'70%':kd.fmt(tgTot)}</td><td class="${sf3}">${isAvgS?'':pct(totAll,tgTot)||'–'}</td></tr>`;
+  html+=`</tbody></table></div>`;
+  document.getElementById('pane-storico').innerHTML=html;
+}
+
+// ╔══════════════════════════════════════════════════════════════╗
+// ║  CONFRONTA                                                   ║
+// ╚══════════════════════════════════════════════════════════════╝
+let cmpA=null,cmpB=null;
+const SCcol={g:'#15803d',a:'#b45309',r:'#b91c1c',n:'#c8c3bb'};
+function showComparePicker(){
+  const mk=getMk();const m=MESI[mk];if(!m)return;
+  document.getElementById('cpicker-list').innerHTML=m.collaboratori.map(c=>`
+    <div class="cpicker-item" onclick="startCompare('${c.id}','${mk}')">
+      <div class="cpicker-av" style="background:${rc(c.ruolo)}18;color:${rc(c.ruolo)}">${ini(c.nome)}</div>
+      <div><div style="font-size:13px;font-weight:700">${c.nome}</div><div style="font-size:11px;color:var(--text2)">${c.ruolo}</div></div>
+    </div>`).join('');
+  document.getElementById('cpicker').style.display='flex';
+}
+function closeComparePicker(){document.getElementById('cpicker').style.display='none';}
+function startCompare(idA,mk){
+  closeComparePicker();
+  const m=MESI[mk];if(!m)return;
+  cmpA=m.collaboratori.find(c=>c.id===idA);
+  const remaining=m.collaboratori.filter(c=>c.id!==idA);
+  document.getElementById('cpicker-list').innerHTML=`<p style="font-size:12px;color:var(--text2);margin-bottom:10px">Confronta <strong>${cmpA.nome}</strong> con:</p>`+
+    remaining.map(c=>`
+    <div class="cpicker-item" onclick="renderCompare('${idA}','${c.id}','${mk}')">
+      <div class="cpicker-av" style="background:${rc(c.ruolo)}18;color:${rc(c.ruolo)}">${ini(c.nome)}</div>
+      <div><div style="font-size:13px;font-weight:700">${c.nome}</div><div style="font-size:11px;color:var(--text2)">${c.ruolo}</div></div>
+    </div>`).join('');
+  document.getElementById('cpicker').style.display='flex';
+}
+function renderCompare(idA,idB,mk){
+  closeComparePicker();
+  const m=MESI[mk];if(!m)return;
+  const a=m.collaboratori.find(c=>c.id===idA);
+  const b=m.collaboratori.find(c=>c.id===idB);
+  const totA=getTot(mk,idA),totB=getTot(mk,idB);
+  function row(lbl,aA,aT,bA,bT,fmt){
+    const aPct=aA!==null&&aT?Math.round((aA/aT)*100):null;
+    const bPct=bA!==null&&bT?Math.round((bA/bT)*100):null;
+    const sA=sem(aA,aT),sB=sem(bA,bT);
+    const aBar=aA!==null&&aT?Math.min((aA/aT)*100,120):0;
+    const bBar=bA!==null&&bT?Math.min((bA/bT)*100,120):0;
+    const winner=aPct!==null&&bPct!==null?(aPct>bPct?a.nome:bPct>aPct?b.nome:'Pari'):null;
+    return `<div class="cmp-card">
+      <div class="cmp-lbl">${lbl}</div>
+      <div class="cmp-cols">
+        <div class="cmp-col">
+          <div class="cmp-cname">${a.nome}</div>
+          <div class="cmp-val ${sA}">${fmt(aA)}</div>
+          <div class="cmp-pct ${sA}">${aPct!==null?aPct+'%':'–'}</div>
+          <div class="cmp-bar"><div class="cmp-fill" style="width:${aBar}%;background:${SCcol[sA]||'#ccc'}"></div></div>
+        </div>
+        <div class="cmp-sep">VS</div>
+        <div class="cmp-col">
+          <div class="cmp-cname">${b.nome}</div>
+          <div class="cmp-val ${sB}">${fmt(bA)}</div>
+          <div class="cmp-pct ${sB}">${bPct!==null?bPct+'%':'–'}</div>
+          <div class="cmp-bar"><div class="cmp-fill" style="width:${bBar}%;background:${SCcol[sB]||'#ccc'}"></div></div>
+        </div>
+      </div>
+      ${winner?`<div class="cmp-winner">✦ ${winner} in vantaggio</div>`:''}
+    </div>`;
+  }
+  let html=`<div class="cmp-hdr">
+    <div class="cmp-av" style="background:${rc(a.ruolo)}18;color:${rc(a.ruolo)}">${ini(a.nome)}</div>
+    <div><div class="cmp-name">${a.nome}</div><div class="cmp-role">${a.ruolo}</div></div>
+    <div class="cmp-vs">VS</div>
+    <div class="cmp-av" style="background:${rc(b.ruolo)}18;color:${rc(b.ruolo)}">${ini(b.nome)}</div>
+    <div><div class="cmp-name">${b.nome}</div><div class="cmp-role">${b.ruolo}</div></div>
+  </div>
+  <div class="cmp-grid">
+    <p style="font-size:11px;color:var(--text2);margin-bottom:0">Confronto cumulato ${MESI[mk]?.label||mk}</p>`;
+  html+=row('💰 Fatturato',totA.fat,a.fat_tm,totB.fat,b.fat_tm,eur);
+  html+=row('👥 Clienti fatti',totA.pre,a.pre_tm,totB.pre,b.pre_tm,num);
+  html+=row('🔄 Clienti di ritorno',totA.rit,a.rit_tm,totB.rit,b.rit_tm,num);
+  html+=row('✨ Nuovi Clienti',totA.nuovi,a.nuovi_tm,totB.nuovi,b.nuovi_tm,num);
+  html+=row('🛍️ Retail',totA.ret,a.ret_tm,totB.ret,b.ret_tm,num);
+  html+=row('📞 Richiami',totA.rich,a.rich_tm,totB.rich,b.rich_tm,num);
+  html+=`</div>`;
+  document.getElementById('cmp-wrap').innerHTML=html;
+  document.getElementById('view-cmp').style.display='block';
+  document.getElementById('tabs-nav').style.display='none';
+  document.getElementById('sumbar').style.display='none';
+  document.querySelectorAll('.tab-pane').forEach(p=>p.style.display='none');
+  document.getElementById('nav-label').textContent='Confronto';
+  window.scrollTo(0,0);
+}
+function closeCompare(){
+  document.getElementById('view-cmp').style.display='none';
+  document.getElementById('tabs-nav').style.display='flex';
+  document.getElementById('sumbar').style.display='flex';
+  document.querySelector('#pane-live').style.display='block';
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelector('.tab-btn').classList.add('active');
+  document.getElementById('nav-label').textContent='Target Team';
+  window.scrollTo(0,0);
+}
+
+// ╔══════════════════════════════════════════════════════════════╗
+// ║  INIT                                                        ║
+// ╚══════════════════════════════════════════════════════════════╝
+const ua=STORICO[getMk()]?.ultimo_aggiornamento;
+document.getElementById('cover-update').textContent=ua?`Aggiornato: ${ua}`:'';
+
+// Auto-login per collaboratore se ?c= presente
+(function(){
+  const uc=getUrlCollab();
+  if(!uc)return;
+  // Modalità collaboratore: nascondi il FAB link team
+  const fab=document.getElementById('fab-links');if(fab)fab.style.display='none';
+  document.getElementById('view-cover').style.display='none';
+  document.getElementById('view-app').style.display='block';
+  document.getElementById('view-analisi').style.display='none';
+  document.getElementById('view-cmp').style.display='none';
+  document.getElementById('tabs-nav').style.display='none';
+  document.getElementById('sumbar').style.display='none';
+  const hdrBtns=document.querySelector('.hdr-btns');if(hdrBtns)hdrBtns.style.display='none';
+  const navBc=document.querySelector('.nav-bc');if(navBc)navBc.style.display='none';
+  document.querySelector('#pane-live').style.display='block';
+  const m=MESI[getMk()];const sw=getSW(getMk());
+  if(document.getElementById('hdr-week'))document.getElementById('hdr-week').textContent=sw?.label||'–';
+  if(document.getElementById('hdr-month'))document.getElementById('hdr-month').textContent=m?.label||'';
+  renderLive();
+})();
+</script>
+</body>
+</html>
