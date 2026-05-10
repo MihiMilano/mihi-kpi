@@ -674,6 +674,8 @@ function getSW(mk){
     const a=new Date(s.a);a.setHours(23,59,59,0);
     if(t>=da&&t<=a)return s;
   }
+  const next=m.settimane.find(s=>new Date(s.da)>t);
+  if(next)return next;
   return [...m.settimane].reverse().find(s=>new Date(s.da)<=t)||m.settimane[0];
 }
 function sem(a,t){
