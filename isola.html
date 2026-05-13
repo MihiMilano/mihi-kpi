@@ -2311,6 +2311,7 @@ function renderCashFlow(){
   const ana=loadAna();
   const {totale:personale}=calcPersCost(mk);
   const fissiTot=Object.values(ana.fissi||{}).reduce((s,v)=>s+(+v||0),0);
+  const varTot=varTotal(ana);
   const costiMensili=fissiTot+personale+varTot;
   const costiSett=costiMensili/4;
 
