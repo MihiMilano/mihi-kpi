@@ -313,6 +313,71 @@ select{background:var(--card);color:var(--text);border:1px solid var(--bord2);pa
 .bvc-delta.pos{color:var(--green)}.bvc-delta.neg{color:var(--red)}
 .bvc-hdr{font-size:9px;text-transform:uppercase;letter-spacing:.6px;color:var(--text2);font-weight:800}
 
+/* ── CALCOLATORE COSTO PERSONALE ─────────────────────────────── */
+.pers-calc{background:linear-gradient(135deg,rgba(166,115,24,.05),rgba(166,115,24,.02));border:1px solid rgba(166,115,24,.25);border-radius:12px;padding:14px;margin-bottom:12px}
+.pers-calc-title{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--gold);margin-bottom:12px;display:flex;align-items:center;gap:6px}
+.pers-tot-input{display:flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--bord);border-radius:10px;padding:10px 14px;margin-bottom:12px}
+.pers-tot-lbl{flex:1;font-size:12px;font-weight:700;color:var(--text)}
+.pers-tot-lbl small{display:block;font-size:10px;color:var(--text2);font-weight:500;margin-top:1px}
+.pers-nette-grid{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
+.pers-netta-row{display:flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--bord);border-radius:9px;padding:8px 12px}
+.pers-netta-name{flex:1;font-size:12px;font-weight:700;color:var(--text)}
+.pers-inp{width:100px;background:var(--bg2);border:1px solid var(--bord);border-radius:8px;padding:7px 10px;font-size:13px;font-weight:700;color:var(--text);font-family:inherit;text-align:right;flex-shrink:0}
+.pers-inp:focus{outline:none;border-color:var(--gold);background:#fff}
+.pers-inp-unit{font-size:11px;color:var(--text2);font-weight:600;flex-shrink:0}
+.pers-breakdown{background:var(--card);border:1px solid var(--bord);border-radius:10px;overflow:hidden}
+.pers-bk-hdr{display:grid;grid-template-columns:1fr 80px 90px 90px;gap:0;padding:8px 12px;background:var(--bg2);font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:var(--text2);border-bottom:1px solid var(--bord)}
+.pers-bk-row{display:grid;grid-template-columns:1fr 80px 90px 90px;gap:0;padding:9px 12px;border-bottom:1px solid var(--bg2);align-items:center;font-size:12px}
+.pers-bk-row:last-child{border-bottom:none}
+.pers-bk-tot{background:rgba(166,115,24,.06);font-weight:900;font-size:13px;border-top:2px solid rgba(166,115,24,.2)}
+.pers-bk-name{font-weight:700}
+.pers-bk-val{text-align:right;font-weight:700;padding-right:8px}
+.pers-bk-extra{text-align:right;font-weight:700;color:var(--amber);padding-right:8px}
+.pers-bk-tot-val{text-align:right;font-weight:900;color:var(--gold)}
+.pers-check{display:flex;align-items:center;gap:8px;margin-top:10px;padding:8px 12px;border-radius:8px;font-size:11px;font-weight:700}
+.pers-check-ok{background:#f0fdf4;color:var(--green);border:1px solid #86efac}
+.pers-check-err{background:#fff5f5;color:var(--red);border:1px solid #fca5a5}
+
+/* ── REDDITIVITÀ AVANZATA ──────────────────────────────────────── */
+.redd-card{background:var(--card);border:1px solid var(--bord);border-radius:14px;padding:16px;margin-bottom:12px}
+.redd-card.redd-ok{border-left:4px solid var(--green)}
+.redd-card.redd-warn{border-left:4px solid var(--amber)}
+.redd-card.redd-bad{border-left:4px solid var(--red)}
+.redd-card.redd-nodata{border-left:4px solid var(--bord2);opacity:.7}
+.redd-hdr{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.redd-av{width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:900;flex-shrink:0}
+.redd-name{font-size:16px;font-weight:800;flex:1}
+.redd-verdict{font-size:11px;font-weight:800;padding:4px 10px;border-radius:20px;flex-shrink:0}
+.redd-verdict-ok{background:#dcfce7;color:#15803d}
+.redd-verdict-warn{background:#fef9c3;color:#b45309}
+.redd-verdict-bad{background:#fee2e2;color:#b91c1c}
+.redd-verdict-nd{background:var(--bg2);color:var(--text2)}
+/* progress bar verso break-even */
+.redd-prog-wrap{margin-bottom:14px}
+.redd-prog-labels{display:flex;justify-content:space-between;font-size:10px;font-weight:700;margin-bottom:4px}
+.redd-prog-track{height:12px;background:var(--bord);border-radius:6px;overflow:visible;position:relative}
+.redd-prog-fill{height:100%;border-radius:6px;transition:width 1s ease;position:relative}
+.redd-be-marker{position:absolute;top:-4px;width:2px;height:20px;background:var(--amber);opacity:.8}
+.redd-be-label{position:absolute;top:-18px;font-size:8px;font-weight:800;color:var(--amber);transform:translateX(-50%);white-space:nowrap}
+/* P&L per collaboratore */
+.redd-pl{background:var(--bg2);border-radius:10px;padding:10px 12px}
+.redd-pl-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;font-size:12px}
+.redd-pl-lbl{color:var(--text2);font-weight:600}
+.redd-pl-val{font-weight:700;text-align:right}
+.redd-pl-sep{border-top:1px solid var(--bord);margin:4px 0}
+.redd-pl-result{display:flex;justify-content:space-between;align-items:center;padding:8px 10px;border-radius:8px;margin-top:6px;font-size:13px;font-weight:800}
+.redd-pl-result-ok{background:rgba(21,128,61,.1);color:var(--green)}
+.redd-pl-result-bad{background:rgba(185,28,28,.08);color:var(--red)}
+/* break-even boxes */
+.redd-be-row{display:flex;gap:8px;margin-top:12px}
+.redd-be-box{flex:1;background:var(--bg2);border-radius:9px;padding:10px;text-align:center}
+.redd-be-val{font-size:15px;font-weight:900}
+.redd-be-lbl{font-size:9px;text-transform:uppercase;letter-spacing:.5px;color:var(--text2);margin-top:2px}
+.redd-be-sub{font-size:9px;color:var(--text2);margin-top:2px;font-weight:600}
+/* Nota metodologica */
+.redd-note{background:var(--bg2);border-radius:10px;padding:12px 14px;font-size:11px;color:var(--text2);line-height:1.6;margin-top:8px}
+.redd-note b{color:var(--text)}
+
 </style>
 </head>
 <body>
@@ -1969,7 +2034,7 @@ function renderCruscotto(){
   const {total:fatMese,byWeek}=anMonthRevenue(mk);
   const tgMese=m.collaboratori.reduce((s,c)=>s+(c.fat_tm||0),0);
   const ana=loadAna();
-  const personale=anGetPersonale(mk);
+  const {totale:personale}=calcPersCost(mk);
   const fissiTot=Object.values(ana.fissi||{}).reduce((s,v)=>s+(+v||0),0);
   const varPct=ana.variabili_pct||0;
   const varAltro=ana.variabili_altro||0;
@@ -2116,15 +2181,7 @@ function renderPL(){
     <div class="an-pe-tot-row" style="margin-top:8px"><span>Totale Costi Fissi</span><span class="an-pe-tot" id="an-fi-tot">${anFmt2(fissiTot)}</span></div>
   </div>
 
-  <div class="an-card">
-    <div class="an-card-title">👥 Personale <span style="font-size:9px;font-weight:600;color:var(--text2)">(da contratto)</span></div>
-    ${(m?.collaboratori||[]).map(c=>`
-    <div class="an-pe-row">
-      <span class="an-pe-lbl">${c.nome}</span>
-      <span class="an-pe-val">${anFmt2(c.costo_m)}</span>
-    </div>`).join('')}
-    <div class="an-pe-tot-row" style="margin-top:4px"><span>Totale Personale</span><span class="an-pe-tot">${anFmt2(personale)}</span></div>
-  </div>
+  <div id="pers-calc-wrap">${renderPersCalc(mk)}</div>
 
   <div class="an-card">
     <div class="an-card-title">📦 Costi Variabili</div>
@@ -2184,7 +2241,7 @@ function renderCashFlow(){
   const mk=anGetMk(); const m=MESI[mk];
   const {byWeek}=anMonthRevenue(mk);
   const ana=loadAna();
-  const personale=anGetPersonale(mk);
+  const {totale:personale}=calcPersCost(mk);
   const fissiTot=Object.values(ana.fissi||{}).reduce((s,v)=>s+(+v||0),0);
   const costiMensili=fissiTot+personale+(+ana.variabili_altro||0);
   const costiSett=costiMensili/4;
@@ -2391,20 +2448,43 @@ function anSkedDel(id){
 function renderRedd(){
   const mk=anGetMk(); const m=MESI[mk];
   if(!m){ document.getElementById('an-redd').innerHTML='<p class="no-data">Nessun dato.</p>'; return; }
+
+  const ana=loadAna();
+  const {totale:costoPers, perCollab, hasData:hasPersCost}=calcPersCost(mk);
+  const varPct=(+ana.variabili_pct||0)/100;
+  const fissiTot=Object.values(ana.fissi||{}).reduce((s,v)=>s+(+v||0),0);
+
+  // P&L per collaboratore
   const collabs=m.collaboratori.map(c=>{
     const fat=anCollabMonthFat(mk,c.id)||0;
-    const costo=c.costo_m||0;
-    const margin=fat-costo;
-    const marginPct=fat>0?margin/fat*100:null;
-    return {...c,fat,costo,margin,marginPct};
+    const costoP=perCollab[c.id]||c.costo_m||0;
+    // Quota costi fissi proporzionale al costo personale
+    const quotaFissi=costoPers>0 ? (costoP/costoPers)*fissiTot : fissiTot/m.collaboratori.length;
+    const varCosto=fat*varPct;
+    const margLordo=fat-varCosto;
+    const contribuzione=margLordo-costoP;
+    const risultato=contribuzione-quotaFissi;
+    // Break-even: quanto fatturato serve per coprire i costi (al netto dei variabili)
+    const be_personale=varPct<1 ? costoP/(1-varPct) : 0;
+    const be_totale=varPct<1 ? (costoP+quotaFissi)/(1-varPct) : 0;
+    const copertura=be_totale>0 ? fat/be_totale : null;
+    return {c, fat, costoP, quotaFissi, varCosto, margLordo, contribuzione, risultato, be_personale, be_totale, copertura};
   });
-  const maxFat=Math.max(...collabs.map(c=>c.fat),1);
-  const totalFat=collabs.reduce((s,c)=>s+c.fat,0);
-  const totalCosto=collabs.reduce((s,c)=>s+c.costo,0);
-  const totalMargin=totalFat-totalCosto;
-  const totalMarginPct=totalFat>0?totalMargin/totalFat*100:null;
 
-  document.getElementById('an-redd').innerHTML=`
+  const totalFat=collabs.reduce((s,d)=>s+d.fat,0);
+  const totalCosto=collabs.reduce((s,d)=>s+d.costoP,0);
+  const totalRisultato=collabs.reduce((s,d)=>s+d.risultato,0);
+  const fissiCoperti=fissiTot>0&&totalFat>0;
+
+  // Avvisi configurazione
+  const warningHtml = (!hasPersCost||fissiTot===0) ? `
+  <div style="background:rgba(180,83,9,.07);border:1px solid rgba(180,83,9,.25);border-radius:10px;padding:12px 14px;margin-bottom:12px;font-size:11px;color:var(--amber);font-weight:600;line-height:1.6">
+    ⚙️ ${!hasPersCost?'Inserisci i costi personale nel <b style="cursor:pointer;text-decoration:underline" onclick="anSwitch(\'pl\')">Conto Economico</b> per l\'analisi completa.':''}
+    ${fissiTot===0?'<br>Inserisci i <b style="cursor:pointer;text-decoration:underline" onclick="anSwitch(\'pl\')">costi fissi mensili</b> per vedere la redditività totale.':''}
+  </div>` : '';
+
+  // KPI di riepilogo
+  const kpiHtml=`
   <div class="an-kpi-row" style="margin-bottom:12px">
     <div class="an-kpi">
       <div class="an-kpi-val">${anFmt2(totalFat)}</div>
@@ -2415,52 +2495,103 @@ function renderRedd(){
       <div class="an-kpi-lbl">Costo Personale</div>
     </div>
     <div class="an-kpi">
-      <div class="an-kpi-val" style="color:${totalMargin>=0?'var(--green)':'var(--red)'}">${totalMargin>=0?'+':''}${anFmt2(totalMargin)}</div>
-      <div class="an-kpi-lbl">Margine Lordo</div>
+      <div class="an-kpi-val">${anFmt2(fissiTot)}</div>
+      <div class="an-kpi-lbl">Costi Fissi</div>
     </div>
     <div class="an-kpi">
-      <div class="an-kpi-val" style="color:${totalMarginPct!=null&&totalMarginPct>=30?'var(--green)':totalMarginPct>=15?'var(--amber)':'var(--red)'}">${anPct(totalMarginPct)}</div>
-      <div class="an-kpi-lbl">Margine %</div>
-    </div>
-  </div>
-
-  <div class="an-card">
-    <div class="an-card-title">👤 Analisi per Collaboratore</div>
-    ${collabs.map(c=>{
-      const barW=Math.round(c.fat/maxFat*100);
-      const costBarW=Math.round(c.costo/maxFat*100);
-      const mc=c.margin>=0?'var(--green)':'var(--red)';
-      const mpc=c.marginPct!=null&&c.marginPct>=30?'var(--green)':c.marginPct>=15?'var(--amber)':'var(--red)';
-      return `<div class="cp-item">
-        <div class="cp-name-row">
-          <span class="cp-name">${c.nome}</span>
-          <span class="cp-pct" style="color:${mpc}">${c.marginPct!=null?Math.round(c.marginPct)+'%':'—'}</span>
-        </div>
-        <div class="cp-bar-track">
-          <div class="cp-bar-fat" style="width:${barW}%;background:var(--green);opacity:.7"></div>
-        </div>
-        <div style="position:relative;height:8px;background:var(--bord);border-radius:4px;margin-bottom:6px;overflow:hidden">
-          <div style="position:absolute;height:100%;width:${costBarW}%;background:var(--red);opacity:.5;border-radius:4px"></div>
-        </div>
-        <div class="cp-details">
-          <span>Fat: <b>${anFmt2(c.fat)}</b></span>
-          <span>Costo: <b>${anFmt2(c.costo)}</b></span>
-          <span style="color:${mc}">Margine: <b>${c.margin>=0?'+':''}${anFmt2(c.margin)}</b></span>
-          ${c.fat_tm?`<span>Target mese: <b>${anFmt2(c.fat_tm)}</b></span>`:''}
-        </div>
-      </div>`;
-    }).join('<hr style="border:none;border-top:1px solid var(--bord);margin:10px 0">')}
-  </div>
-
-  <div class="an-card" style="background:var(--bg2)">
-    <div class="an-card-title">📌 Legenda</div>
-    <div style="font-size:11px;color:var(--text2);line-height:1.8">
-      <div>🟩 <b>Barra superiore</b> = Fatturato (verde)</div>
-      <div>🟥 <b>Barra inferiore</b> = Costo (rosso)</div>
-      <div>Margine lordo = Fatturato − Costo collaboratore</div>
-      <div style="margin-top:4px;font-size:10px">N.B. Non include i costi fissi e variabili del salone</div>
+      <div class="an-kpi-val" style="color:${totalRisultato>=0?'var(--green)':'var(--red)'}">${totalRisultato>=0?'+':''}${anFmt2(totalRisultato)}</div>
+      <div class="an-kpi-lbl">Risultato Netto</div>
     </div>
   </div>`;
+
+  // Cards per collaboratore
+  const cardsHtml=collabs.map(({c,fat,costoP,quotaFissi,varCosto,margLordo,contribuzione,risultato,be_personale,be_totale,copertura})=>{
+    const hasRev=fat>0;
+    const status=!hasRev?'nodata':copertura>=1?'ok':copertura>=0.8?'warn':'bad';
+    const verdict=!hasRev?'Nessun dato':copertura>=1?'✓ Redditiva':copertura>=0.8?'⚠ Quasi':copertura<0?'✗ In perdita':'✗ Sotto break-even';
+    const verdictCls=!hasRev?'nd':copertura>=1?'ok':copertura>=0.8?'warn':'bad';
+    const pctLabel=copertura!=null?Math.round(copertura*100)+'% break-even':'—';
+    const progW=copertura!=null?Math.min(100,Math.round(copertura*100)):0;
+    const progColor=copertura>=1?'var(--green)':copertura>=0.8?'var(--amber)':'var(--red)';
+    // Posizione marker break-even personale sulla barra totale
+    const bePersonalePct=be_totale>0?Math.min(98,Math.round(be_personale/be_totale*100)):50;
+    // Avatar color
+    const avColors=['#a67318','#15803d','#0369a1','#6d28d9','#be185d'];
+    const avColor=avColors[m.collaboratori.findIndex(x=>x.id===c.id)%avColors.length];
+    const initials=c.nome.slice(0,2).toUpperCase();
+
+    return `<div class="redd-card redd-${status}">
+      <div class="redd-hdr">
+        <div class="redd-av" style="background:${avColor}20;color:${avColor};border:2px solid ${avColor}40">${initials}</div>
+        <div>
+          <div class="redd-name">${c.nome}</div>
+          <div style="font-size:10px;color:var(--text2);font-weight:600">${c.ruolo}</div>
+        </div>
+        <span class="redd-verdict redd-verdict-${verdictCls}">${verdict}</span>
+      </div>
+
+      ${hasRev&&be_totale>0?`
+      <div class="redd-prog-wrap">
+        <div class="redd-prog-labels">
+          <span>Fatturato: ${anFmt2(fat)}</span>
+          <span style="color:${progColor}">${pctLabel}</span>
+        </div>
+        <div class="redd-prog-track">
+          <div class="redd-prog-fill" style="width:${progW}%;background:${progColor}"></div>
+          <div class="redd-be-marker" style="left:${bePersonalePct}%">
+            <div class="redd-be-label">solo costo</div>
+          </div>
+          <div class="redd-be-marker" style="left:99%;background:var(--red)">
+            <div class="redd-be-label" style="color:var(--red)">totale</div>
+          </div>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:9px;color:var(--text2);margin-top:3px">
+          <span>€0</span>
+          <span style="color:var(--amber)">BE pers. ${anFmt2(be_personale)}</span>
+          <span style="color:var(--red)">BE tot. ${anFmt2(be_totale)}</span>
+        </div>
+      </div>` : ''}
+
+      <div class="redd-pl">
+        <div class="redd-pl-row"><span class="redd-pl-lbl">Fatturato</span><span class="redd-pl-val an-pe-pos">${hasRev?anFmt2(fat):'—'}</span></div>
+        ${hasRev&&varPct>0?`<div class="redd-pl-row"><span class="redd-pl-lbl">− Costi variabili (${Math.round(varPct*100)}%)</span><span class="redd-pl-val" style="color:var(--red)">− ${anFmt2(varCosto)}</span></div>`:''}
+        ${hasRev?`<div class="redd-pl-row" style="font-weight:800;color:var(--text)"><span class="redd-pl-lbl" style="font-weight:800;color:var(--text)">= Margine lordo</span><span class="redd-pl-val">${anFmt2(margLordo)}</span></div>`:''}
+        <div class="redd-pl-sep"></div>
+        <div class="redd-pl-row"><span class="redd-pl-lbl">− Costo personale</span><span class="redd-pl-val" style="color:var(--red)">− ${anFmt2(costoP)}</span></div>
+        ${hasRev?`<div class="redd-pl-row" style="font-weight:800"><span class="redd-pl-lbl" style="font-weight:800;color:var(--text)">= Contribuzione ai fissi</span><span class="redd-pl-val" style="color:${contribuzione>=0?'var(--green)':'var(--red)'}">${contribuzione>=0?'+':''}${anFmt2(contribuzione)}</span></div>`:''}
+        ${fissiTot>0?`
+        <div class="redd-pl-sep"></div>
+        <div class="redd-pl-row"><span class="redd-pl-lbl">− Quota costi fissi</span><span class="redd-pl-val" style="color:var(--red)">− ${anFmt2(quotaFissi)}</span></div>`:''}
+      </div>
+
+      ${hasRev?`<div class="redd-pl-result ${risultato>=0?'redd-pl-result-ok':'redd-pl-result-bad'}">
+        <span>Risultato netto</span>
+        <span>${risultato>=0?'+':''}${anFmt2(risultato)}</span>
+      </div>`:''}
+
+      <div class="redd-be-row">
+        <div class="redd-be-box">
+          <div class="redd-be-val" style="color:${fat>0&&fat>=be_personale?'var(--green)':'var(--amber)'}">${anFmt2(be_personale)}</div>
+          <div class="redd-be-lbl">Break-Even Personale</div>
+          <div class="redd-be-sub">per coprire solo il suo costo</div>
+        </div>
+        <div class="redd-be-box">
+          <div class="redd-be-val" style="color:${fat>0&&fat>=be_totale?'var(--green)':'var(--red)'}">${anFmt2(be_totale)}</div>
+          <div class="redd-be-lbl">Break-Even Totale</div>
+          <div class="redd-be-sub">costo + quota costi fissi</div>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+
+  const noteHtml=`<div class="redd-note">
+    <b>Come si legge:</b> il Break-Even Personale è il fatturato minimo per coprire solo lo stipendio.
+    Il Break-Even Totale aggiunge la quota di costi fissi (affitto, utenze, ecc.) proporzionale al peso di ogni collaboratore.
+    La barra mostra dove si trova il fatturato reale rispetto ai due obiettivi.<br>
+    <b>Quota fissi:</b> ripartita in proporzione al costo personale (chi costa di più, contribuisce di più ai fissi).
+  </div>`;
+
+  document.getElementById('an-redd').innerHTML=warningHtml+kpiHtml+cardsHtml+noteHtml;
 }
 
 // ══════════════════════════════════════════════════════════════════
@@ -2522,6 +2653,130 @@ function renderBudget(){
 function anBudSave(){
   const el=document.getElementById('an-bud-mens'); if(!el) return;
   saveBud({mensile:+el.value||0});
+}
+
+
+// ══════════════════════════════════════════════════════════════════
+// COSTO PERSONALE — Calcolatore
+// ══════════════════════════════════════════════════════════════════
+const PERS_KEY = 'isola_pers_v2';
+
+function persStorageKey(mk){ return PERS_KEY + '_' + mk; }
+function loadPers(mk){ try{ return JSON.parse(localStorage.getItem(persStorageKey(mk))) || {}; } catch(e){ return {}; } }
+function savePers(mk, d){ localStorage.setItem(persStorageKey(mk), JSON.stringify(d)); }
+
+function calcPersCost(mk){
+  const m = MESI[mk]; if(!m) return {totale:0, perCollab:{}};
+  const pers = loadPers(mk);
+  const costoTot = +pers.costo_totale || 0;
+  const collabs = m.collaboratori;
+  const nette = {};
+  let totNette = 0;
+  for(const c of collabs){
+    const n = +pers.nette?.[c.id] || 0;
+    nette[c.id] = n;
+    totNette += n;
+  }
+  const quota = costoTot - totNette;
+  const perCollab = {};
+  for(const c of collabs){
+    const n = nette[c.id];
+    perCollab[c.id] = totNette > 0 ? n + (n / totNette) * quota : n;
+  }
+  const hasData = costoTot > 0 && totNette > 0;
+  if(!hasData){
+    for(const c of collabs) perCollab[c.id] = c.costo_m || 0;
+    return { totale: collabs.reduce((s,c)=>s+(c.costo_m||0),0), perCollab, hasData:false };
+  }
+  return { totale: costoTot, perCollab, hasData:true };
+}
+
+function renderPersCalc(mk){
+  const m = MESI[mk]; if(!m) return '';
+  const pers = loadPers(mk);
+  const collabs = m.collaboratori;
+  const costoTot = +pers.costo_totale || 0;
+  let totNette = 0;
+  const nette = {};
+  for(const c of collabs){
+    const n = +pers.nette?.[c.id] || 0;
+    nette[c.id] = n;
+    totNette += n;
+  }
+  const quota = costoTot > 0 ? costoTot - totNette : 0;
+  const hasData = costoTot > 0 && totNette > 0;
+
+  const rows = collabs.map(c => {
+    const n = nette[c.id] || 0;
+    const extra = hasData && totNette > 0 ? (n / totNette) * quota : 0;
+    const tot = n + extra;
+    const pct = costoTot > 0 ? Math.round(tot / costoTot * 100) : 0;
+    return `<div class="pers-bk-row">
+      <span class="pers-bk-name">${c.nome}</span>
+      <span class="pers-bk-val">${n > 0 ? anFmt2(n) : '—'}</span>
+      <span class="pers-bk-extra">${extra > 0 ? '+'+anFmt2(extra) : '—'}</span>
+      <span class="pers-bk-tot-val" style="color:${tot>0?'var(--gold)':'var(--bord2)'}">${tot > 0 ? anFmt2(tot) : '—'}<span style="font-size:9px;color:var(--text2);font-weight:600;margin-left:3px">${pct>0?pct+'%':''}</span></span>
+    </div>`;
+  }).join('');
+
+  const checkHtml = costoTot > 0 && totNette > 0
+    ? `<div class="pers-check pers-check-ok">✓ Verificato: ${anFmt2(totNette)} nette + ${anFmt2(quota)} F24/TFR = ${anFmt2(costoTot)}</div>`
+    : costoTot > 0 && totNette === 0
+    ? `<div class="pers-check pers-check-err">⚠ Inserisci le buste nette per calcolare la ripartizione</div>`
+    : `<div class="pers-check" style="background:var(--bg2);color:var(--text2);border:1px solid var(--bord)">💡 Inserisci il costo totale per attivare il calcolatore</div>`;
+
+  return `<div class="pers-calc">
+    <div class="pers-calc-title">👥 Calcolatore Costo Personale</div>
+    <div class="pers-tot-input">
+      <div class="pers-tot-lbl">
+        <span>Costo Totale Aziendale</span>
+        <small>Cedolini netti + F24 + TFR — tutto incluso</small>
+      </div>
+      <input class="pers-inp" type="number" id="pers-tot" value="${costoTot||''}" placeholder="0.00" step="0.01" min="0" oninput="persAutoSave('${mk}')">
+      <span class="pers-inp-unit">€</span>
+    </div>
+    <div style="font-size:10px;font-weight:800;color:var(--text2);text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px">Buste Paga Nette</div>
+    <div class="pers-nette-grid">
+      ${collabs.map(c => `<div class="pers-netta-row">
+        <span class="pers-netta-name">${c.nome}</span>
+        <input class="pers-inp" type="number" id="pers-n-${c.id}" value="${nette[c.id]||''}" placeholder="0.00" step="0.01" min="0" oninput="persAutoSave('${mk}')">
+        <span class="pers-inp-unit">€</span>
+      </div>`).join('')}
+    </div>
+    ${hasData ? `
+    <div style="font-size:10px;font-weight:800;color:var(--text2);text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px;padding-top:4px">Ripartizione Automatica</div>
+    <div class="pers-breakdown">
+      <div class="pers-bk-hdr">
+        <span>Collaboratore</span>
+        <span style="text-align:right;padding-right:8px">Netta</span>
+        <span style="text-align:right;padding-right:8px">F24+TFR</span>
+        <span style="text-align:right">Costo Totale</span>
+      </div>
+      ${rows}
+      <div class="pers-bk-row pers-bk-tot">
+        <span class="pers-bk-name">TOTALE</span>
+        <span class="pers-bk-val">${anFmt2(totNette)}</span>
+        <span class="pers-bk-extra">+${anFmt2(quota)}</span>
+        <span class="pers-bk-tot-val">${anFmt2(costoTot)}</span>
+      </div>
+    </div>` : ''}
+    ${checkHtml}
+  </div>`;
+}
+
+function persAutoSave(mk){
+  const m = MESI[mk]; if(!m) return;
+  const pers = loadPers(mk);
+  const totEl = document.getElementById('pers-tot');
+  if(totEl) pers.costo_totale = +totEl.value || 0;
+  pers.nette = pers.nette || {};
+  for(const c of m.collaboratori){
+    const el = document.getElementById('pers-n-'+c.id);
+    if(el) pers.nette[c.id] = +el.value || 0;
+  }
+  savePers(mk, pers);
+  const container = document.getElementById('pers-calc-wrap');
+  if(container) container.innerHTML = renderPersCalc(mk);
 }
 
 // ── Hook into showModule ──────────────────────────────────────────
