@@ -2306,6 +2306,12 @@ function anAutoSave(){
 // CASH FLOW
 // ══════════════════════════════════════════════════════════════════
 function renderCashFlow(){
+  try{ _renderCashFlow(); } catch(e){
+    const el=document.getElementById('an-cashflow');
+    if(el) el.innerHTML=`<div style="padding:20px;background:#fff5f5;border:1px solid #fca5a5;border-radius:10px;color:#b91c1c;font-size:12px;font-family:monospace">⚠ Errore renderCashFlow:<br>${e.message}<br><pre style="margin-top:8px;font-size:10px;white-space:pre-wrap">${e.stack||''}</pre></div>`;
+  }
+}
+function _renderCashFlow(){
   const mk=anGetMk(); const m=MESI[mk];
   const {byWeek}=anMonthRevenue(mk);
   const ana=loadAna();
