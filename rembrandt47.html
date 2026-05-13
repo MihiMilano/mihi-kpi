@@ -308,19 +308,110 @@ select{background:var(--card);color:var(--text);border:1px solid var(--bord2);pa
 
   <!-- ANALISI SALONE (coming soon) -->
   <div id="view-analisi" style="display:none">
-    <div class="as-wrap">
-      <div class="as-icon">📊</div>
-      <div class="as-title">Analisi Salone</div>
-      <div class="as-sub">Il modulo di analisi economica è in fase di sviluppo. Sarà disponibile a breve con conto economico completo, benchmark di settore e analisi delle potenzialità.</div>
-      <div class="as-badge">⏳ In sviluppo — disponibile a breve</div>
-      <div class="as-modules">
-        <div class="as-mod"><div class="as-mod-title">Conto Economico</div>Fatturato, costi fissi e variabili, margine operativo</div>
-        <div class="as-mod"><div class="as-mod-title">Benchmark Settore</div>Confronto con medie nazionali saloni italiani</div>
-        <div class="as-mod"><div class="as-mod-title">Potenzialità</div>Saturazione agenda, ore disponibili vs prodotte</div>
-        <div class="as-mod"><div class="as-mod-title">Break-Even Salone</div>Punto di pareggio totale inclusi costi generali</div>
+
+  <!-- Sub-nav Analisi -->
+  <div class="an-nav" id="an-nav">
+    <div class="an-tab active" onclick="anSwitch('cruscotto')">📊 Cruscotto</div>
+    <div class="an-tab" onclick="anSwitch('pl')">📋 Conto Eco.</div>
+    <div class="an-tab" onclick="anSwitch('cashflow')">💸 Cash Flow</div>
+    <div class="an-tab" onclick="anSwitch('sked')">📅 Scadenziario</div>
+    <div class="an-tab" onclick="anSwitch('redd')">👤 Redditività</div>
+    <div class="an-tab" onclick="anSwitch('budget')">🎯 Budget</div>
+  </div>
+
+  <!-- PANE 1: CRUSCOTTO -->
+  <div class="an-pane active" id="an-cruscotto"></div>
+
+  <!-- PANE 2: CONTO ECONOMICO -->
+  <div class="an-pane" id="an-pl"></div>
+
+  <!-- PANE 3: CASH FLOW -->
+  <div class="an-pane" id="an-cashflow"></div>
+
+  <!-- PANE 4: SCADENZIARIO -->
+  <div class="an-pane" id="an-sked"></div>
+
+  <!-- PANE 5: REDDITIVITÀ COLLABORATORI -->
+  <div class="an-pane" id="an-redd"></div>
+
+  <!-- PANE 6: BUDGET VS CONSUNTIVO -->
+  <div class="an-pane" id="an-budget"></div>
+
+</div>
+
+<!-- MODAL SCADENZIARIO -->
+<div class="an-modal-bg" id="an-modal-bg" onclick="if(event.target===this)anModalClose()">
+  <div class="an-modal">
+    <div class="an-modal-title" id="an-modal-title">Nuova Scadenza</div>
+    <input type="hidden" id="an-sked-edit-id">
+    <div class="an-field">
+      <label>Descrizione</label>
+      <input type="text" id="an-f-desc" placeholder="Es. Fattura fornitore prodotti">
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+      <div class="an-field">
+        <label>Importo (€)</label>
+        <input type="number" id="an-f-importo" placeholder="0.00" step="0.01">
+      </div>
+      <div class="an-field">
+        <label>Tipo</label>
+        <select id="an-f-tipo">
+          <option value="uscita">Uscita (da pagare)</option>
+          <option value="entrata">Entrata (da incassare)</option>
+        </select>
       </div>
     </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+      <div class="an-field">
+        <label>Data Scadenza</label>
+        <input type="date" id="an-f-data">
+      </div>
+      <div class="an-field">
+        <label>Categoria</label>
+        <select id="an-f-cat">
+          <option value="fornitore">Fornitore</option>
+          <option value="affitto">Affitto</option>
+          <option value="utenze">Utenze</option>
+          <option value="personale">Personale</option>
+          <option value="tasse">Tasse / F24</option>
+          <option value="leasing">Leasing / Finanziamento</option>
+          <option value="cliente">Cliente</option>
+          <option value="altro">Altro</option>
+        </select>
+      </div>
+    </div>
+    <div class="an-field">
+      <label>Note (opzionale)</label>
+      <input type="text" id="an-f-note" placeholder="">
+    </div>
+    <div class="an-modal-btns">
+      <button class="an-modal-cancel" onclick="anModalClose()">Annulla</button>
+      <button class="an-modal-ok" onclick="anSkedSave()">Salva</button>
+    </div>
   </div>
+</div>
+
+  <!-- COMPARE VIEW -->
+  <div id="view-cmp" style="display:none">
+    <div class="cmp-topbar">
+      <button class="btn-hdr" onclick="closeCompare()" style="border-color:var(--bord2);color:var(--text2)">← Indietro</button>
+      <span style="font-size:12px;font-weight:700;color:var(--text2)">Confronto Collaboratori</span>
+      <span></span>
+    </div>
+    <div id="cmp-wrap"></div>
+  </div>
+
+  <div class="foot">MIHI Milano · Uso interno riservato · Aggiornato: <span id="last-upd">mai</span></div>
+</div>
+
+<!-- COMPARE PICKER OVERLAY -->
+<div id="cpicker" class="cpicker" style="display:none" onclick="if(event.target===this)closeComparePicker()">
+  <div class="cpicker-box">
+    <div class="cpicker-title">Seleziona collaboratore da confrontare</div>
+    <div id="cpicker-list"></div>
+    <button class="cpicker-cancel" onclick="closeComparePicker()">Annulla</button>
+  </div>
+</div>
 
   <!-- COMPARE VIEW -->
   <div id="view-cmp" style="display:none">
@@ -1935,6 +2026,198 @@ body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Segoe UI',sa
   body{background:white!important}
   .no-print{display:none!important}
 }
+
+/* ══════════════════════ ANALISI ECONOMICA ══════════════════════ */
+.an-nav{background:var(--card);border-bottom:1px solid var(--bord);display:flex;overflow-x:auto;gap:0;position:sticky;top:56px;z-index:89;flex-shrink:0}
+.an-tab{padding:11px 15px;font-size:12px;font-weight:700;color:var(--text2);cursor:pointer;border-bottom:3px solid transparent;white-space:nowrap;transition:all .2s;letter-spacing:.3px;flex-shrink:0}
+.an-tab.active{color:var(--gold);border-bottom-color:var(--gold)}
+.an-tab:hover:not(.active){color:var(--text)}
+.an-pane{display:none;padding:14px 16px 32px;max-width:720px;margin:0 auto}
+.an-pane.active{display:block}
+.an-card{background:var(--card);border:1px solid var(--bord);border-radius:14px;padding:16px;margin-bottom:12px}
+.an-card-title{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1.2px;color:var(--text2);margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;padding-bottom:8px;border-bottom:1px solid var(--bord)}
+.an-kpi-row{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+@media(min-width:480px){.an-kpi-row{grid-template-columns:repeat(4,1fr)}}
+.an-kpi{background:var(--bg2);border-radius:11px;padding:13px 10px;text-align:center}
+.an-kpi-val{font-size:20px;font-weight:900;color:var(--text);line-height:1.1}
+.an-kpi-lbl{font-size:8px;text-transform:uppercase;letter-spacing:.7px;color:var(--text2);margin-top:4px}
+.an-kpi-sub{font-size:10px;color:var(--text2);margin-top:3px;font-weight:600}
+/* progress bars */
+.an-prog-wrap{margin:4px 0 8px}
+.an-prog-lbl{display:flex;justify-content:space-between;font-size:11px;font-weight:700;margin-bottom:5px}
+.an-prog-bar{height:10px;background:var(--bord);border-radius:5px;overflow:hidden}
+.an-prog-fill{height:100%;border-radius:5px;transition:width 1s ease}
+/* P&L input rows */
+.an-inp-row{display:flex;flex-direction:column;gap:0}
+.an-inp-group{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--bg2)}
+.an-inp-group:last-child{border-bottom:none}
+.an-inp-lbl{flex:1;min-width:0}
+.an-inp-lbl span{display:block;font-size:12px;font-weight:600;color:var(--text)}
+.an-inp-lbl small{display:block;font-size:10px;color:var(--text2);margin-top:1px}
+.an-inp{width:100px;background:var(--bg2);border:1px solid var(--bord);border-radius:8px;padding:7px 10px;font-size:13px;font-weight:700;color:var(--text);font-family:inherit;text-align:right;flex-shrink:0}
+.an-inp:focus{outline:none;border-color:var(--gold);background:#fff}
+.an-inp-unit{font-size:11px;color:var(--text2);font-weight:600;flex-shrink:0;width:16px}
+/* P&L summary rows */
+.an-pe-section{margin-bottom:12px}
+.an-pe-row{display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--bg2);font-size:12px}
+.an-pe-row:last-child{border-bottom:none}
+.an-pe-lbl{color:var(--text2);font-weight:600}
+.an-pe-val{font-weight:800;text-align:right}
+.an-pe-pos{color:var(--green)}
+.an-pe-neg{color:var(--red)}
+.an-pe-tot{font-size:15px;font-weight:900}
+.an-pe-tot-row{display:flex;align-items:center;justify-content:space-between;padding:10px;background:var(--bg2);border-radius:9px;margin-top:4px;font-size:13px;font-weight:800}
+/* Save button */
+.an-save-btn{width:100%;padding:12px;background:var(--gold);color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:800;cursor:pointer;font-family:inherit;letter-spacing:.3px;margin-top:10px;transition:opacity .15s}
+.an-save-btn:hover{opacity:.85}
+.an-save-btn:active{opacity:.7}
+/* Scadenziario */
+.sked-item{background:var(--card);border:1px solid var(--bord);border-radius:12px;padding:13px 14px;margin-bottom:8px;border-left:4px solid var(--bord2);transition:opacity .3s}
+.sked-item.sked-ok{border-left-color:var(--green)}
+.sked-item.sked-warn{border-left-color:var(--amber)}
+.sked-item.sked-exp{border-left-color:var(--red)}
+.sked-item.sked-paid{opacity:.5;border-left-color:var(--bord2)}
+.sked-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:5px}
+.sked-desc{font-size:13px;font-weight:700;flex:1}
+.sked-badge{font-size:9px;font-weight:800;padding:3px 8px;border-radius:20px;text-transform:uppercase;letter-spacing:.4px;flex-shrink:0}
+.sked-badge-ok{background:#dcfce7;color:#15803d}
+.sked-badge-warn{background:#fef9c3;color:#b45309}
+.sked-badge-exp{background:#fee2e2;color:#b91c1c}
+.sked-badge-paid{background:var(--bg2);color:var(--text2)}
+.sked-meta{font-size:11px;color:var(--text2);display:flex;gap:14px;flex-wrap:wrap;margin-bottom:8px}
+.sked-meta b{color:var(--text);font-weight:700}
+.sked-actions{display:flex;gap:6px}
+.sked-btn{padding:5px 11px;border-radius:7px;font-size:10px;font-weight:800;cursor:pointer;border:1px solid var(--bord);background:var(--bg2);color:var(--text2);font-family:inherit;transition:all .15s;letter-spacing:.3px}
+.sked-btn-pay{border-color:#86efac;color:var(--green);background:#f0fdf4}
+.sked-btn-pay:hover{background:#dcfce7}
+.sked-btn-del{border-color:#fca5a5;color:var(--red);background:#fff5f5}
+.sked-btn-del:hover{background:#fee2e2}
+.sked-add-btn{width:100%;padding:13px;background:none;border:2px dashed var(--bord2);color:var(--text2);border-radius:12px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;transition:all .2s;margin-bottom:12px}
+.sked-add-btn:hover{border-color:var(--gold);color:var(--gold)}
+/* Filter pills */
+.an-filter-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.an-pill{padding:5px 12px;border-radius:20px;border:1px solid var(--bord2);background:var(--card);color:var(--text2);cursor:pointer;font-size:11px;font-weight:700;font-family:inherit;transition:all .15s}
+.an-pill.active{background:var(--gold);color:#fff;border-color:var(--gold)}
+/* Modal */
+.an-modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:400;display:none;align-items:flex-end;justify-content:center}
+.an-modal-bg.open{display:flex}
+.an-modal{background:var(--bg);border-radius:20px 20px 0 0;width:100%;max-width:600px;padding:24px 20px 36px;max-height:88vh;overflow-y:auto}
+.an-modal-title{font-size:16px;font-weight:800;margin-bottom:20px}
+.an-field{margin-bottom:14px}
+.an-field label{display:block;font-size:10px;font-weight:800;color:var(--text2);margin-bottom:6px;text-transform:uppercase;letter-spacing:.6px}
+.an-field input,.an-field select,.an-field textarea{width:100%;background:var(--card);border:1px solid var(--bord);border-radius:9px;padding:11px 13px;font-size:13px;font-weight:600;color:var(--text);font-family:inherit;-webkit-appearance:none}
+.an-field input:focus,.an-field select:focus{outline:none;border-color:var(--gold)}
+.an-modal-btns{display:flex;gap:8px;margin-top:18px}
+.an-modal-cancel{flex:1;padding:12px;background:none;border:1px solid var(--bord2);color:var(--text2);border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit}
+.an-modal-ok{flex:2;padding:12px;background:var(--gold);color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:800;cursor:pointer;font-family:inherit}
+/* Collab profit */
+.cp-item{margin-bottom:14px}
+.cp-name-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:5px}
+.cp-name{font-size:13px;font-weight:800}
+.cp-pct{font-size:12px;font-weight:800}
+.cp-bar-track{height:12px;background:var(--bord);border-radius:6px;overflow:hidden;margin-bottom:3px}
+.cp-bar-fat{height:12px;border-radius:6px;transition:width 1s ease}
+.cp-details{display:flex;gap:12px;font-size:10px;color:var(--text2);flex-wrap:wrap}
+.cp-details b{color:var(--text);font-weight:700}
+/* Cash Flow SVG */
+.an-cf-svg{width:100%;display:block}
+/* Forecast */
+.an-forecast-card{background:linear-gradient(135deg,rgba(166,115,24,.08),rgba(166,115,24,.03));border:1px solid rgba(166,115,24,.3);border-radius:12px;padding:14px;display:flex;align-items:center;gap:14px}
+.an-forecast-icon{font-size:28px;flex-shrink:0}
+.an-forecast-val{font-size:22px;font-weight:900;color:var(--gold)}
+.an-forecast-lbl{font-size:11px;color:var(--text2);font-weight:600;margin-top:2px}
+/* Revenue week pills */
+.an-week-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+.an-week-pill{flex:1;min-width:0;background:var(--bg2);border-radius:9px;padding:8px 6px;text-align:center}
+.an-week-pill-lbl{font-size:9px;text-transform:uppercase;letter-spacing:.5px;color:var(--text2)}
+.an-week-pill-val{font-size:13px;font-weight:800;margin-top:2px}
+.an-week-pill-val.missing{color:var(--bord2)}
+/* Budget table */
+.bvc-row{display:grid;grid-template-columns:80px 1fr 1fr 1fr;gap:0;align-items:center;padding:9px 0;border-bottom:1px solid var(--bg2);font-size:12px}
+.bvc-row:last-child{border-bottom:none}
+.bvc-lbl{font-weight:700;color:var(--text2);font-size:11px}
+.bvc-val{text-align:right;font-weight:700;padding-right:6px}
+.bvc-delta.pos{color:var(--green)}.bvc-delta.neg{color:var(--red)}
+.bvc-hdr{font-size:9px;text-transform:uppercase;letter-spacing:.6px;color:var(--text2);font-weight:800}
+
+/* ── CALCOLATORE COSTO PERSONALE ─────────────────────────────── */
+.pers-calc{background:linear-gradient(135deg,rgba(166,115,24,.05),rgba(166,115,24,.02));border:1px solid rgba(166,115,24,.25);border-radius:12px;padding:14px;margin-bottom:12px}
+.pers-calc-title{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--gold);margin-bottom:12px;display:flex;align-items:center;gap:6px}
+.pers-tot-input{display:flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--bord);border-radius:10px;padding:10px 14px;margin-bottom:12px}
+.pers-tot-lbl{flex:1;font-size:12px;font-weight:700;color:var(--text)}
+.pers-tot-lbl small{display:block;font-size:10px;color:var(--text2);font-weight:500;margin-top:1px}
+.pers-nette-grid{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
+.pers-netta-row{display:flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--bord);border-radius:9px;padding:8px 12px}
+.pers-netta-name{flex:1;font-size:12px;font-weight:700;color:var(--text)}
+.pers-inp{width:100px;background:var(--bg2);border:1px solid var(--bord);border-radius:8px;padding:7px 10px;font-size:13px;font-weight:700;color:var(--text);font-family:inherit;text-align:right;flex-shrink:0}
+.pers-inp:focus{outline:none;border-color:var(--gold);background:#fff}
+.pers-inp-unit{font-size:11px;color:var(--text2);font-weight:600;flex-shrink:0}
+.pers-breakdown{background:var(--card);border:1px solid var(--bord);border-radius:10px;overflow:hidden}
+.pers-bk-hdr{display:grid;grid-template-columns:1fr 80px 90px 90px;gap:0;padding:8px 12px;background:var(--bg2);font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:var(--text2);border-bottom:1px solid var(--bord)}
+.pers-bk-row{display:grid;grid-template-columns:1fr 80px 90px 90px;gap:0;padding:9px 12px;border-bottom:1px solid var(--bg2);align-items:center;font-size:12px}
+.pers-bk-row:last-child{border-bottom:none}
+.pers-bk-tot{background:rgba(166,115,24,.06);font-weight:900;font-size:13px;border-top:2px solid rgba(166,115,24,.2)}
+.pers-bk-name{font-weight:700}
+.pers-bk-val{text-align:right;font-weight:700;padding-right:8px}
+.pers-bk-extra{text-align:right;font-weight:700;color:var(--amber);padding-right:8px}
+.pers-bk-tot-val{text-align:right;font-weight:900;color:var(--gold)}
+.pers-check{display:flex;align-items:center;gap:8px;margin-top:10px;padding:8px 12px;border-radius:8px;font-size:11px;font-weight:700}
+.pers-check-ok{background:#f0fdf4;color:var(--green);border:1px solid #86efac}
+.pers-check-err{background:#fff5f5;color:var(--red);border:1px solid #fca5a5}
+
+/* ── COSTI VARIABILI DINAMICI ──────────────────────────────── */
+.var-items-wrap{display:flex;flex-direction:column;gap:6px;margin-bottom:10px}
+.var-item-row{display:grid;grid-template-columns:1fr 90px 18px 28px;gap:6px;align-items:center}
+.var-inp-nome{background:var(--bg2);border:1px solid var(--bord);border-radius:7px;padding:7px 10px;font-size:12px;color:var(--text);font-family:inherit;outline:none;width:100%}
+.var-inp-nome:focus{border-color:var(--gold)}
+.var-inp-imp{background:var(--bg2);border:1px solid var(--bord);border-radius:7px;padding:7px 8px;font-size:13px;font-weight:700;color:var(--text);text-align:right;outline:none;width:100%}
+.var-inp-imp:focus{border-color:var(--gold)}
+.var-del-btn{background:none;border:1px solid var(--bord);border-radius:6px;color:var(--text2);font-size:11px;cursor:pointer;padding:4px 6px;line-height:1;transition:all .2s}
+.var-del-btn:hover{background:rgba(185,28,28,.15);border-color:var(--red);color:var(--red)}
+.var-add-btn{background:var(--bg2);border:1px dashed var(--gold);border-radius:8px;color:var(--gold);font-size:12px;font-weight:700;padding:8px 16px;cursor:pointer;width:100%;transition:all .2s;margin-top:2px}
+.var-add-btn:hover{background:rgba(166,115,24,.1)}
+
+/* ── REDDITIVITÀ AVANZATA ──────────────────────────────────────── */
+.redd-card{background:var(--card);border:1px solid var(--bord);border-radius:14px;padding:16px;margin-bottom:12px}
+.redd-card.redd-ok{border-left:4px solid var(--green)}
+.redd-card.redd-warn{border-left:4px solid var(--amber)}
+.redd-card.redd-bad{border-left:4px solid var(--red)}
+.redd-card.redd-nodata{border-left:4px solid var(--bord2);opacity:.7}
+.redd-hdr{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.redd-av{width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:900;flex-shrink:0}
+.redd-name{font-size:16px;font-weight:800;flex:1}
+.redd-verdict{font-size:11px;font-weight:800;padding:4px 10px;border-radius:20px;flex-shrink:0}
+.redd-verdict-ok{background:#dcfce7;color:#15803d}
+.redd-verdict-warn{background:#fef9c3;color:#b45309}
+.redd-verdict-bad{background:#fee2e2;color:#b91c1c}
+.redd-verdict-nd{background:var(--bg2);color:var(--text2)}
+/* progress bar verso break-even */
+.redd-prog-wrap{margin-bottom:14px}
+.redd-prog-labels{display:flex;justify-content:space-between;font-size:10px;font-weight:700;margin-bottom:4px}
+.redd-prog-track{height:12px;background:var(--bord);border-radius:6px;overflow:visible;position:relative}
+.redd-prog-fill{height:100%;border-radius:6px;transition:width 1s ease;position:relative}
+.redd-be-marker{position:absolute;top:-4px;width:2px;height:20px;background:var(--amber);opacity:.8}
+.redd-be-label{position:absolute;top:-18px;font-size:8px;font-weight:800;color:var(--amber);transform:translateX(-50%);white-space:nowrap}
+/* P&L per collaboratore */
+.redd-pl{background:var(--bg2);border-radius:10px;padding:10px 12px}
+.redd-pl-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;font-size:12px}
+.redd-pl-lbl{color:var(--text2);font-weight:600}
+.redd-pl-val{font-weight:700;text-align:right}
+.redd-pl-sep{border-top:1px solid var(--bord);margin:4px 0}
+.redd-pl-result{display:flex;justify-content:space-between;align-items:center;padding:8px 10px;border-radius:8px;margin-top:6px;font-size:13px;font-weight:800}
+.redd-pl-result-ok{background:rgba(21,128,61,.1);color:var(--green)}
+.redd-pl-result-bad{background:rgba(185,28,28,.08);color:var(--red)}
+/* break-even boxes */
+.redd-be-row{display:flex;gap:8px;margin-top:12px}
+.redd-be-box{flex:1;background:var(--bg2);border-radius:9px;padding:10px;text-align:center}
+.redd-be-val{font-size:15px;font-weight:900}
+.redd-be-lbl{font-size:9px;text-transform:uppercase;letter-spacing:.5px;color:var(--text2);margin-top:2px}
+.redd-be-sub{font-size:9px;color:var(--text2);margin-top:2px;font-weight:600}
+/* Nota metodologica */
+.redd-note{background:var(--bg2);border-radius:10px;padding:12px 14px;font-size:11px;color:var(--text2);line-height:1.6;margin-top:8px}
+.redd-note b{color:var(--text)}
+
+
 </style>
 </head>
 <body>
@@ -2584,6 +2867,1039 @@ document.getElementById('cover-update').textContent=ua?`Aggiornato: ${ua}`:'';
   if(document.getElementById('hdr-month'))document.getElementById('hdr-month').textContent=m?.label||'';
   renderLive();
 })();
+</script>
+
+<script>
+
+// ╔══════════════════════════════════════════════════════════════╗
+// ║  ANALISI ECONOMICA — Isola                                   ║
+// ╚══════════════════════════════════════════════════════════════╝
+
+const ANA_KEY   = 'rembrandt_ana_v2';
+const SKED_KEY  = 'rembrandt_sked_v2';
+const BUD_KEY   = 'rembrandt_bud_v2';
+let anSkedFilter = 'tutti';
+
+// ── Default data ─────────────────────────────────────────────────
+const ANA_DEF = {
+  fissi: { affitto:2500, utenze:300, assicurazione:150, marketing:200, altro:100 },
+  variabili: []  // array di {id, nome, importo}
+};
+const BUD_DEF = { mensile: 26976 };
+
+// ── LocalStorage helpers ──────────────────────────────────────────
+function loadAna(){
+  try{
+    const raw=JSON.parse(localStorage.getItem(ANA_KEY)||'{}');
+    const d=Object.assign({},ANA_DEF,raw);
+    // Migrazione: se variabili è ancora il vecchio oggetto, converti in array
+    if(d.variabili && !Array.isArray(d.variabili)){
+      const labelMap={prodotti:'Prodotti',consumabili:'Consumabili',pulizia:'Pulizia & Igiene',manutenzioni:'Manutenzioni',altro:'Altro variabile'};
+      d.variabili=Object.entries(d.variabili)
+        .filter(([,v])=>+v>0)
+        .map(([k,v],i)=>({id:'v'+(i+1),nome:labelMap[k]||k,importo:+v}));
+    }
+    return d;
+  }catch(e){ return Object.assign({},ANA_DEF); }
+}
+function saveAna(d){ localStorage.setItem(ANA_KEY,JSON.stringify(d)); }
+
+// ── Costi variabili helpers ───────────────────────────────────────
+function varTotal(ana){
+  if(!ana||!Array.isArray(ana.variabili)) return 0;
+  return ana.variabili.reduce((s,r)=>s+(+r.importo||0),0);
+}
+
+function renderVariabiliList(){
+  const ana=loadAna();
+  const items=Array.isArray(ana.variabili)?ana.variabili:[];
+  const tot=varTotal(ana);
+  const rows=items.map(item=>`
+    <div class="var-item-row" id="var-row-${item.id}">
+      <input class="var-inp-nome" type="text" value="${item.nome.replace(/"/g,'&quot;')}" placeholder="Es: Tinture Wella" oninput="varSaveNome('${item.id}',this.value)">
+      <input class="var-inp-imp" type="number" value="${item.importo||''}" placeholder="0" min="0" step="1" oninput="varSaveImp('${item.id}',+this.value)">
+      <span class="var-inp-unit">€</span>
+      <button class="var-del-btn" onclick="varDelItem('${item.id}')" title="Elimina voce">✕</button>
+    </div>`).join('');
+  return `<div id="var-list-inner">
+    <div class="var-items-wrap">${rows}</div>
+    <button class="var-add-btn" onclick="varAddItem()">＋ Aggiungi voce</button>
+    <div class="an-pe-tot-row" style="margin-top:10px"><span>Totale Variabili</span><span class="an-pe-tot" id="an-vp-tot">${anFmt2(tot)}</span></div>
+  </div>`;
+}
+
+function varAddItem(){
+  const ana=loadAna();
+  if(!Array.isArray(ana.variabili)) ana.variabili=[];
+  const id='v'+Date.now();
+  ana.variabili.push({id,nome:'',importo:0});
+  saveAna(ana);
+  const wrap=document.getElementById('var-list-wrap');
+  if(wrap) wrap.innerHTML=renderVariabiliList();
+}
+
+function varDelItem(id){
+  const ana=loadAna();
+  if(!Array.isArray(ana.variabili)) return;
+  ana.variabili=ana.variabili.filter(r=>r.id!==id);
+  saveAna(ana);
+  const wrap=document.getElementById('var-list-wrap');
+  if(wrap) wrap.innerHTML=renderVariabiliList();
+}
+
+function varSaveNome(id, val){
+  const ana=loadAna();
+  const item=Array.isArray(ana.variabili)?ana.variabili.find(r=>r.id===id):null;
+  if(item){ item.nome=val; saveAna(ana); }
+  // Aggiorna solo il totale senza re-renderizzare
+  const tot=varTotal(ana);
+  const el=document.getElementById('an-vp-tot');
+  if(el) el.textContent=anFmt2(tot);
+}
+
+function varSaveImp(id, val){
+  const ana=loadAna();
+  const item=Array.isArray(ana.variabili)?ana.variabili.find(r=>r.id===id):null;
+  if(item){ item.importo=+val||0; saveAna(ana); }
+  const tot=varTotal(ana);
+  const el=document.getElementById('an-vp-tot');
+  if(el) el.textContent=anFmt2(tot);
+}
+function loadSked(){ try{ return JSON.parse(localStorage.getItem(SKED_KEY)||'[]'); }catch(e){ return []; } }
+function saveSked(d){ localStorage.setItem(SKED_KEY,JSON.stringify(d)); }
+function loadBud(){ try{ return Object.assign({},BUD_DEF,JSON.parse(localStorage.getItem(BUD_KEY)||'{}')); }catch(e){ return Object.assign({},BUD_DEF); } }
+function saveBud(d){ localStorage.setItem(BUD_KEY,JSON.stringify(d)); }
+
+// ── Revenue helpers (reads global STORICO/MESI) ───────────────────
+function anGetMk(){ return Object.keys(MESI).sort().reverse()[0]; }
+
+function anMonthRevenue(mk){
+  const sto=STORICO[mk]; const m=MESI[mk];
+  if(!sto||!m) return {total:null,byWeek:{}};
+  let total=null; const byWeek={};
+  for(const sw of m.settimane){
+    const week=sto[sw.id]; if(!week){ byWeek[sw.id]={fat:null,label:sw.label}; continue; }
+    let wFat=null;
+    for(const c of m.collaboratori){
+      const d=week[c.id]; if(d&&d.fat!=null) wFat=(wFat||0)+d.fat;
+    }
+    byWeek[sw.id]={fat:wFat,label:sw.label};
+    if(wFat!=null) total=(total||0)+wFat;
+  }
+  return {total,byWeek};
+}
+
+function anCollabMonthFat(mk,cid){
+  const sto=STORICO[mk]; const m=MESI[mk]; if(!sto||!m) return null;
+  let total=null;
+  for(const sw of m.settimane){
+    const d=sto?.[sw.id]?.[cid]; if(d&&d.fat!=null) total=(total||0)+d.fat;
+  }
+  return total;
+}
+
+function anGetPersonale(mk){
+  return (MESI[mk]?.collaboratori||[]).reduce((s,c)=>s+(c.costo_m||0),0);
+}
+
+function anGetForecast(mk){
+  const m=MESI[mk]; if(!m) return null;
+  const {byWeek}=anMonthRevenue(mk);
+  const today=new Date();
+  // find current and completed weeks
+  const sw=getSW(mk);
+  let completedFat=0,completedWeeks=0;
+  let curFat=0, curWeekIdx=-1;
+  for(let i=0;i<m.settimane.length;i++){
+    const s=m.settimane[i];
+    const wEnd=new Date(s.a); wEnd.setHours(23,59,59);
+    const wFat=byWeek[s.id]?.fat||0;
+    if(wEnd<today && s.id!==sw.id){ completedFat+=wFat; completedWeeks++; }
+    else if(s.id===sw.id){ curFat=wFat||0; curWeekIdx=i; }
+  }
+  if(curWeekIdx<0) return null;
+  // days elapsed in current week
+  const swStart=new Date(m.settimane[curWeekIdx].da);
+  const diffMs=today-swStart;
+  const daysElapsed=Math.max(1,Math.min(5,Math.floor(diffMs/86400000)+1));
+  const curWeekForecast=curFat*(5/daysElapsed);
+  // remaining weeks
+  const remWeeks=m.settimane.length-curWeekIdx-1;
+  const avgWeek=completedWeeks>0?completedFat/completedWeeks:curWeekForecast;
+  return Math.round(completedFat+curWeekForecast+remWeeks*avgWeek);
+}
+
+function anFmt(v){ if(v==null||isNaN(v)) return '—'; return '€'+Math.round(v).toLocaleString('it-IT'); }
+function anFmt2(v){ if(v==null||isNaN(v)) return '—'; return '€'+v.toLocaleString('it-IT',{minimumFractionDigits:0,maximumFractionDigits:0}); }
+function anPct(v){ if(v==null||isNaN(v)) return '—'; return Math.round(v)+'%'; }
+
+// ── Sub-tab switch ────────────────────────────────────────────────
+function anSwitch(name){
+  document.querySelectorAll('.an-tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.an-pane').forEach(p=>p.classList.remove('active'));
+  const tabEl=document.querySelector(`.an-tab[onclick="anSwitch('${name}')"]`);
+  if(tabEl) tabEl.classList.add('active');
+  const pane=document.getElementById('an-'+name);
+  if(pane){ pane.classList.add('active'); }
+  if(name==='cruscotto') renderCruscotto();
+  if(name==='pl')        renderPL();
+  if(name==='cashflow')  renderCashFlow();
+  if(name==='sked')      renderSked();
+  if(name==='redd')      renderRedd();
+  if(name==='budget')    renderBudget();
+}
+
+function renderAnalisi(){
+  // Render the active pane
+  const active=document.querySelector('.an-pane.active');
+  if(!active) return;
+  const id=active.id.replace('an-','');
+  anSwitch(id);
+}
+
+// ══════════════════════════════════════════════════════════════════
+// CRUSCOTTO
+// ══════════════════════════════════════════════════════════════════
+function renderCruscotto(){
+  const mk=anGetMk(); const m=MESI[mk]; if(!m){
+    document.getElementById('an-cruscotto').innerHTML='<p class="no-data">Nessun dato disponibile.</p>'; return;
+  }
+  const {total:fatMese,byWeek}=anMonthRevenue(mk);
+  const tgMese=m.collaboratori.reduce((s,c)=>s+(c.fat_tm||0),0);
+  const ana=loadAna();
+  const {totale:personale}=calcPersCost(mk);
+  const fissiTot=Object.values(ana.fissi||{}).reduce((s,v)=>s+(+v||0),0);
+  const varTot=varTotal(ana);
+  const costiTot=fissiTot+personale+varTot;
+  const ebitda=fatMese!=null?fatMese-costiTot:null;
+  const margPct=fatMese&&fatMese>0?ebitda/fatMese*100:null;
+  const forecast=anGetForecast(mk);
+  const pct=tgMese>0&&fatMese!=null?Math.min(200,fatMese/tgMese*100):null;
+  const bePct=costiTot>0&&fatMese!=null?Math.min(200,fatMese/costiTot*100):null;
+
+  const sw=getSW(mk);
+  const swFat=byWeek[sw?.id]?.fat;
+
+  // Color logic
+  const pctColor=pct==null?'var(--bord2)':pct>=85?'var(--green)':pct>=60?'var(--amber)':'var(--red)';
+  const beColor=bePct==null?'var(--bord2)':bePct>=100?'var(--green)':bePct>=80?'var(--amber)':'var(--red)';
+  const mrgColor=margPct==null?'var(--text)':margPct>=15?'var(--green)':margPct>=5?'var(--amber)':'var(--red)';
+
+  document.getElementById('an-cruscotto').innerHTML=`
+  <div style="padding:14px 0 4px;font-size:11px;font-weight:800;color:var(--text2);text-transform:uppercase;letter-spacing:1px">${m.label}</div>
+
+  <div class="an-kpi-row" style="margin-bottom:12px">
+    <div class="an-kpi">
+      <div class="an-kpi-val">${anFmt2(fatMese)}</div>
+      <div class="an-kpi-lbl">Fat. Mese</div>
+    </div>
+    <div class="an-kpi">
+      <div class="an-kpi-val">${anFmt2(tgMese)}</div>
+      <div class="an-kpi-lbl">Target Mese</div>
+    </div>
+    <div class="an-kpi">
+      <div class="an-kpi-val" style="color:${mrgColor}">${ebitda!=null?(ebitda>=0?'+':'')+anFmt2(ebitda):'—'}</div>
+      <div class="an-kpi-lbl">EBITDA</div>
+    </div>
+    <div class="an-kpi">
+      <div class="an-kpi-val" style="color:${mrgColor}">${margPct!=null?Math.round(margPct)+'%':'—'}</div>
+      <div class="an-kpi-lbl">Margine %</div>
+    </div>
+  </div>
+
+  <div class="an-card">
+    <div class="an-card-title">📈 Avanzamento Target</div>
+    <div class="an-prog-wrap">
+      <div class="an-prog-lbl">
+        <span>Fatturato vs Target</span>
+        <span style="color:${pctColor};font-size:13px;font-weight:900">${anPct(pct)}</span>
+      </div>
+      <div class="an-prog-bar">
+        <div class="an-prog-fill" style="width:${Math.min(100,pct||0)}%;background:${pctColor}"></div>
+      </div>
+      <div style="font-size:10px;color:var(--text2);margin-top:3px">${anFmt2(fatMese)} su ${anFmt2(tgMese)} obiettivo mensile</div>
+    </div>
+    <div class="an-prog-wrap" style="margin-top:14px">
+      <div class="an-prog-lbl">
+        <span>Break-Even Coverage</span>
+        <span style="color:${beColor};font-size:13px;font-weight:900">${anPct(bePct)}</span>
+      </div>
+      <div class="an-prog-bar">
+        <div class="an-prog-fill" style="width:${Math.min(100,bePct||0)}%;background:${beColor}"></div>
+      </div>
+      <div style="font-size:10px;color:var(--text2);margin-top:3px">Copertura costi mensili: ${anFmt2(fatMese)} su ${anFmt2(costiTot)} stimati</div>
+    </div>
+  </div>
+
+  <div class="an-forecast-card" style="margin-bottom:12px">
+    <div class="an-forecast-icon">🔮</div>
+    <div style="flex:1">
+      <div class="an-forecast-val">${forecast!=null?anFmt2(forecast):'—'}</div>
+      <div class="an-forecast-lbl">Forecast fatturato a fine mese<br><span style="font-size:9px;opacity:.7">Estrapolazione basata su settimane già acquisite</span></div>
+    </div>
+    ${forecast!=null&&tgMese>0?`<div style="text-align:center;flex-shrink:0"><div style="font-size:16px;font-weight:900;color:${forecast>=tgMese?'var(--green)':'var(--amber)'}">${Math.round(forecast/tgMese*100)}%</div><div style="font-size:9px;color:var(--text2)">del target</div></div>`:''}
+  </div>
+
+  <div class="an-card">
+    <div class="an-card-title">📅 Settimane del Mese</div>
+    <div class="an-week-row">
+    ${m.settimane.map(s=>{
+      const wf=byWeek[s.id]?.fat;
+      const tgW=m.collaboratori.reduce((sum,c)=>sum+(c.fat_tw||0),0);
+      const isCur=s.id===sw?.id;
+      const wp=tgW>0&&wf!=null?Math.round(wf/tgW*100):null;
+      const wc=wp==null?'var(--bord2)':wp>=85?'var(--green)':wp>=60?'var(--amber)':'var(--red)';
+      return `<div class="an-week-pill" style="${isCur?'border:1px solid var(--gold);background:rgba(166,115,24,.05)':''}">
+        <div class="an-week-pill-lbl">${s.id}${isCur?' ●':''}</div>
+        <div class="an-week-pill-val ${wf==null?'missing':''}" style="color:${wf!=null?wc:'var(--bord2)'}">${wf!=null?anFmt2(wf):'—'}</div>
+        ${wp!=null?`<div style="font-size:9px;color:${wc};font-weight:700">${wp}%</div>`:''}
+      </div>`;
+    }).join('')}
+    </div>
+  </div>
+
+  <div class="an-card">
+    <div class="an-card-title">💰 Struttura Costi (mese)</div>
+    <div class="an-pe-row"><span class="an-pe-lbl">Personale (collaboratori)</span><span class="an-pe-val">${anFmt2(personale)}</span></div>
+    <div class="an-pe-row"><span class="an-pe-lbl">Costi Fissi</span><span class="an-pe-val">${anFmt2(fissiTot)}</span></div>
+    <div class="an-pe-row"><span class="an-pe-lbl">Costi Variabili</span><span class="an-pe-val">${anFmt2(varTot)}</span></div>
+    <div class="an-pe-tot-row"><span>Totale Costi</span><span class="an-pe-tot">${anFmt2(costiTot)}</span></div>
+    <div style="margin-top:8px;font-size:10px;color:var(--text2);text-align:center">Configura i costi in <b style="color:var(--gold);cursor:pointer" onclick="anSwitch('pl')">Conto Economico →</b></div>
+  </div>`;
+}
+
+// ══════════════════════════════════════════════════════════════════
+// CONTO ECONOMICO / P&L
+// ══════════════════════════════════════════════════════════════════
+function renderPL(){
+  const mk=anGetMk(); const m=MESI[mk];
+  const {total:fatMese,byWeek}=anMonthRevenue(mk);
+  const ana=loadAna();
+  const {totale:personale}=calcPersCost(mk);
+  const varTot=varTotal(ana);
+  const fissiTot=Object.values(ana.fissi||{}).reduce((s,v)=>s+(+v||0),0);
+  const costiTot=fissiTot+personale+varTot;
+  const ebitda=fatMese!=null?fatMese-costiTot:null;
+  const margPct=fatMese&&fatMese>0?ebitda/fatMese*100:null;
+
+  document.getElementById('an-pl').innerHTML=`
+  <div class="an-card">
+    <div class="an-card-title">📥 Ricavi — ${m?.label||''}</div>
+    <div class="an-week-row">
+    ${(m?.settimane||[]).map(s=>{
+      const wf=byWeek[s.id]?.fat;
+      return `<div class="an-week-pill">
+        <div class="an-week-pill-lbl">${s.id}</div>
+        <div class="an-week-pill-val ${wf==null?'missing':''}">${wf!=null?anFmt2(wf):'—'}</div>
+      </div>`;
+    }).join('')}
+    </div>
+    <div class="an-pe-tot-row" style="margin-top:4px"><span>TOTALE RICAVI</span><span class="an-pe-tot" style="color:var(--green)">${anFmt2(fatMese)}</span></div>
+  </div>
+
+  <div class="an-card">
+    <div class="an-card-title">🔧 Costi Fissi Mensili <span style="font-size:9px;font-weight:600;color:var(--text2)">(clicca per modificare)</span></div>
+    <div class="an-inp-row">
+      ${[['affitto','Affitto / Canone locazione'],['utenze','Utenze (luce, gas, acqua)'],['assicurazione','Assicurazione'],['marketing','Marketing & comunicazione'],['altro','Altro fisso']].map(([k,lbl])=>`
+      <div class="an-inp-group">
+        <div class="an-inp-lbl"><span>${lbl}</span></div>
+        <input class="an-inp" type="number" id="an-fi-${k}" value="${ana.fissi?.[k]??0}" min="0" step="10" oninput="anAutoSave()">
+        <span class="an-inp-unit">€</span>
+      </div>`).join('')}
+    </div>
+    <div class="an-pe-tot-row" style="margin-top:8px"><span>Totale Costi Fissi</span><span class="an-pe-tot" id="an-fi-tot">${anFmt2(fissiTot)}</span></div>
+  </div>
+
+  <div id="pers-calc-wrap">${renderPersCalc(mk)}</div>
+
+  <div class="an-card">
+    <div class="an-card-title">📦 Costi Variabili Mensili <span style="font-size:9px;font-weight:600;color:var(--text2)">(voci reali da fatture)</span></div>
+    <div id="var-list-wrap">${renderVariabiliList()}</div>
+  </div>
+
+  <div class="an-card" style="border-color:${ebitda!=null&&ebitda>=0?'rgba(21,128,61,.3)':'rgba(185,28,28,.2)'}">
+    <div class="an-card-title">📊 Risultato Operativo</div>
+    <div class="an-pe-row"><span class="an-pe-lbl">RICAVI TOTALI</span><span class="an-pe-val an-pe-pos" style="font-size:14px">${anFmt2(fatMese)}</span></div>
+    <div class="an-pe-row"><span class="an-pe-lbl">Costi Fissi</span><span class="an-pe-val" style="color:var(--red)">- ${anFmt2(fissiTot)}</span></div>
+    <div class="an-pe-row"><span class="an-pe-lbl">Personale</span><span class="an-pe-val" style="color:var(--red)">- ${anFmt2(personale)}</span></div>
+    <div class="an-pe-row"><span class="an-pe-lbl">Costi Variabili</span><span class="an-pe-val" style="color:var(--red)">- ${anFmt2(varTot)}</span></div>
+    <div class="an-pe-row"><span class="an-pe-lbl" style="font-weight:800">TOTALE COSTI</span><span class="an-pe-val" style="font-size:14px;font-weight:900;color:var(--red)">- ${anFmt2(costiTot)}</span></div>
+    <div class="an-pe-tot-row" style="background:${ebitda!=null&&ebitda>=0?'rgba(21,128,61,.08)':'rgba(185,28,28,.07)'};margin-top:8px">
+      <span style="font-size:14px">EBITDA</span>
+      <span class="an-pe-tot" style="font-size:20px;color:${ebitda!=null&&ebitda>=0?'var(--green)':'var(--red)'}">${ebitda!=null?(ebitda>=0?'+':'')+anFmt2(ebitda):'—'}</span>
+    </div>
+    ${margPct!=null?`<div style="text-align:center;margin-top:8px;font-size:13px;font-weight:800;color:${margPct>=15?'var(--green)':margPct>=5?'var(--amber)':'var(--red)'}">Margine Operativo: ${Math.round(margPct)}%</div>`:''}
+  </div>`;
+}
+
+function anAutoSave(){
+  const ana=loadAna();
+  ['affitto','utenze','assicurazione','marketing','altro'].forEach(k=>{
+    const el=document.getElementById('an-fi-'+k); if(el) ana.fissi[k]=+el.value||0;
+  });
+  saveAna(ana);
+  // Update derived totals
+  const mk=anGetMk();
+  const {total:fatMese}=anMonthRevenue(mk);
+  const fissiTot=Object.values(ana.fissi).reduce((s,v)=>s+(+v||0),0);
+  const varTot=varTotal(ana);
+  const fiTotEl=document.getElementById('an-fi-tot');
+  if(fiTotEl) fiTotEl.textContent=anFmt2(fissiTot);
+
+}
+
+// ══════════════════════════════════════════════════════════════════
+// CASH FLOW
+// ══════════════════════════════════════════════════════════════════
+function renderCashFlow(){
+  const mk=anGetMk(); const m=MESI[mk];
+  const {byWeek}=anMonthRevenue(mk);
+  const ana=loadAna();
+  const {totale:personale}=calcPersCost(mk);
+  const fissiTot=Object.values(ana.fissi||{}).reduce((s,v)=>s+(+v||0),0);
+  const varTot=varTotal(ana);
+  const costiMensili=fissiTot+personale+varTot;
+  const costiSett=costiMensili/4;
+
+  const weeks=(m?.settimane||[]).map(s=>({
+    id:s.id, label:s.id,
+    entrate:byWeek[s.id]?.fat||0,
+    uscite:costiSett
+  }));
+  const maxVal=Math.max(...weeks.map(w=>Math.max(w.entrate,w.uscite)),1);
+  const svgH=160;
+  const barW=40; const gap=20; const totW=(barW*2+gap)*weeks.length+(weeks.length-1)*20;
+  let saldo=0;
+
+  const bars=weeks.map((w,i)=>{
+    const x=i*((barW*2+gap)+20);
+    const hE=Math.round((w.entrate/maxVal)*(svgH-30));
+    const hU=Math.round((w.uscite/maxVal)*(svgH-30));
+    saldo+=w.entrate-w.uscite;
+    const netColor=w.entrate>=w.uscite?'var(--green)':'var(--red)';
+    return `
+    <g transform="translate(${x},0)">
+      <rect x="0" y="${svgH-30-hE}" width="${barW}" height="${hE}" rx="3" fill="var(--green)" opacity=".8"/>
+      <rect x="${barW+gap}" y="${svgH-30-hU}" width="${barW}" height="${hU}" rx="3" fill="var(--red)" opacity=".6"/>
+      <text x="${barW}" y="${svgH-14}" text-anchor="middle" font-size="10" fill="var(--text2)" font-weight="800">${w.label}</text>
+      <text x="${barW/2}" y="${svgH-30-hE-4}" text-anchor="middle" font-size="9" fill="var(--green)" font-weight="800">${w.entrate>0?anFmt2(w.entrate):''}</text>
+      <line x1="${barW}" y1="${svgH-30-hE}" x2="${barW}" y2="${svgH-30}" stroke="${netColor}" stroke-width="1.5" stroke-dasharray="3,2" opacity=".5"/>
+    </g>`;
+  }).join('');
+
+  document.getElementById('an-cashflow').innerHTML=`
+  <div class="an-card">
+    <div class="an-card-title">💸 Cash Flow Settimanale — ${m?.label||''}</div>
+    <div style="display:flex;gap:14px;font-size:10px;color:var(--text2);margin-bottom:12px;flex-wrap:wrap">
+      <span style="display:flex;align-items:center;gap:5px"><span style="display:inline-block;width:12px;height:12px;background:var(--green);border-radius:2px;opacity:.8"></span>Entrate</span>
+      <span style="display:flex;align-items:center;gap:5px"><span style="display:inline-block;width:12px;height:12px;background:var(--red);border-radius:2px;opacity:.6"></span>Uscite stimate</span>
+    </div>
+    <div style="overflow-x:auto">
+      <svg class="an-cf-svg" viewBox="-10 0 ${totW+30} ${svgH+10}" style="min-width:${totW+20}px">
+        ${bars}
+        <line x1="-10" y1="${svgH-30}" x2="${totW+20}" y2="${svgH-30}" stroke="var(--bord)" stroke-width="1"/>
+      </svg>
+    </div>
+    <div class="an-pe-tot-row" style="margin-top:8px;background:${saldo>=0?'rgba(21,128,61,.08)':'rgba(185,28,28,.07)'}">
+      <span>Saldo Netto Stimato</span>
+      <span class="an-pe-tot" style="color:${saldo>=0?'var(--green)':'var(--red)'}">${saldo>=0?'+':''}${anFmt2(saldo)}</span>
+    </div>
+  </div>
+
+  <div class="an-card">
+    <div class="an-card-title">📊 Riepilogo Settimane</div>
+    <div style="display:grid;grid-template-columns:60px 1fr 1fr 1fr;gap:0;font-size:10px;font-weight:800;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;padding:6px 0;border-bottom:1px solid var(--bord)">
+      <span></span><span>Entrate</span><span>Uscite</span><span>Saldo</span>
+    </div>
+    ${weeks.map(w=>{
+      const net=w.entrate-w.uscite;
+      return `<div style="display:grid;grid-template-columns:60px 1fr 1fr 1fr;gap:0;align-items:center;padding:9px 0;border-bottom:1px solid var(--bg2);font-size:12px">
+        <span style="font-weight:800;color:var(--text2)">${w.label}</span>
+        <span style="font-weight:700;color:var(--green)">${w.entrate>0?anFmt2(w.entrate):'—'}</span>
+        <span style="font-weight:700;color:var(--text2)">≈${anFmt2(w.uscite)}</span>
+        <span style="font-weight:800;color:${net>=0?'var(--green)':'var(--red)'}">${net>=0?'+':''}${anFmt2(net)}</span>
+      </div>`;
+    }).join('')}
+    <div style="font-size:10px;color:var(--text2);margin-top:10px;line-height:1.5;font-style:italic">Le uscite settimanali sono una stima (costi mensili ÷ 4). Configura i costi in Conto Economico.</div>
+  </div>`;
+}
+
+// ══════════════════════════════════════════════════════════════════
+// SCADENZIARIO
+// ══════════════════════════════════════════════════════════════════
+function skedStatus(item){
+  if(item.pagato) return {cls:'sked-paid',badge:'sked-badge-paid',label:'Pagato'};
+  const days=Math.round((new Date(item.data)-new Date())/(1000*60*60*24));
+  if(days<0) return {cls:'sked-exp',badge:'sked-badge-exp',label:'Scaduto '+Math.abs(days)+' gg fa'};
+  if(days<=7) return {cls:'sked-warn',badge:'sked-badge-warn',label:'Scade in '+days+' gg'};
+  return {cls:'sked-ok',badge:'sked-badge-ok',label:'In '+(days)+' gg'};
+}
+
+function renderSked(){
+  const items=loadSked();
+  const filter=anSkedFilter;
+  const today=new Date();
+  const filtered=items.filter(it=>{
+    if(filter==='tutti') return true;
+    if(filter==='pagati') return it.pagato;
+    if(filter==='scaduti') return !it.pagato&&new Date(it.data)<today;
+    if(filter==='in_scadenza'){const d=Math.round((new Date(it.data)-today)/(1000*60*60*24)); return !it.pagato&&d>=0&&d<=14;}
+    return true;
+  }).sort((a,b)=>{
+    if(a.pagato!==b.pagato) return a.pagato?1:-1;
+    return new Date(a.data)-new Date(b.data);
+  });
+
+  // Summary counts
+  const scaduti=items.filter(i=>!i.pagato&&new Date(i.data)<today).length;
+  const inSc=items.filter(i=>{const d=Math.round((new Date(i.data)-today)/(1000*60*60*24));return !i.pagato&&d>=0&&d<=7;}).length;
+  const totOpen=items.filter(i=>!i.pagato).reduce((s,i)=>s+(+i.importo||0),0);
+
+  document.getElementById('an-sked').innerHTML=`
+  <button class="sked-add-btn" onclick="anModalOpen()">+ Aggiungi Scadenza</button>
+
+  ${scaduti>0||inSc>0?`<div style="background:rgba(185,28,28,.06);border:1px solid rgba(185,28,28,.2);border-radius:10px;padding:10px 14px;margin-bottom:12px;display:flex;gap:14px;align-items:center;flex-wrap:wrap">
+    ${scaduti>0?`<span style="font-size:11px;font-weight:700;color:var(--red)">🔴 ${scaduti} scadut${scaduti===1?'o':'i'}</span>`:''}
+    ${inSc>0?`<span style="font-size:11px;font-weight:700;color:var(--amber)">⚠️ ${inSc} in scadenza (7gg)</span>`:''}
+    <span style="font-size:11px;font-weight:700;color:var(--text2);margin-left:auto">Aperto: ${anFmt2(totOpen)}</span>
+  </div>`:''}
+
+  <div class="an-filter-row">
+    ${[['tutti','Tutti'],['in_scadenza','In scadenza'],['scaduti','Scaduti'],['pagati','Pagati']].map(([v,lbl])=>
+      `<button class="an-pill ${filter===v?'active':''}" onclick="anSkedFilter='${v}';renderSked()">${lbl}</button>`
+    ).join('')}
+  </div>
+
+  ${filtered.length===0?`<div class="no-data" style="padding:32px 20px">
+    ${items.length===0?'Nessuna scadenza registrata.<br><small style="color:var(--text2)">Aggiungi fatture, utenze, affitto...</small>':'Nessuna scadenza in questa categoria.'}
+  </div>`:''}
+
+  ${filtered.map(item=>{
+    const st=skedStatus(item);
+    const dataFmt=new Date(item.data).toLocaleDateString('it-IT',{day:'numeric',month:'short',year:'numeric'});
+    const catLabel={fornitore:'Fornitore',affitto:'Affitto',utenze:'Utenze',personale:'Personale',tasse:'Tasse',leasing:'Leasing',cliente:'Cliente',altro:'Altro'}[item.cat]||item.cat;
+    return `<div class="sked-item ${st.cls}" id="sked-${item.id}">
+      <div class="sked-top">
+        <span class="sked-desc">${item.desc}</span>
+        <span class="sked-badge ${st.badge}">${st.label}</span>
+      </div>
+      <div class="sked-meta">
+        <span><b>${item.tipo==='uscita'?'💸':'💰'} ${anFmt2(item.importo)}</b></span>
+        <span>📅 ${dataFmt}</span>
+        <span>${catLabel}</span>
+        ${item.note?`<span>📝 ${item.note}</span>`:''}
+      </div>
+      <div class="sked-actions">
+        ${!item.pagato?`<button class="sked-btn sked-btn-pay" onclick="anSkedPay('${item.id}')">✓ Segna pagato</button>`:''}
+        <button class="sked-btn" onclick="anSkedEdit('${item.id}')">✏️ Modifica</button>
+        <button class="sked-btn sked-btn-del" onclick="anSkedDel('${item.id}')">🗑</button>
+      </div>
+    </div>`;
+  }).join('')}`;
+}
+
+function anModalOpen(editId){
+  document.getElementById('an-modal-bg').classList.add('open');
+  document.getElementById('an-sked-edit-id').value='';
+  if(!editId){
+    document.getElementById('an-modal-title').textContent='Nuova Scadenza';
+    document.getElementById('an-f-desc').value='';
+    document.getElementById('an-f-importo').value='';
+    document.getElementById('an-f-tipo').value='uscita';
+    document.getElementById('an-f-cat').value='fornitore';
+    const today=new Date(); today.setDate(today.getDate()+14);
+    document.getElementById('an-f-data').value=today.toISOString().split('T')[0];
+    document.getElementById('an-f-note').value='';
+  }
+}
+function anModalClose(){
+  document.getElementById('an-modal-bg').classList.remove('open');
+}
+function anSkedEdit(id){
+  const items=loadSked(); const item=items.find(i=>i.id===id); if(!item) return;
+  document.getElementById('an-sked-edit-id').value=id;
+  document.getElementById('an-modal-title').textContent='Modifica Scadenza';
+  document.getElementById('an-f-desc').value=item.desc;
+  document.getElementById('an-f-importo').value=item.importo;
+  document.getElementById('an-f-tipo').value=item.tipo||'uscita';
+  document.getElementById('an-f-cat').value=item.cat||'altro';
+  document.getElementById('an-f-data').value=item.data;
+  document.getElementById('an-f-note').value=item.note||'';
+  document.getElementById('an-modal-bg').classList.add('open');
+}
+function anSkedSave(){
+  const desc=document.getElementById('an-f-desc').value.trim();
+  const importo=+document.getElementById('an-f-importo').value||0;
+  const tipo=document.getElementById('an-f-tipo').value;
+  const cat=document.getElementById('an-f-cat').value;
+  const data=document.getElementById('an-f-data').value;
+  const note=document.getElementById('an-f-note').value.trim();
+  if(!desc||!data){ alert('Inserisci almeno descrizione e data.'); return; }
+  const items=loadSked();
+  const editId=document.getElementById('an-sked-edit-id').value;
+  if(editId){
+    const i=items.findIndex(x=>x.id===editId);
+    if(i>=0) items[i]={...items[i],desc,importo,tipo,cat,data,note};
+  } else {
+    items.push({id:'s'+Date.now(),desc,importo,tipo,cat,data,note,pagato:false,creato:new Date().toISOString()});
+  }
+  saveSked(items);
+  anModalClose();
+  renderSked();
+}
+function anSkedPay(id){
+  const items=loadSked(); const i=items.findIndex(x=>x.id===id); if(i<0) return;
+  items[i].pagato=!items[i].pagato; items[i].pagato_il=new Date().toISOString();
+  saveSked(items); renderSked();
+}
+function anSkedDel(id){
+  if(!confirm('Eliminare questa scadenza?')) return;
+  const items=loadSked().filter(i=>i.id!==id); saveSked(items); renderSked();
+}
+
+// ══════════════════════════════════════════════════════════════════
+// REDDITIVITÀ COLLABORATORI
+// ══════════════════════════════════════════════════════════════════
+function renderRedd(){
+  const mk=anGetMk(); const m=MESI[mk];
+  if(!m){ document.getElementById('an-redd').innerHTML='<p class="no-data">Nessun dato.</p>'; return; }
+
+  const ana=loadAna();
+  const {totale:costoPers, perCollab, hasData:hasPersCost}=calcPersCost(mk);
+  const varTot=varTotal(ana);
+  const fissiTot=Object.values(ana.fissi||{}).reduce((s,v)=>s+(+v||0),0);
+
+  // P&L per collaboratore
+  const collabs=m.collaboratori.map(c=>{
+    const fat=anCollabMonthFat(mk,c.id)||0;
+    const costoP=perCollab[c.id]||c.costo_m||0;
+    // Quota costi fissi proporzionale al costo personale
+    const quotaFissi=costoPers>0 ? (costoP/costoPers)*fissiTot : fissiTot/m.collaboratori.length;
+    const quotaVar=costoPers>0?(costoP/costoPers)*varTot:varTot/m.collaboratori.length;
+    const varCosto=quotaVar;
+    const margLordo=fat-varCosto;
+    const contribuzione=margLordo-costoP;
+    const risultato=contribuzione-quotaFissi;
+    // Break-even: quanto fatturato serve per coprire i costi (al netto dei variabili)
+    const be_personale=costoP+quotaVar;
+    const be_totale=costoP+quotaFissi+quotaVar;
+    const copertura=be_totale>0 ? fat/be_totale : null;
+    return {c, fat, costoP, quotaFissi, varCosto, margLordo, contribuzione, risultato, be_personale, be_totale, copertura};
+  });
+
+  const totalFat=collabs.reduce((s,d)=>s+d.fat,0);
+  const totalCosto=collabs.reduce((s,d)=>s+d.costoP,0);
+  const totalRisultato=collabs.reduce((s,d)=>s+d.risultato,0);
+  const fissiCoperti=fissiTot>0&&totalFat>0;
+
+  // Avvisi configurazione
+  const warningHtml = (!hasPersCost||fissiTot===0) ? `
+  <div style="background:rgba(180,83,9,.07);border:1px solid rgba(180,83,9,.25);border-radius:10px;padding:12px 14px;margin-bottom:12px;font-size:11px;color:var(--amber);font-weight:600;line-height:1.6">
+    ⚙️ ${!hasPersCost?'Inserisci i costi personale nel <b style="cursor:pointer;text-decoration:underline" onclick="anSwitch(\'pl\')">Conto Economico</b> per l\'analisi completa.':''}
+    ${fissiTot===0?'<br>Inserisci i <b style="cursor:pointer;text-decoration:underline" onclick="anSwitch(\'pl\')">costi fissi mensili</b> per vedere la redditività totale.':''}
+  </div>` : '';
+
+  // KPI di riepilogo
+  const kpiHtml=`
+  <div class="an-kpi-row" style="margin-bottom:12px">
+    <div class="an-kpi">
+      <div class="an-kpi-val">${anFmt2(totalFat)}</div>
+      <div class="an-kpi-lbl">Fat. Mese</div>
+    </div>
+    <div class="an-kpi">
+      <div class="an-kpi-val">${anFmt2(totalCosto)}</div>
+      <div class="an-kpi-lbl">Costo Personale</div>
+    </div>
+    <div class="an-kpi">
+      <div class="an-kpi-val">${anFmt2(fissiTot)}</div>
+      <div class="an-kpi-lbl">Costi Fissi</div>
+    </div>
+    <div class="an-kpi">
+      <div class="an-kpi-val" style="color:${totalRisultato>=0?'var(--green)':'var(--red)'}">${totalRisultato>=0?'+':''}${anFmt2(totalRisultato)}</div>
+      <div class="an-kpi-lbl">Risultato Netto</div>
+    </div>
+  </div>`;
+
+  // Cards per collaboratore
+  const cardsHtml=collabs.map(({c,fat,costoP,quotaFissi,varCosto,margLordo,contribuzione,risultato,be_personale,be_totale,copertura})=>{
+    const hasRev=fat>0;
+    const status=!hasRev?'nodata':copertura>=1?'ok':copertura>=0.8?'warn':'bad';
+    const verdict=!hasRev?'Nessun dato':copertura>=1?'✓ Redditiva':copertura>=0.8?'⚠ Quasi':copertura<0?'✗ In perdita':'✗ Sotto break-even';
+    const verdictCls=!hasRev?'nd':copertura>=1?'ok':copertura>=0.8?'warn':'bad';
+    const pctLabel=copertura!=null?Math.round(copertura*100)+'% break-even':'—';
+    const progW=copertura!=null?Math.min(100,Math.round(copertura*100)):0;
+    const progColor=copertura>=1?'var(--green)':copertura>=0.8?'var(--amber)':'var(--red)';
+    // Posizione marker break-even personale sulla barra totale
+    const bePersonalePct=be_totale>0?Math.min(98,Math.round(be_personale/be_totale*100)):50;
+    // Avatar color
+    const avColors=['#a67318','#15803d','#0369a1','#6d28d9','#be185d'];
+    const avColor=avColors[m.collaboratori.findIndex(x=>x.id===c.id)%avColors.length];
+    const initials=c.nome.slice(0,2).toUpperCase();
+
+    return `<div class="redd-card redd-${status}">
+      <div class="redd-hdr">
+        <div class="redd-av" style="background:${avColor}20;color:${avColor};border:2px solid ${avColor}40">${initials}</div>
+        <div>
+          <div class="redd-name">${c.nome}</div>
+          <div style="font-size:10px;color:var(--text2);font-weight:600">${c.ruolo}</div>
+        </div>
+        <span class="redd-verdict redd-verdict-${verdictCls}">${verdict}</span>
+      </div>
+
+      ${hasRev&&be_totale>0?`
+      <div class="redd-prog-wrap">
+        <div class="redd-prog-labels">
+          <span>Fatturato: ${anFmt2(fat)}</span>
+          <span style="color:${progColor}">${pctLabel}</span>
+        </div>
+        <div class="redd-prog-track">
+          <div class="redd-prog-fill" style="width:${progW}%;background:${progColor}"></div>
+          <div class="redd-be-marker" style="left:${bePersonalePct}%">
+            <div class="redd-be-label">solo costo</div>
+          </div>
+          <div class="redd-be-marker" style="left:99%;background:var(--red)">
+            <div class="redd-be-label" style="color:var(--red)">totale</div>
+          </div>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:9px;color:var(--text2);margin-top:3px">
+          <span>€0</span>
+          <span style="color:var(--amber)">BE pers. ${anFmt2(be_personale)}</span>
+          <span style="color:var(--red)">BE tot. ${anFmt2(be_totale)}</span>
+        </div>
+      </div>` : ''}
+
+      <div class="redd-pl">
+        <div class="redd-pl-row"><span class="redd-pl-lbl">Fatturato</span><span class="redd-pl-val an-pe-pos">${hasRev?anFmt2(fat):'—'}</span></div>
+        ${hasRev&&varCosto>0?`<div class="redd-pl-row"><span class="redd-pl-lbl">− Costi variabili (quota)</span><span class="redd-pl-val" style="color:var(--red)">− ${anFmt2(varCosto)}</span></div>`:''}
+        ${hasRev?`<div class="redd-pl-row" style="font-weight:800;color:var(--text)"><span class="redd-pl-lbl" style="font-weight:800;color:var(--text)">= Margine lordo</span><span class="redd-pl-val">${anFmt2(margLordo)}</span></div>`:''}
+        <div class="redd-pl-sep"></div>
+        <div class="redd-pl-row"><span class="redd-pl-lbl">− Costo personale</span><span class="redd-pl-val" style="color:var(--red)">− ${anFmt2(costoP)}</span></div>
+        ${hasRev?`<div class="redd-pl-row" style="font-weight:800"><span class="redd-pl-lbl" style="font-weight:800;color:var(--text)">= Contribuzione ai fissi</span><span class="redd-pl-val" style="color:${contribuzione>=0?'var(--green)':'var(--red)'}">${contribuzione>=0?'+':''}${anFmt2(contribuzione)}</span></div>`:''}
+        ${fissiTot>0?`
+        <div class="redd-pl-sep"></div>
+        <div class="redd-pl-row"><span class="redd-pl-lbl">− Quota costi fissi</span><span class="redd-pl-val" style="color:var(--red)">− ${anFmt2(quotaFissi)}</span></div>`:''}
+      </div>
+
+      ${hasRev?`<div class="redd-pl-result ${risultato>=0?'redd-pl-result-ok':'redd-pl-result-bad'}">
+        <span>Risultato netto</span>
+        <span>${risultato>=0?'+':''}${anFmt2(risultato)}</span>
+      </div>`:''}
+
+      <div class="redd-be-row">
+        <div class="redd-be-box">
+          <div class="redd-be-val" style="color:${fat>0&&fat>=be_personale?'var(--green)':'var(--amber)'}">${anFmt2(be_personale)}</div>
+          <div class="redd-be-lbl">Break-Even Personale</div>
+          <div class="redd-be-sub">per coprire solo il suo costo</div>
+        </div>
+        <div class="redd-be-box">
+          <div class="redd-be-val" style="color:${fat>0&&fat>=be_totale?'var(--green)':'var(--red)'}">${anFmt2(be_totale)}</div>
+          <div class="redd-be-lbl">Break-Even Totale</div>
+          <div class="redd-be-sub">costo + quota costi fissi</div>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+
+  const noteHtml=`<div class="redd-note">
+    <b>Come si legge:</b> il Break-Even Personale è il fatturato minimo per coprire solo lo stipendio.
+    Il Break-Even Totale aggiunge la quota di costi fissi (affitto, utenze, ecc.) proporzionale al peso di ogni collaboratore.
+    La barra mostra dove si trova il fatturato reale rispetto ai due obiettivi.<br>
+    <b>Quota fissi:</b> ripartita in proporzione al costo personale (chi costa di più, contribuisce di più ai fissi).
+  </div>`;
+
+  document.getElementById('an-redd').innerHTML=warningHtml+kpiHtml+cardsHtml+noteHtml;
+}
+
+// ══════════════════════════════════════════════════════════════════
+// BUDGET VS CONSUNTIVO
+// ══════════════════════════════════════════════════════════════════
+function renderBudget(){
+  const mk=anGetMk(); const m=MESI[mk];
+  if(!m){ document.getElementById('an-budget').innerHTML='<p class="no-data">Nessun dato.</p>'; return; }
+  const bud=loadBud();
+  const mensile=+bud.mensile||0;
+  const settBud=mensile/4;
+  const {total:fatMese,byWeek}=anMonthRevenue(mk);
+  const tgMese=m.collaboratori.reduce((s,c)=>s+(c.fat_tm||0),0);
+
+  document.getElementById('an-budget').innerHTML=`
+  <div class="an-card">
+    <div class="an-card-title">🎯 Budget Mensile</div>
+    <div class="an-inp-row">
+      <div class="an-inp-group">
+        <div class="an-inp-lbl"><span>Budget Fatturato Mensile</span><small>Obiettivo gestionale custom</small></div>
+        <input class="an-inp" type="number" id="an-bud-mens" value="${mensile}" min="0" step="100" oninput="anBudSave()">
+        <span class="an-inp-unit">€</span>
+      </div>
+    </div>
+    <div style="margin-top:8px;font-size:10px;color:var(--text2)">Target KPI Team (da contratto): <b style="color:var(--text)">${anFmt2(tgMese)}</b></div>
+  </div>
+
+  <div class="an-card">
+    <div class="an-card-title">📊 Budget vs Consuntivo — ${m.label}</div>
+    <div style="display:grid;grid-template-columns:60px 1fr 1fr 1fr;gap:0;font-size:9px;font-weight:800;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;padding:6px 0;border-bottom:1px solid var(--bord)">
+      <span></span><span>Budget</span><span>Reale</span><span>Scostamento</span>
+    </div>
+    ${m.settimane.map(s=>{
+      const wFat=byWeek[s.id]?.fat;
+      const delta=wFat!=null?wFat-settBud:null;
+      return `<div style="display:grid;grid-template-columns:60px 1fr 1fr 1fr;gap:0;align-items:center;padding:9px 0;border-bottom:1px solid var(--bg2);font-size:12px">
+        <span style="font-weight:800;color:var(--text2)">${s.id}</span>
+        <span style="font-weight:700">${anFmt2(settBud)}</span>
+        <span style="font-weight:700;color:${wFat!=null?(wFat>=settBud?'var(--green)':'var(--amber)'):'var(--bord2)'}">${wFat!=null?anFmt2(wFat):'—'}</span>
+        <span style="font-weight:800;color:${delta==null?'var(--bord2)':delta>=0?'var(--green)':'var(--red)'}">${delta!=null?(delta>=0?'+':'')+anFmt2(delta):'—'}</span>
+      </div>`;
+    }).join('')}
+    <div style="display:grid;grid-template-columns:60px 1fr 1fr 1fr;gap:0;align-items:center;padding:11px 0;font-size:13px;font-weight:900;background:var(--bg2);border-radius:8px;margin-top:4px;padding-left:8px">
+      <span style="color:var(--text2)">MESE</span>
+      <span>${anFmt2(mensile)}</span>
+      <span style="color:${fatMese!=null?(fatMese>=mensile?'var(--green)':'var(--amber)'):'var(--bord2)'}">${fatMese!=null?anFmt2(fatMese):'—'}</span>
+      <span style="color:${fatMese==null?'var(--bord2)':fatMese-mensile>=0?'var(--green)':'var(--red)'}">${fatMese!=null?((fatMese-mensile>=0?'+':'')+anFmt2(fatMese-mensile)):'—'}</span>
+    </div>
+  </div>
+
+  ${mensile>0&&tgMese>0?`<div class="an-card" style="background:var(--bg2)">
+    <div class="an-card-title">🔍 Confronto Budget vs Target KPI</div>
+    <div class="an-pe-row"><span class="an-pe-lbl">Budget custom</span><span class="an-pe-val">${anFmt2(mensile)}</span></div>
+    <div class="an-pe-row"><span class="an-pe-lbl">Target KPI Team</span><span class="an-pe-val">${anFmt2(tgMese)}</span></div>
+    <div class="an-pe-row"><span class="an-pe-lbl">Differenza</span><span class="an-pe-val" style="color:${mensile>=tgMese?'var(--green)':'var(--amber)'}">${mensile>=tgMese?'+':''}${anFmt2(mensile-tgMese)}</span></div>
+  </div>`:''}`;
+}
+
+function anBudSave(){
+  const el=document.getElementById('an-bud-mens'); if(!el) return;
+  saveBud({mensile:+el.value||0});
+}
+
+
+// ══════════════════════════════════════════════════════════════════
+// COSTO PERSONALE — Calcolatore
+// ══════════════════════════════════════════════════════════════════
+const PERS_KEY = 'isola_pers_v2';
+
+function persStorageKey(mk){ return PERS_KEY + '_' + mk; }
+function loadPers(mk){ try{ return JSON.parse(localStorage.getItem(persStorageKey(mk))) || {}; } catch(e){ return {}; } }
+function savePers(mk, d){ localStorage.setItem(persStorageKey(mk), JSON.stringify(d)); }
+
+function calcPersCost(mk){
+  const m = MESI[mk]; if(!m) return {totale:0, perCollab:{}};
+  const pers = loadPers(mk);
+  const costoTot = +pers.costo_totale || 0;
+  const collabs = m.collaboratori;
+  const nette = {};
+  let totNette = 0;
+  for(const c of collabs){
+    const n = +pers.nette?.[c.id] || 0;
+    nette[c.id] = n;
+    totNette += n;
+  }
+  const quota = costoTot - totNette;
+  const perCollab = {};
+  for(const c of collabs){
+    const n = nette[c.id];
+    perCollab[c.id] = totNette > 0 ? n + (n / totNette) * quota : n;
+  }
+  const hasData = costoTot > 0 && totNette > 0;
+  if(!hasData){
+    for(const c of collabs) perCollab[c.id] = c.costo_m || 0;
+    return { totale: collabs.reduce((s,c)=>s+(c.costo_m||0),0), perCollab, hasData:false };
+  }
+  return { totale: costoTot, perCollab, hasData:true };
+}
+
+function renderPersCalc(mk){
+  const m = MESI[mk]; if(!m) return '';
+  const pers = loadPers(mk);
+  const collabs = m.collaboratori;
+  const costoTot = +pers.costo_totale || 0;
+  let totNette = 0;
+  const nette = {};
+  for(const c of collabs){
+    const n = +pers.nette?.[c.id] || 0;
+    nette[c.id] = n;
+    totNette += n;
+  }
+  const quota = costoTot > 0 ? costoTot - totNette : 0;
+  const hasData = costoTot > 0 && totNette > 0;
+
+  const rows = collabs.map(c => {
+    const n = nette[c.id] || 0;
+    const extra = hasData && totNette > 0 ? (n / totNette) * quota : 0;
+    const tot = n + extra;
+    const pct = costoTot > 0 ? Math.round(tot / costoTot * 100) : 0;
+    return `<div class="pers-bk-row">
+      <span class="pers-bk-name">${c.nome}</span>
+      <span class="pers-bk-val">${n > 0 ? anFmt2(n) : '—'}</span>
+      <span class="pers-bk-extra">${extra > 0 ? '+'+anFmt2(extra) : '—'}</span>
+      <span class="pers-bk-tot-val" style="color:${tot>0?'var(--gold)':'var(--bord2)'}">${tot > 0 ? anFmt2(tot) : '—'}<span style="font-size:9px;color:var(--text2);font-weight:600;margin-left:3px">${pct>0?pct+'%':''}</span></span>
+    </div>`;
+  }).join('');
+
+  const checkHtml = costoTot > 0 && totNette > 0
+    ? `<div class="pers-check pers-check-ok">✓ Verificato: ${anFmt2(totNette)} nette + ${anFmt2(quota)} F24/TFR = ${anFmt2(costoTot)}</div>`
+    : costoTot > 0 && totNette === 0
+    ? `<div class="pers-check pers-check-err">⚠ Inserisci le buste nette per calcolare la ripartizione</div>`
+    : `<div class="pers-check" style="background:var(--bg2);color:var(--text2);border:1px solid var(--bord)">💡 Inserisci il costo totale per attivare il calcolatore</div>`;
+
+  return `<div class="pers-calc">
+    <div class="pers-calc-title">👥 Calcolatore Costo Personale</div>
+    <div class="pers-tot-input">
+      <div class="pers-tot-lbl">
+        <span>Costo Totale Aziendale</span>
+        <small>Cedolini netti + F24 + TFR — tutto incluso</small>
+      </div>
+      <input class="pers-inp" type="number" id="pers-tot" value="${costoTot||''}" placeholder="0.00" step="0.01" min="0" oninput="persAutoSave('${mk}')">
+      <span class="pers-inp-unit">€</span>
+    </div>
+    <div style="font-size:10px;font-weight:800;color:var(--text2);text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px">Buste Paga Nette</div>
+    <div class="pers-nette-grid">
+      ${collabs.map(c => `<div class="pers-netta-row">
+        <span class="pers-netta-name">${c.nome}</span>
+        <input class="pers-inp" type="number" id="pers-n-${c.id}" value="${nette[c.id]||''}" placeholder="0.00" step="0.01" min="0" oninput="persAutoSave('${mk}')">
+        <span class="pers-inp-unit">€</span>
+      </div>`).join('')}
+    </div>
+    <div id="pers-bk-wrap">${hasData ? `
+    <div style="font-size:10px;font-weight:800;color:var(--text2);text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px;padding-top:4px">Ripartizione Automatica</div>
+    <div class="pers-breakdown">
+      <div class="pers-bk-hdr">
+        <span>Collaboratore</span>
+        <span style="text-align:right;padding-right:8px">Netta</span>
+        <span style="text-align:right;padding-right:8px">F24+TFR</span>
+        <span style="text-align:right">Costo Totale</span>
+      </div>
+      ${rows}
+      <div class="pers-bk-row pers-bk-tot">
+        <span class="pers-bk-name">TOTALE</span>
+        <span class="pers-bk-val">${anFmt2(totNette)}</span>
+        <span class="pers-bk-extra">+${anFmt2(quota)}</span>
+        <span class="pers-bk-tot-val">${anFmt2(costoTot)}</span>
+      </div>
+    </div>` : ''}
+    ${checkHtml}
+  </div></div>`;
+}
+
+function persAutoSave(mk){
+  const m = MESI[mk]; if(!m) return;
+  const pers = loadPers(mk);
+  const totEl = document.getElementById('pers-tot');
+  if(totEl) pers.costo_totale = +totEl.value || 0;
+  pers.nette = pers.nette || {};
+  for(const c of m.collaboratori){
+    const el = document.getElementById('pers-n-'+c.id);
+    if(el) pers.nette[c.id] = +el.value || 0;
+  }
+  savePers(mk, pers);
+  // Aggiorna solo il breakdown senza distruggere gli input
+  const bkWrap = document.getElementById('pers-bk-wrap');
+  if(bkWrap) bkWrap.outerHTML = renderPersBK(mk);
+}
+
+function renderPersBK(mk){
+  const m = MESI[mk]; if(!m) return '<div id="pers-bk-wrap"></div>';
+  const pers = loadPers(mk);
+  const costoTot = pers.costo_totale || 0;
+  const nette = pers.nette || {};
+  const totNette = Object.values(nette).reduce((s,v)=>s+(+v||0),0);
+  const quota = costoTot > 0 ? costoTot - totNette : 0;
+  const hasData = costoTot > 0 && totNette > 0;
+  const collabs = m.collaboratori;
+
+  const rows = collabs.map(c => {
+    const n = nette[c.id] || 0;
+    const extra = hasData && totNette > 0 ? (n / totNette) * quota : 0;
+    const tot = n + extra;
+    const pct = costoTot > 0 ? Math.round(tot / costoTot * 100) : 0;
+    return `<div class="pers-bk-row">
+      <span class="pers-bk-name">${c.nome}</span>
+      <span class="pers-bk-val">${n > 0 ? anFmt2(n) : '—'}</span>
+      <span class="pers-bk-extra">${extra > 0 ? '+'+anFmt2(extra) : '—'}</span>
+      <span class="pers-bk-tot-val" style="color:${tot>0?'var(--gold)':'var(--bord2)'}">${tot > 0 ? anFmt2(tot) : '—'}<span style="font-size:9px;color:var(--text2);font-weight:600;margin-left:3px">${pct>0?pct+'%':''}</span></span>
+    </div>`;
+  }).join('');
+
+  const checkHtml = costoTot > 0 && totNette > 0
+    ? `<div class="pers-check pers-check-ok">✓ Verificato: ${anFmt2(totNette)} nette + ${anFmt2(quota)} F24/TFR = ${anFmt2(costoTot)}</div>`
+    : costoTot > 0 && totNette === 0
+    ? `<div class="pers-check pers-check-err">⚠ Inserisci le buste nette per calcolare la ripartizione</div>`
+    : `<div class="pers-check" style="background:var(--bg2);color:var(--text2);border:1px solid var(--bord)">💡 Inserisci il costo totale per attivare il calcolatore</div>`;
+
+  return `<div id="pers-bk-wrap">${hasData ? `
+    <div style="font-size:10px;font-weight:800;color:var(--text2);text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px;padding-top:4px">Ripartizione Automatica</div>
+    <div class="pers-breakdown">
+      <div class="pers-bk-hdr">
+        <span>Collaboratore</span>
+        <span style="text-align:right;padding-right:8px">Netta</span>
+        <span style="text-align:right;padding-right:8px">F24+TFR</span>
+        <span style="text-align:right">Costo Totale</span>
+      </div>
+      ${rows}
+      <div class="pers-bk-row pers-bk-tot">
+        <span class="pers-bk-name">TOTALE</span>
+        <span class="pers-bk-val">${anFmt2(totNette)}</span>
+        <span class="pers-bk-extra">+${anFmt2(quota)}</span>
+        <span class="pers-bk-tot-val">${anFmt2(costoTot)}</span>
+      </div>
+    </div>` : ''}
+    ${checkHtml}
+  </div>`;
+}
+
+
+// ── Break-even helper per Target Team ────────────────────────────
+function getCollabBE(mk, cid){
+  const m=MESI[mk]; if(!m) return null;
+  const ana=loadAna();
+  const {totale:costoPers, perCollab}=calcPersCost(mk);
+  const fissiTot=Object.values(ana.fissi||{}).reduce((s,v)=>s+(+v||0),0);
+  const varTot=varTotal(ana);
+  const costoP=perCollab[cid]||0;
+  if(costoP===0&&fissiTot===0) return null;
+  const quotaFissi=costoPers>0?(costoP/costoPers)*fissiTot:0;
+  const quotaVar=costoPers>0?(costoP/costoPers)*varTot:0;
+  const be_personale=costoP+quotaVar;
+  const be_totale=costoP+quotaFissi+quotaVar;
+  // Fatturato mese corrente (tutte le settimane disponibili)
+  const fatMese=anCollabMonthFat(mk,cid)||0;
+  return {costoP, quotaFissi, quotaVar, be_personale, be_totale, fatMese};
+}
+
+function renderBEIndicator(mk, cid){
+  const be=getCollabBE(mk,cid);
+  if(!be||be.be_totale===0) return '';
+  const pct=Math.round(be.fatMese/be.be_totale*100);
+  const pctP=Math.round(be.fatMese/be.be_personale*100);
+  const color=pct>=100?'var(--green)':pct>=75?'var(--amber)':'var(--red)';
+  const icon=pct>=100?'✓':pct>=75?'⚠':'✗';
+  const bePersonalePctOnBar=Math.min(97,Math.round(be.be_personale/be.be_totale*100));
+  const progW=Math.min(100,pct);
+  return `<div style="margin-top:10px;padding:10px 12px;background:var(--bg2);border-radius:9px;border-left:3px solid ${color}">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+      <span style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--text2)">Analisi Economica</span>
+      <span style="font-size:11px;font-weight:800;color:${color}">${icon} ${pct}% break-even</span>
+    </div>
+    <div style="height:8px;background:var(--bord);border-radius:4px;overflow:hidden;position:relative;margin-bottom:5px">
+      <div style="height:100%;width:${progW}%;background:${color};border-radius:4px;transition:width 1s"></div>
+      <div style="position:absolute;top:0;left:${bePersonalePctOnBar}%;width:2px;height:100%;background:var(--amber);opacity:.9"></div>
+    </div>
+    <div style="display:flex;justify-content:space-between;font-size:9px;color:var(--text2)">
+      <span>Fatto mese: <b style="color:var(--text)">${anFmt2(be.fatMese)}</b></span>
+      <span style="color:var(--amber)">Solo costo: ${anFmt2(be.be_personale)}</span>
+      <span style="color:var(--red)">Con fissi: ${anFmt2(be.be_totale)}</span>
+    </div>
+  </div>`;
+}
+
+// ── Hook into showModule ──────────────────────────────────────────
+(function(){
+  const _orig=window.showModule;
+  window.showModule=function(mod){
+    _orig.call(this,mod);
+    if(mod==='analisi'){ renderAnalisi(); }
+  };
+})();
+
 </script>
 </body>
 </html>
