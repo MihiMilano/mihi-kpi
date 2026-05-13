@@ -338,6 +338,18 @@ select{background:var(--card);color:var(--text);border:1px solid var(--bord2);pa
 .pers-check-ok{background:#f0fdf4;color:var(--green);border:1px solid #86efac}
 .pers-check-err{background:#fff5f5;color:var(--red);border:1px solid #fca5a5}
 
+/* ── COSTI VARIABILI DINAMICI ──────────────────────────────── */
+.var-items-wrap{display:flex;flex-direction:column;gap:6px;margin-bottom:10px}
+.var-item-row{display:grid;grid-template-columns:1fr 90px 18px 28px;gap:6px;align-items:center}
+.var-inp-nome{background:var(--bg2);border:1px solid var(--bord);border-radius:7px;padding:7px 10px;font-size:12px;color:var(--text);font-family:inherit;outline:none;width:100%}
+.var-inp-nome:focus{border-color:var(--gold)}
+.var-inp-imp{background:var(--bg2);border:1px solid var(--bord);border-radius:7px;padding:7px 8px;font-size:13px;font-weight:700;color:var(--text);text-align:right;outline:none;width:100%}
+.var-inp-imp:focus{border-color:var(--gold)}
+.var-del-btn{background:none;border:1px solid var(--bord);border-radius:6px;color:var(--text2);font-size:11px;cursor:pointer;padding:4px 6px;line-height:1;transition:all .2s}
+.var-del-btn:hover{background:rgba(185,28,28,.15);border-color:var(--red);color:var(--red)}
+.var-add-btn{background:var(--bg2);border:1px dashed var(--gold);border-radius:8px;color:var(--gold);font-size:12px;font-weight:700;padding:8px 16px;cursor:pointer;width:100%;transition:all .2s;margin-top:2px}
+.var-add-btn:hover{background:rgba(166,115,24,.1)}
+
 /* ── REDDITIVITÀ AVANZATA ──────────────────────────────────────── */
 .redd-card{background:var(--card);border:1px solid var(--bord);border-radius:14px;padding:16px;margin-bottom:12px}
 .redd-card.redd-ok{border-left:4px solid var(--green)}
@@ -1623,6 +1635,7 @@ function renderLive(){
       html+=`<div class="profilo-wrap">
         <div class="psec-lbl">💡 Suggerimenti personalizzati</div>`;
     } else {
+      html+=renderBEIndicator(mk, c.id);
       html+=`<button class="expand-btn" id="btn-profilo-${c.id}" onclick="toggleProfilo('${c.id}')">▾ Profilo &amp; Suggerimenti</button>
         <div id="profilo-${c.id}" class="profilo-wrap" style="display:none">
           <button onclick="stampaProfilo('${c.id}')" style="width:100%;margin-bottom:12px;padding:9px;background:#1a1510;border:none;border-radius:9px;color:#a67318;font-size:11px;font-weight:800;cursor:pointer;font-family:inherit;letter-spacing:.5px;display:flex;align-items:center;justify-content:center;gap:6px">📄 Esporta scheda personale</button>
@@ -1924,14 +1937,88 @@ let anSkedFilter = 'tutti';
 // ── Default data ─────────────────────────────────────────────────
 const ANA_DEF = {
   fissi: { affitto:2500, utenze:300, assicurazione:150, marketing:200, altro:100 },
-  variabili_pct: 15,
-  variabili_altro: 200
+  variabili: []  // array di {id, nome, importo}
 };
 const BUD_DEF = { mensile: 13055 };
 
 // ── LocalStorage helpers ──────────────────────────────────────────
-function loadAna(){ try{ return Object.assign({},ANA_DEF,JSON.parse(localStorage.getItem(ANA_KEY)||'{}')); }catch(e){ return Object.assign({},ANA_DEF); } }
+function loadAna(){
+  try{
+    const raw=JSON.parse(localStorage.getItem(ANA_KEY)||'{}');
+    const d=Object.assign({},ANA_DEF,raw);
+    // Migrazione: se variabili è ancora il vecchio oggetto, converti in array
+    if(d.variabili && !Array.isArray(d.variabili)){
+      const labelMap={prodotti:'Prodotti',consumabili:'Consumabili',pulizia:'Pulizia & Igiene',manutenzioni:'Manutenzioni',altro:'Altro variabile'};
+      d.variabili=Object.entries(d.variabili)
+        .filter(([,v])=>+v>0)
+        .map(([k,v],i)=>({id:'v'+(i+1),nome:labelMap[k]||k,importo:+v}));
+    }
+    return d;
+  }catch(e){ return Object.assign({},ANA_DEF); }
+}
 function saveAna(d){ localStorage.setItem(ANA_KEY,JSON.stringify(d)); }
+
+// ── Costi variabili helpers ───────────────────────────────────────
+function varTotal(ana){
+  if(!ana||!Array.isArray(ana.variabili)) return 0;
+  return ana.variabili.reduce((s,r)=>s+(+r.importo||0),0);
+}
+
+function renderVariabiliList(){
+  const ana=loadAna();
+  const items=Array.isArray(ana.variabili)?ana.variabili:[];
+  const tot=varTotal(ana);
+  const rows=items.map(item=>`
+    <div class="var-item-row" id="var-row-${item.id}">
+      <input class="var-inp-nome" type="text" value="${item.nome.replace(/"/g,'&quot;')}" placeholder="Es: Tinture Wella" oninput="varSaveNome('${item.id}',this.value)">
+      <input class="var-inp-imp" type="number" value="${item.importo||''}" placeholder="0" min="0" step="1" oninput="varSaveImp('${item.id}',+this.value)">
+      <span class="var-inp-unit">€</span>
+      <button class="var-del-btn" onclick="varDelItem('${item.id}')" title="Elimina voce">✕</button>
+    </div>`).join('');
+  return `<div id="var-list-inner">
+    <div class="var-items-wrap">${rows}</div>
+    <button class="var-add-btn" onclick="varAddItem()">＋ Aggiungi voce</button>
+    <div class="an-pe-tot-row" style="margin-top:10px"><span>Totale Variabili</span><span class="an-pe-tot" id="an-vp-tot">${anFmt2(tot)}</span></div>
+  </div>`;
+}
+
+function varAddItem(){
+  const ana=loadAna();
+  if(!Array.isArray(ana.variabili)) ana.variabili=[];
+  const id='v'+Date.now();
+  ana.variabili.push({id,nome:'',importo:0});
+  saveAna(ana);
+  const wrap=document.getElementById('var-list-wrap');
+  if(wrap) wrap.innerHTML=renderVariabiliList();
+}
+
+function varDelItem(id){
+  const ana=loadAna();
+  if(!Array.isArray(ana.variabili)) return;
+  ana.variabili=ana.variabili.filter(r=>r.id!==id);
+  saveAna(ana);
+  const wrap=document.getElementById('var-list-wrap');
+  if(wrap) wrap.innerHTML=renderVariabiliList();
+}
+
+function varSaveNome(id, val){
+  const ana=loadAna();
+  const item=Array.isArray(ana.variabili)?ana.variabili.find(r=>r.id===id):null;
+  if(item){ item.nome=val; saveAna(ana); }
+  // Aggiorna solo il totale senza re-renderizzare
+  const tot=varTotal(ana);
+  const el=document.getElementById('an-vp-tot');
+  if(el) el.textContent=anFmt2(tot);
+}
+
+function varSaveImp(id, val){
+  const ana=loadAna();
+  const item=Array.isArray(ana.variabili)?ana.variabili.find(r=>r.id===id):null;
+  if(item){ item.importo=+val||0; saveAna(ana); }
+  const tot=varTotal(ana);
+  const el=document.getElementById('an-vp-tot');
+  if(el) el.textContent=anFmt2(tot);
+}
 function loadSked(){ try{ return JSON.parse(localStorage.getItem(SKED_KEY)||'[]'); }catch(e){ return []; } }
 function saveSked(d){ localStorage.setItem(SKED_KEY,JSON.stringify(d)); }
 function loadBud(){ try{ return Object.assign({},BUD_DEF,JSON.parse(localStorage.getItem(BUD_KEY)||'{}')); }catch(e){ return Object.assign({},BUD_DEF); } }
@@ -2036,9 +2123,7 @@ function renderCruscotto(){
   const ana=loadAna();
   const {totale:personale}=calcPersCost(mk);
   const fissiTot=Object.values(ana.fissi||{}).reduce((s,v)=>s+(+v||0),0);
-  const varPct=ana.variabili_pct||0;
-  const varAltro=ana.variabili_altro||0;
-  const varTot=fatMese!=null?(fatMese*(varPct/100)+varAltro):varAltro;
+  const varTot=varTotal(ana);
   const costiTot=fissiTot+personale+varTot;
   const ebitda=fatMese!=null?fatMese-costiTot:null;
   const margPct=fatMese&&fatMese>0?ebitda/fatMese*100:null;
@@ -2144,10 +2229,8 @@ function renderPL(){
   const mk=anGetMk(); const m=MESI[mk];
   const {total:fatMese,byWeek}=anMonthRevenue(mk);
   const ana=loadAna();
-  const personale=anGetPersonale(mk);
-  const varPct=+ana.variabili_pct||0;
-  const varAltro=+ana.variabili_altro||0;
-  const varTot=fatMese!=null?(fatMese*(varPct/100)+varAltro):varAltro;
+  const {totale:personale}=calcPersCost(mk);
+  const varTot=varTotal(ana);
   const fissiTot=Object.values(ana.fissi||{}).reduce((s,v)=>s+(+v||0),0);
   const costiTot=fissiTot+personale+varTot;
   const ebitda=fatMese!=null?fatMese-costiTot:null;
@@ -2184,20 +2267,8 @@ function renderPL(){
   <div id="pers-calc-wrap">${renderPersCalc(mk)}</div>
 
   <div class="an-card">
-    <div class="an-card-title">📦 Costi Variabili</div>
-    <div class="an-inp-row">
-      <div class="an-inp-group">
-        <div class="an-inp-lbl"><span>Prodotti & consumabili</span><small>% sul fatturato</small></div>
-        <input class="an-inp" type="number" id="an-vp" value="${varPct}" min="0" max="100" step="1" oninput="anAutoSave()">
-        <span class="an-inp-unit">%</span>
-      </div>
-      <div class="an-inp-group">
-        <div class="an-inp-lbl"><span>Altre variabili</span></div>
-        <input class="an-inp" type="number" id="an-va" value="${varAltro}" min="0" step="10" oninput="anAutoSave()">
-        <span class="an-inp-unit">€</span>
-      </div>
-    </div>
-    <div class="an-pe-tot-row" style="margin-top:8px"><span>Totale Variabili</span><span class="an-pe-tot" id="an-vp-tot">${anFmt2(varTot)}</span></div>
+    <div class="an-card-title">📦 Costi Variabili Mensili <span style="font-size:9px;font-weight:600;color:var(--text2)">(voci reali da fatture)</span></div>
+    <div id="var-list-wrap">${renderVariabiliList()}</div>
   </div>
 
   <div class="an-card" style="border-color:${ebitda!=null&&ebitda>=0?'rgba(21,128,61,.3)':'rgba(185,28,28,.2)'}">
@@ -2220,18 +2291,15 @@ function anAutoSave(){
   ['affitto','utenze','assicurazione','marketing','altro'].forEach(k=>{
     const el=document.getElementById('an-fi-'+k); if(el) ana.fissi[k]=+el.value||0;
   });
-  const vp=document.getElementById('an-vp'); if(vp) ana.variabili_pct=+vp.value||0;
-  const va=document.getElementById('an-va'); if(va) ana.variabili_altro=+va.value||0;
   saveAna(ana);
   // Update derived totals
   const mk=anGetMk();
   const {total:fatMese}=anMonthRevenue(mk);
   const fissiTot=Object.values(ana.fissi).reduce((s,v)=>s+(+v||0),0);
-  const varTot=fatMese!=null?(fatMese*(ana.variabili_pct/100)+ana.variabili_altro):ana.variabili_altro;
+  const varTot=varTotal(ana);
   const fiTotEl=document.getElementById('an-fi-tot');
   if(fiTotEl) fiTotEl.textContent=anFmt2(fissiTot);
-  const vpTotEl=document.getElementById('an-vp-tot');
-  if(vpTotEl) vpTotEl.textContent=anFmt2(varTot);
+
 }
 
 // ══════════════════════════════════════════════════════════════════
@@ -2243,7 +2311,7 @@ function renderCashFlow(){
   const ana=loadAna();
   const {totale:personale}=calcPersCost(mk);
   const fissiTot=Object.values(ana.fissi||{}).reduce((s,v)=>s+(+v||0),0);
-  const costiMensili=fissiTot+personale+(+ana.variabili_altro||0);
+  const costiMensili=fissiTot+personale+varTot;
   const costiSett=costiMensili/4;
 
   const weeks=(m?.settimane||[]).map(s=>({
@@ -2451,7 +2519,7 @@ function renderRedd(){
 
   const ana=loadAna();
   const {totale:costoPers, perCollab, hasData:hasPersCost}=calcPersCost(mk);
-  const varPct=(+ana.variabili_pct||0)/100;
+  const varTot=varTotal(ana);
   const fissiTot=Object.values(ana.fissi||{}).reduce((s,v)=>s+(+v||0),0);
 
   // P&L per collaboratore
@@ -2460,13 +2528,14 @@ function renderRedd(){
     const costoP=perCollab[c.id]||c.costo_m||0;
     // Quota costi fissi proporzionale al costo personale
     const quotaFissi=costoPers>0 ? (costoP/costoPers)*fissiTot : fissiTot/m.collaboratori.length;
-    const varCosto=fat*varPct;
+    const quotaVar=costoPers>0?(costoP/costoPers)*varTot:varTot/m.collaboratori.length;
+    const varCosto=quotaVar;
     const margLordo=fat-varCosto;
     const contribuzione=margLordo-costoP;
     const risultato=contribuzione-quotaFissi;
     // Break-even: quanto fatturato serve per coprire i costi (al netto dei variabili)
-    const be_personale=varPct<1 ? costoP/(1-varPct) : 0;
-    const be_totale=varPct<1 ? (costoP+quotaFissi)/(1-varPct) : 0;
+    const be_personale=costoP+quotaVar;
+    const be_totale=costoP+quotaFissi+quotaVar;
     const copertura=be_totale>0 ? fat/be_totale : null;
     return {c, fat, costoP, quotaFissi, varCosto, margLordo, contribuzione, risultato, be_personale, be_totale, copertura};
   });
@@ -2554,7 +2623,7 @@ function renderRedd(){
 
       <div class="redd-pl">
         <div class="redd-pl-row"><span class="redd-pl-lbl">Fatturato</span><span class="redd-pl-val an-pe-pos">${hasRev?anFmt2(fat):'—'}</span></div>
-        ${hasRev&&varPct>0?`<div class="redd-pl-row"><span class="redd-pl-lbl">− Costi variabili (${Math.round(varPct*100)}%)</span><span class="redd-pl-val" style="color:var(--red)">− ${anFmt2(varCosto)}</span></div>`:''}
+        ${hasRev&&varCosto>0?`<div class="redd-pl-row"><span class="redd-pl-lbl">− Costi variabili (quota)</span><span class="redd-pl-val" style="color:var(--red)">− ${anFmt2(varCosto)}</span></div>`:''}
         ${hasRev?`<div class="redd-pl-row" style="font-weight:800;color:var(--text)"><span class="redd-pl-lbl" style="font-weight:800;color:var(--text)">= Margine lordo</span><span class="redd-pl-val">${anFmt2(margLordo)}</span></div>`:''}
         <div class="redd-pl-sep"></div>
         <div class="redd-pl-row"><span class="redd-pl-lbl">− Costo personale</span><span class="redd-pl-val" style="color:var(--red)">− ${anFmt2(costoP)}</span></div>
@@ -2743,7 +2812,73 @@ function renderPersCalc(mk){
         <span class="pers-inp-unit">€</span>
       </div>`).join('')}
     </div>
-    ${hasData ? `
+    <div id="pers-bk-wrap">${hasData ? `
+    <div style="font-size:10px;font-weight:800;color:var(--text2);text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px;padding-top:4px">Ripartizione Automatica</div>
+    <div class="pers-breakdown">
+      <div class="pers-bk-hdr">
+        <span>Collaboratore</span>
+        <span style="text-align:right;padding-right:8px">Netta</span>
+        <span style="text-align:right;padding-right:8px">F24+TFR</span>
+        <span style="text-align:right">Costo Totale</span>
+      </div>
+      ${rows}
+      <div class="pers-bk-row pers-bk-tot">
+        <span class="pers-bk-name">TOTALE</span>
+        <span class="pers-bk-val">${anFmt2(totNette)}</span>
+        <span class="pers-bk-extra">+${anFmt2(quota)}</span>
+        <span class="pers-bk-tot-val">${anFmt2(costoTot)}</span>
+      </div>
+    </div>` : ''}
+    ${checkHtml}
+  </div></div>`;
+}
+
+function persAutoSave(mk){
+  const m = MESI[mk]; if(!m) return;
+  const pers = loadPers(mk);
+  const totEl = document.getElementById('pers-tot');
+  if(totEl) pers.costo_totale = +totEl.value || 0;
+  pers.nette = pers.nette || {};
+  for(const c of m.collaboratori){
+    const el = document.getElementById('pers-n-'+c.id);
+    if(el) pers.nette[c.id] = +el.value || 0;
+  }
+  savePers(mk, pers);
+  // Aggiorna solo il breakdown senza distruggere gli input
+  const bkWrap = document.getElementById('pers-bk-wrap');
+  if(bkWrap) bkWrap.outerHTML = renderPersBK(mk);
+}
+
+function renderPersBK(mk){
+  const m = MESI[mk]; if(!m) return '<div id="pers-bk-wrap"></div>';
+  const pers = loadPers(mk);
+  const costoTot = pers.costo_totale || 0;
+  const nette = pers.nette || {};
+  const totNette = Object.values(nette).reduce((s,v)=>s+(+v||0),0);
+  const quota = costoTot > 0 ? costoTot - totNette : 0;
+  const hasData = costoTot > 0 && totNette > 0;
+  const collabs = m.collaboratori;
+
+  const rows = collabs.map(c => {
+    const n = nette[c.id] || 0;
+    const extra = hasData && totNette > 0 ? (n / totNette) * quota : 0;
+    const tot = n + extra;
+    const pct = costoTot > 0 ? Math.round(tot / costoTot * 100) : 0;
+    return `<div class="pers-bk-row">
+      <span class="pers-bk-name">${c.nome}</span>
+      <span class="pers-bk-val">${n > 0 ? anFmt2(n) : '—'}</span>
+      <span class="pers-bk-extra">${extra > 0 ? '+'+anFmt2(extra) : '—'}</span>
+      <span class="pers-bk-tot-val" style="color:${tot>0?'var(--gold)':'var(--bord2)'}">${tot > 0 ? anFmt2(tot) : '—'}<span style="font-size:9px;color:var(--text2);font-weight:600;margin-left:3px">${pct>0?pct+'%':''}</span></span>
+    </div>`;
+  }).join('');
+
+  const checkHtml = costoTot > 0 && totNette > 0
+    ? `<div class="pers-check pers-check-ok">✓ Verificato: ${anFmt2(totNette)} nette + ${anFmt2(quota)} F24/TFR = ${anFmt2(costoTot)}</div>`
+    : costoTot > 0 && totNette === 0
+    ? `<div class="pers-check pers-check-err">⚠ Inserisci le buste nette per calcolare la ripartizione</div>`
+    : `<div class="pers-check" style="background:var(--bg2);color:var(--text2);border:1px solid var(--bord)">💡 Inserisci il costo totale per attivare il calcolatore</div>`;
+
+  return `<div id="pers-bk-wrap">${hasData ? `
     <div style="font-size:10px;font-weight:800;color:var(--text2);text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px;padding-top:4px">Ripartizione Automatica</div>
     <div class="pers-breakdown">
       <div class="pers-bk-hdr">
@@ -2764,19 +2899,49 @@ function renderPersCalc(mk){
   </div>`;
 }
 
-function persAutoSave(mk){
-  const m = MESI[mk]; if(!m) return;
-  const pers = loadPers(mk);
-  const totEl = document.getElementById('pers-tot');
-  if(totEl) pers.costo_totale = +totEl.value || 0;
-  pers.nette = pers.nette || {};
-  for(const c of m.collaboratori){
-    const el = document.getElementById('pers-n-'+c.id);
-    if(el) pers.nette[c.id] = +el.value || 0;
-  }
-  savePers(mk, pers);
-  const container = document.getElementById('pers-calc-wrap');
-  if(container) container.innerHTML = renderPersCalc(mk);
+
+// ── Break-even helper per Target Team ────────────────────────────
+function getCollabBE(mk, cid){
+  const m=MESI[mk]; if(!m) return null;
+  const ana=loadAna();
+  const {totale:costoPers, perCollab}=calcPersCost(mk);
+  const fissiTot=Object.values(ana.fissi||{}).reduce((s,v)=>s+(+v||0),0);
+  const varTot=varTotal(ana);
+  const costoP=perCollab[cid]||0;
+  if(costoP===0&&fissiTot===0) return null;
+  const quotaFissi=costoPers>0?(costoP/costoPers)*fissiTot:0;
+  const quotaVar=costoPers>0?(costoP/costoPers)*varTot:0;
+  const be_personale=costoP+quotaVar;
+  const be_totale=costoP+quotaFissi+quotaVar;
+  // Fatturato mese corrente (tutte le settimane disponibili)
+  const fatMese=anCollabMonthFat(mk,cid)||0;
+  return {costoP, quotaFissi, quotaVar, be_personale, be_totale, fatMese};
+}
+
+function renderBEIndicator(mk, cid){
+  const be=getCollabBE(mk,cid);
+  if(!be||be.be_totale===0) return '';
+  const pct=Math.round(be.fatMese/be.be_totale*100);
+  const pctP=Math.round(be.fatMese/be.be_personale*100);
+  const color=pct>=100?'var(--green)':pct>=75?'var(--amber)':'var(--red)';
+  const icon=pct>=100?'✓':pct>=75?'⚠':'✗';
+  const bePersonalePctOnBar=Math.min(97,Math.round(be.be_personale/be.be_totale*100));
+  const progW=Math.min(100,pct);
+  return `<div style="margin-top:10px;padding:10px 12px;background:var(--bg2);border-radius:9px;border-left:3px solid ${color}">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+      <span style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--text2)">Analisi Economica</span>
+      <span style="font-size:11px;font-weight:800;color:${color}">${icon} ${pct}% break-even</span>
+    </div>
+    <div style="height:8px;background:var(--bord);border-radius:4px;overflow:hidden;position:relative;margin-bottom:5px">
+      <div style="height:100%;width:${progW}%;background:${color};border-radius:4px;transition:width 1s"></div>
+      <div style="position:absolute;top:0;left:${bePersonalePctOnBar}%;width:2px;height:100%;background:var(--amber);opacity:.9"></div>
+    </div>
+    <div style="display:flex;justify-content:space-between;font-size:9px;color:var(--text2)">
+      <span>Fatto mese: <b style="color:var(--text)">${anFmt2(be.fatMese)}</b></span>
+      <span style="color:var(--amber)">Solo costo: ${anFmt2(be.be_personale)}</span>
+      <span style="color:var(--red)">Con fissi: ${anFmt2(be.be_totale)}</span>
+    </div>
+  </div>`;
 }
 
 // ── Hook into showModule ──────────────────────────────────────────
