@@ -1961,59 +1961,105 @@ function renderServizi(servizi, color){
 // Genera suggerimenti AI personalizzati
 function genSuggerimenti(c, d, servizi){
   if(d.fat===null&&d.pre===null&&d.serv===null&&d.fiche===null)
-    return[{icon:'⏳',cls:'sugg-card-ok',title:'In attesa di dati',text:'Inserisci i dati di questa settimana per ricevere suggerimenti personalizzati.'}];
+    return [{icon:'⏳',cls:'sugg-card-ok',title:'In attesa di dati',text:'Inserisci i dati di questa settimana per ricevere suggerimenti personalizzati.'}];
 
   const suggs=[];
+  const fatTw=c.fat_tw||0;
+  const ficheTgt=c.fiche_t||40;
+  const servTgt=c.serv_t||2;
+  const retTgt=c.ret_tw||2;
+  const ritTgt=c.rit_tw||15;
 
-  // 1. Serv/Cliente ≤ target: 2 è il MINIMO, spingiamo sempre oltre
-  if(d.serv!==null&&d.serv!==undefined&&c.serv_t>0&&d.serv<=c.serv_t){
-    const atTarget=d.serv>=c.serv_t;
-    suggs.push({icon:'➕',cls:'sugg-card-fat',title:'Aumenta i servizi per cliente',
-      text:atTarget
-        ?`Sei al minimo di ${c.serv_t} serv/cliente — non fermarti qui. Ogni cliente è un'occasione: proponi un trattamento, un finish, una cura specifica. Punta a ${(c.serv_t+0.5).toFixed(1)}+ e il ticket si alza da solo.`
-        :`Media attuale ${d.serv.toFixed(1)} vs target ${c.serv_t}. Proponi almeno 1 servizio aggiuntivo per ogni cliente: un trattamento, un finish, una cura specifica. Ogni +0.5 serv/cliente si traduce in fatturato reale.`});
+  // P1: fat < 60% fat_tw → alza il valore di ogni appuntamento
+  if(d.fat!==null&&fatTw>0&&d.fat<fatTw*0.60){
+    const gap=Math.round(fatTw-d.fat);
+    const perCliente=d.pre>0?Math.round(gap/d.pre):null;
+    suggs.push({icon:'🎯',cls:'sugg-card-fat',
+      title:'Alza il valore di ogni appuntamento',
+      text:`Sei a ${anFmt2(d.fat)} su target ${anFmt2(fatTw)}. Ogni appuntamento in agenda vale di più se alzi il valore: proponi un servizio aggiuntivo, un trattamento, un upgrade.${perCliente?' €'+perCliente+' in più per cliente e sei sul target.':''}`
+    });
   }
 
-  // 2. Fiche media sotto target
-  if(suggs.length<2&&d.fiche!==null&&d.fiche!==undefined&&c.fiche_t>0&&d.fiche<c.fiche_t){
-    const gap=Math.round(c.fiche_t-d.fiche);
-    let txt=`Ticket medio €${d.fiche.toFixed(2)} vs target €${c.fiche_t}. `;
+  // P2: rit < 50% rit_tw → fidelizza i ritorni
+  if(suggs.length<3&&d.rit!==null&&ritTgt>0&&d.rit<ritTgt*0.50){
+    suggs.push({icon:'🔄',cls:'sugg-card-fat',
+      title:'Fidelizza: rifissa prima che escano',
+      text:`${d.rit} ritorni questa settimana, target ${ritTgt}. Prima che ogni cliente esca, fissa già il prossimo — in quel momento è ancora soddisfatto e dice sì.`
+    });
+  }
+
+  // P3: ret = 0 → zero vendite prodotti
+  if(suggs.length<3&&d.ret!==null&&d.ret===0&&retTgt>0){
+    suggs.push({icon:'🛍️',cls:'sugg-card-retail',
+      title:'Zero vendite prodotti',
+      text:`Nessuna vendita prodotti questa settimana. Non proporre "vuoi un prodotto?" — di' "per il tuo tipo di capello uso questo, te lo prendi?" La differenza è enorme.`
+    });
+  }
+
+  // P4: fat 60–85% fat_tw → gap recuperabile, usa servizio top
+  if(suggs.length<3&&d.fat!==null&&fatTw>0&&d.fat>=fatTw*0.60&&d.fat<fatTw*0.85){
+    const gap=Math.round(fatTw-d.fat);
+    let topServ=null;
     if(servizi&&servizi.length){
-      const prem=servizi.filter(s=>s.qta>0&&(s.ricavi/s.qta)>=(c.fiche_t||0)).sort((a,b)=>(b.ricavi/b.qta)-(a.ricavi/a.qta));
-      if(prem.length)txt+=`Valorizza "${prem[0].nome}" e proponi upgrade: ogni €${gap} in più per cliente chiude il gap.`;
-      else txt+=`Proponi trattamenti ad alto valore — ogni €${gap} in più per cliente chiude il gap.`;
-    } else txt+=`Proponi upgrade e trattamenti ad alto valore — ogni €${gap} in più per cliente chiude il gap.`;
-    suggs.push({icon:'💎',cls:'sugg-card-fat',title:'Alza il ticket medio',text:txt});
+      const filtered=servizi.filter(s=>s.qta>0&&s.nome&&s.nome.toLowerCase()!=='prodotti');
+      if(filtered.length) topServ=filtered.sort((a,b)=>(b.ricavi/b.qta)-(a.ricavi/a.qta))[0];
+    }
+    const topTxt=topServ
+      ?` Il tuo servizio più redditizio è "${topServ.nome}" a €${Math.round(topServ.ricavi/topServ.qta)} — proporne ${Math.ceil(gap/(topServ.ricavi/topServ.qta))} in più e chiudi il gap.`
+      :'';
+    suggs.push({icon:'📈',cls:'sugg-card-fat',
+      title:'Gap recuperabile',
+      text:`Sei a ${anFmt2(d.fat)}, mancano €${gap} al target.${topTxt}`
+    });
   }
 
-  // 3. Saturazione bassa → esperienza wow + rifissa appuntamento
-  if(suggs.length<2&&d.sat!==null&&d.sat!==undefined&&d.sat<70){
-    const lvl=d.sat<50?'molto bassa':'sotto soglia';
-    suggs.push({icon:'✨',cls:'sugg-card-fat',title:'Crea un\'esperienza wow',
-      text:`Saturazione ${lvl} (${d.sat}%). Ogni cliente che entra deve vivere una consulenza memorabile: analisi del capello, proposta personalizzata, styling finale. Rifissa l'appuntamento prima che esca — è il momento giusto. Un'esperienza wow genera passaparola.`});
+  // P5: serv < 80% serv_t → servizi per cliente bassi
+  if(suggs.length<3&&d.serv!==null&&servTgt>0&&d.serv<servTgt*0.80){
+    suggs.push({icon:'➕',cls:'sugg-card-fat',
+      title:'Aumenta i servizi per cliente',
+      text:`Media ${d.serv.toFixed(1)} serv/cliente, target ${servTgt}. Ogni cliente che entra per un taglio è anche un potenziale trattamento, una maschera, un finish. Non chiedere — proponi.`
+    });
   }
 
-  // 4. Ritorni bassi se c'è ancora spazio (solo se dato presente e sotto metà target)
-  if(suggs.length<2&&d.rit!==null&&c.rit_tw>0&&d.rit/c.rit_tw<0.4)
-    suggs.push({icon:'🔄',cls:'sugg-card-fat',title:'Fidelizza i clienti',
-      text:'I clienti di ritorno sono sotto soglia. Rifissa sempre l\'appuntamento in cassa prima che il cliente esca — è l\'abitudine più importante per costruire una clientela solida.'});
+  // P6: fiche < 85% fiche_t → upgrade concreto
+  if(suggs.length<3&&d.fiche!==null&&ficheTgt>0&&d.fiche<ficheTgt*0.85){
+    let baseServ=null;
+    if(servizi&&servizi.length){
+      const filtered=servizi.filter(s=>s.qta>0&&s.nome&&s.nome.toLowerCase()!=='prodotti');
+      if(filtered.length) baseServ=filtered.sort((a,b)=>b.qta-a.qta)[0];
+    }
+    const gap=Math.round(ficheTgt-d.fiche);
+    const upgradeTxt=baseServ
+      ?` Il tuo servizio più frequente è "${baseServ.nome}" — proponi sempre il passo successivo: maschera, trattamento, upgrade. Vale €${gap} in più per appuntamento.`
+      :` Proponi il passo successivo: taglio → trattamento, piega → finish, colore → gloss. Vale €${gap} in più per appuntamento.`;
+    suggs.push({icon:'💎',cls:'sugg-card-fat',
+      title:'Alza il ticket con un upgrade',
+      text:`Ticket medio €${d.fiche.toFixed(1)} vs target €${ficheTgt}.${upgradeTxt}`
+    });
+  }
 
-  // Se tutto ok
-  if(suggs.length===0)
-    suggs.push({icon:'🌟',cls:'sugg-card-ok',title:'KPI in linea — ottimo!',
-      text:'Serv/cliente e ticket medio sono in target. Mantieni il ritmo e punta a chiudere la settimana in verde!'});
+  // P7: ret > 0 ma < 70% ret_tw → retail sotto target
+  if(suggs.length<3&&d.ret!==null&&d.ret>0&&retTgt>0&&d.ret<retTgt*0.70){
+    suggs.push({icon:'🛍️',cls:'sugg-card-retail',
+      title:'Spingi i prodotti',
+      text:`${d.ret} ${d.ret===1?'prodotto venduto':'prodotti venduti'}, target ${retTgt}. Abbina il consiglio prodotto al momento del risciacquo o dello styling — è il momento in cui il cliente è più ricettivo.`
+    });
+  }
 
-  // SEMPRE slot 3: Retail motivazionale
-  const retOk=d.ret!==null&&c.ret_tw>0&&d.ret>=c.ret_tw*0.8;
-  suggs.push({icon:'🛍️',cls:'sugg-card-retail',
-    title:retOk?'Mantieni il ritmo sui prodotti':'Spingi i prodotti',
-    text:retOk
-      ?'Ottimo sui prodotti! Continua a consigliare 1 prodotto personalizzato per ogni cliente: rafforza la fidelizzazione e aumenta il fatturato in modo naturale.'
-      :'Non vendere — consiglia. Dopo ogni servizio scegli 1 prodotto specifico per quel cliente e spiegagli perché è perfetto per lui. Un consiglio personalizzato vale più di qualsiasi promozione.'
-  });
+  // OK: tutto in linea
+  if(suggs.length===0){
+    const fatStr=d.fat!==null?'Fatturato '+anFmt2(d.fat)+', ':'';
+    const ficheStr=d.fiche!==null?'ticket €'+d.fiche.toFixed(1)+', ':'';
+    const servStr=d.serv!==null?d.serv.toFixed(1)+' serv/cliente':'';
+    suggs.push({icon:'🌟',cls:'sugg-card-ok',
+      title:'Settimana solida',
+      text:`${fatStr}${ficheStr}${servStr}. Mantieni questo ritmo — la costanza è il vero obiettivo.`
+    });
+  }
 
   return suggs.slice(0,3);
 }
+
 
 // Toggle espansione card
 function toggleProfilo(id){
@@ -3301,7 +3347,31 @@ function renderCruscotto(){
     <div class="an-pe-row"><span class="an-pe-lbl">Costi Variabili</span><span class="an-pe-val">${anFmt2(varTot)}</span></div>
     <div class="an-pe-tot-row"><span>Totale Costi</span><span class="an-pe-tot">${anFmt2(costiTot)}</span></div>
     <div style="margin-top:8px;font-size:10px;color:var(--text2);text-align:center">Configura i costi in <b style="color:var(--gold);cursor:pointer" onclick="anSwitch('pl')">Conto Economico →</b></div>
-  </div>`;
+  </div>
+
+  ${(()=>{
+    // Alert saturazione per il direttore
+    const sw=getSW(mk);
+    const sid=sw?.id||'S1';
+    const sats=m.collaboratori.map(c=>STORICO[mk]?.[sid]?.[c.id]?.sat).filter(v=>v!=null&&v!==undefined);
+    if(!sats.length) return '';
+    const satMedia=Math.round(sats.reduce((a,b)=>a+b,0)/sats.length);
+    if(satMedia>=65) return '';
+    const isCrit=satMedia<40;
+    const alertColor=isCrit?'var(--red)':'var(--amber)';
+    const alertBg=isCrit?'rgba(185,28,28,.07)':'rgba(180,83,9,.07)';
+    const alertBorder=isCrit?'rgba(185,28,28,.25)':'rgba(180,83,9,.25)';
+    const alertIcon=isCrit?'🚨':'⚠️';
+    const alertTitle=isCrit?'Saturazione critica — azione richiesta':'Saturazione da monitorare';
+    const alertText=isCrit
+      ?"Agenda quasi vuota questa settimana. Attiva subito: contatti di riattivazione clienti dormienti, post sui social con disponibilità, promozione last-minute. Ogni posto libero è ricavo perso."
+      :"Agenda non piena ("+satMedia+"%). Valuta se attivare azioni di riempimento per i giorni con più buchi — controlla il calendario e segnala disponibilità ai clienti abituali.";
+    return `<div style="background:${alertBg};border:1px solid ${alertBorder};border-radius:10px;padding:12px 14px;margin-top:14px;font-size:11px;color:${alertColor};font-weight:600;line-height:1.6">
+      ${alertIcon} <b>${alertTitle}</b> (sat. media: ${satMedia}%)<br>
+      <span style="font-weight:400;color:var(--text)">${alertText}</span>
+    </div>`;
+  })()}
+  `;
 }
 
 // ══════════════════════════════════════════════════════════════════
