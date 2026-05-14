@@ -1945,7 +1945,7 @@ function renderServizi(servizi, color){
 
 // Genera suggerimenti AI personalizzati
 function genSuggerimenti(c, d, servizi){
-  if(d.fat===null&&d.pre===null&&d.serv===null&&d.fiche===null)
+  if(d.fat==null&&d.pre==null&&d.serv==null&&d.fiche==null)
     return [{icon:'⏳',cls:'sugg-card-ok',title:'In attesa di dati',text:'Inserisci i dati di questa settimana per ricevere suggerimenti personalizzati.'}];
 
   const suggs=[];
@@ -2033,9 +2033,9 @@ function genSuggerimenti(c, d, servizi){
 
   // OK: tutto in linea
   if(suggs.length===0){
-    const fatStr=d.fat!==null?'Fatturato '+anFmt2(d.fat)+', ':'';
-    const ficheStr=d.fiche!==null?'ticket €'+d.fiche.toFixed(1)+', ':'';
-    const servStr=d.serv!==null?d.serv.toFixed(1)+' serv/cliente':'';
+    const fatStr=d.fat!=null?'Fatturato '+anFmt2(d.fat)+', ':'';
+    const ficheStr=d.fiche!=null?'ticket €'+d.fiche.toFixed(1)+', ':'';
+    const servStr=d.serv!=null?d.serv.toFixed(1)+' serv/cliente':'';
     suggs.push({icon:'🌟',cls:'sugg-card-ok',
       title:'Settimana solida',
       text:`${fatStr}${ficheStr}${servStr}. Mantieni questo ritmo — la costanza è il vero obiettivo.`
