@@ -203,6 +203,25 @@ select{background:var(--card);color:var(--text);border:1px solid var(--bord2);pa
 </style>
 </head>
 <body>
+<script>
+// === SALONE_ATTIVO ===
+const SALONE_ATTIVO = true;
+// =====================
+(function(){
+  if(SALONE_ATTIVO) return;
+  document.addEventListener('DOMContentLoaded', function(){
+    document.body.innerHTML = '';
+    var d = document.createElement('div');
+    d.style.cssText = 'display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;background:#0d0d0d;color:#f5f0e8;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif;padding:32px;text-align:center';
+    d.innerHTML = '<div style="font-size:12px;font-weight:800;letter-spacing:3px;color:#a67318;margin-bottom:32px">MIHI</div>'
+      +'<div style="font-size:52px;margin-bottom:20px">🔒</div>'
+      +'<div style="font-size:20px;font-weight:900;color:#ef4444;margin-bottom:12px">Dashboard non disponibile</div>'
+      +'<div style="font-size:14px;color:#8a7a60;line-height:1.7;max-width:320px;margin-bottom:28px">Accesso temporaneamente sospeso.<br>Contatta MIHI per informazioni.</div>'
+      +'<div style="background:#ef444415;border:1px solid #ef444430;border-radius:12px;padding:14px 24px;font-size:12px;color:#ef4444;font-weight:700">MIHI Milano · mihi@mihimilano.com</div>';
+    document.body.appendChild(d);
+  });
+})();
+</script>
 
 <!-- COVER -->
 <div id="view-cover" class="cover">
@@ -2714,9 +2733,33 @@ function renderMese(){
   const mk=getMk();const m=MESI[mk];
   if(!m){document.getElementById('pane-mese').innerHTML='<p class="no-data">Nessun dato.</p>';return;}
   const sw=getSW(mk);const kd=KD.find(k=>k.k===meseKpi)||KD[0];
-  const icons={fat:'💰',pre:'👥',ret:'🛍️',rit:'🔄',nuovi:'✨',rich:'📞',sat:'📅'};
-  let html=`<div class="kpi-sel">`;
-  KD.forEach(k=>html+=`<button class="kbtn${k.k===meseKpi?' active':''}" onclick="meseKpi='${k.k}';renderMese()">${icons[k.k]} ${k.lbl}</button>`);
+  const icons={fat:'💰',pre:'👥',ret:'🛍️',rit:'🔄',nuovi:'✨',rich:'📞',sat:'📅',fiche:'🧾',serv:'✂️'};
+  // Calcola ticket medio e servizi/cliente salone per la summary card
+  let _totFat=null,_totPre=null,_totServ=null,_cntServ=0;
+  for(const sid of['S1','S2','S3','S4']){
+    const sdw=STORICO[mk]?.[sid];
+    if(!sdw)continue;
+    m.collaboratori.forEach(c=>{
+      const d=sdw[c.id];if(!d)return;
+      if(d.fat!=null)_totFat=(_totFat||0)+d.fat;
+      if(d.pre!=null)_totPre=(_totPre||0)+d.pre;
+      if(d.serv!=null){_totServ=(_totServ||0)+d.serv;_cntServ++;}
+    });
+  }
+  const _ficheSalone=(_totFat!=null&&_totPre)? _totFat/_totPre : null;
+  const _servSalone=_cntServ>0?_totServ/_cntServ:null;
+  let html=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px">
+    <div class="an-kpi" style="text-align:center">
+      <div class="an-kpi-val">${_ficheSalone!=null?'€'+_ficheSalone.toFixed(1):'—'}</div>
+      <div class="an-kpi-lbl">🧾 Ticket medio salone</div>
+    </div>
+    <div class="an-kpi" style="text-align:center">
+      <div class="an-kpi-val">${_servSalone!=null?_servSalone.toFixed(2):'—'}</div>
+      <div class="an-kpi-lbl">✂️ Servizi/cliente salone</div>
+    </div>
+  </div>`;
+  html+=`<div class="kpi-sel">`;
+  KD.forEach(k=>html+=`<button class="kbtn${k.k===meseKpi?' active':''}" onclick="meseKpi='${k.k}';renderMese()">${icons[k.k]||'•'} ${k.lbl}</button>`);
   html+=`</div><div class="tbl-wrap"><table><thead><tr><th>Collaboratore</th>`;
   m.settimane.forEach(s=>{
     const live=s.id===sw?.id;
@@ -2744,10 +2787,31 @@ function renderMese(){
   }
   if(isAvg){let cnt=0;m.collaboratori.forEach(c=>{const t=getTot(mk,c.id);if(t[meseKpi]!==null){totAll=(totAll||0)+t[meseKpi];cnt++;}});if(cnt)totAll/=cnt;tgTot=70;}
   else{m.collaboratori.forEach(c=>{const t=getTot(mk,c.id);if(t[meseKpi]!==null)totAll=(totAll||0)+t[meseKpi];if(c[kd.tm])tgTot+=c[kd.tm];});}
+  // Per fiche: ticket medio salone = fat_tot/pre_tot; per serv: media pesata
+  if(meseKpi==='fiche'){
+    html+=`<tr class="tot-row"><td>MEDIA SALONE</td>`;
+    m.settimane.forEach(s=>{
+      let _sf=null,_sp=null;
+      m.collaboratori.forEach(c=>{const d=STORICO[mk]?.[s.id]?.[c.id];if(!d)return;if(d.fat!=null)_sf=(_sf||0)+d.fat;if(d.pre!=null)_sp=(_sp||0)+d.pre;});
+      html+=`<td>${_sf!=null&&_sp?'€'+(_sf/_sp).toFixed(1):'–'}</td>`;
+    });
+    const _sfT=totAll,_spT=m.collaboratori.reduce((s,c)=>{const t=getTot(mk,c.id);return t.pre!=null?s+t.pre:s;},0);
+    const _ficheTot=_sfT&&_spT?_sfT/_spT:null;
+    html+=`<td class="${semKpi('fiche',_ficheTot,70)}" style="font-weight:800">${_ficheTot?'€'+_ficheTot.toFixed(1):'–'}</td><td style="color:var(--text2)">€${m.collaboratori[0]?.fiche_t||40}</td><td>—</td></tr>`;
+  } else if(meseKpi==='serv'){
+    html+=`<tr class="tot-row"><td>MEDIA SALONE</td>`;
+    m.settimane.forEach(s=>{
+      let _sv=null,_sc=0;
+      m.collaboratori.forEach(c=>{const v=STORICO[mk]?.[s.id]?.[c.id]?.serv;if(v!=null){_sv=(_sv||0)+v;_sc++;}});
+      html+=`<td>${_sc>0?(_sv/_sc).toFixed(2):'–'}</td>`;
+    });
+    html+=`<td class="${semKpi('serv',totAll,2)}" style="font-weight:800">${totAll!=null?totAll.toFixed(2):'–'}</td><td style="color:var(--text2)">${m.collaboratori[0]?.serv_t||2}</td><td>—</td></tr>`;
+  } else {
   html+=`<tr class="tot-row"><td>${isAvg?'MEDIA SALONE':'TOTALE SALONE'}</td>`;
   m.settimane.forEach(s=>html+=`<td>${kd.fmt(sums[s.id])}</td>`);
   const sf2=semKpi(kd.k,totAll,tgTot);
   html+=`<td class="${sf2}">${kd.fmt(totAll)}</td><td style="color:var(--text2)">${isAvg?'70%':kd.fmt(tgTot)}</td><td class="${sf2}">${isAvg?'':pct(totAll,tgTot)||'–'}</td></tr>`;
+  } // fine else normale
   html+=`</tbody></table></div>`;
   document.getElementById('pane-mese').innerHTML=html;
 }
@@ -3524,7 +3588,7 @@ function renderRedd(){
   const ana=loadAna();
   const {totale:costoPers, perCollab, hasData:hasPersCost}=calcPersCost(mk);
   const varTot=varTotal(ana);
-  const fissiTot=Object.values(ana.fissi||{}).reduce((s,v)=>s+(+v||0),0);
+  const fissiTot=Object.values(ana.fissi||{}).reduce((s,v)=>s+(+v||0),0)+fissiExtraTotal(ana);
 
   // P&L per collaboratore
   const collabs=m.collaboratori.map(c=>{
@@ -3603,27 +3667,34 @@ function renderRedd(){
         <span class="redd-verdict redd-verdict-${verdictCls}">${verdict}</span>
       </div>
 
-      ${hasRev&&be_totale>0?`
+      ${hasRev&&be_totale>0?(()=>{
+        // Scala la barra: se fat > be_totale, la barra mostra TUTTO
+        const _scale=Math.max(fat, be_totale);
+        const _costW=Math.round(Math.min(fat,be_totale)/_scale*100);
+        const _utileW=fat>be_totale?Math.round((fat-be_totale)/_scale*100):0;
+        const _bePersonW=Math.round(be_personale/_scale*100);
+        const _beTotW=Math.round(be_totale/_scale*100); // = 100 se fat<be_totale
+        const _utile=fat-be_totale;
+        const _costColor=fat>=be_totale?'var(--amber)':'var(--red)';
+        return `
       <div class="redd-prog-wrap">
         <div class="redd-prog-labels">
           <span>Fatturato: ${anFmt2(fat)}</span>
-          <span style="color:${progColor}">${pctLabel}</span>
+          <span style="color:${fat>=be_totale?'var(--green)':progColor}">${fat>=be_totale?'✓ Utile: +'+anFmt2(_utile):pctLabel}</span>
         </div>
-        <div class="redd-prog-track">
-          <div class="redd-prog-fill" style="width:${progW}%;background:${progColor}"></div>
-          <div class="redd-be-marker" style="left:${bePersonalePct}%">
-            <div class="redd-be-label">solo costo</div>
-          </div>
-          <div class="redd-be-marker" style="left:99%;background:var(--red)">
-            <div class="redd-be-label" style="color:var(--red)">totale</div>
-          </div>
+        <div class="redd-prog-track" style="overflow:visible">
+          <div style="position:absolute;left:0;top:0;height:100%;width:${_costW}%;background:${_costColor};border-radius:${_utileW>0?'4px 0 0 4px':'4px'};transition:width .3s"></div>
+          ${_utileW>0?`<div style="position:absolute;left:${_costW}%;top:0;height:100%;width:${_utileW}%;background:var(--green);border-radius:0 4px 4px 0;transition:width .3s"></div>`:''}
+          <div class="redd-be-marker" style="left:${_bePersonW}%"><div class="redd-be-label">costo</div></div>
+          ${fat<be_totale?`<div class="redd-be-marker" style="left:99%;background:var(--red)"><div class="redd-be-label" style="color:var(--red)">totale</div></div>`:`<div class="redd-be-marker" style="left:${_beTotW}%;background:var(--green)"><div class="redd-be-label" style="color:var(--green)">BE ✓</div></div>`}
         </div>
         <div style="display:flex;justify-content:space-between;font-size:9px;color:var(--text2);margin-top:3px">
           <span>€0</span>
           <span style="color:var(--amber)">BE pers. ${anFmt2(be_personale)}</span>
-          <span style="color:var(--red)">BE tot. ${anFmt2(be_totale)}</span>
+          <span style="color:${fat>=be_totale?'var(--green)':'var(--red)'}">${fat>=be_totale?'✓ '+anFmt2(be_totale):'BE tot. '+anFmt2(be_totale)}</span>
         </div>
-      </div>` : ''}
+      </div>`;
+      })() : ''}
 
       <div class="redd-pl">
         <div class="redd-pl-row"><span class="redd-pl-lbl">Fatturato</span><span class="redd-pl-val an-pe-pos">${hasRev?anFmt2(fat):'—'}</span></div>
