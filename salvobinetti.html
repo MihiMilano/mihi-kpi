@@ -203,6 +203,25 @@ select{background:var(--card);color:var(--text);border:1px solid var(--bord2);pa
 </style>
 </head>
 <body>
+<script>
+// === SALONE_ATTIVO ===
+const SALONE_ATTIVO = true;
+// =====================
+(function(){
+  if(SALONE_ATTIVO) return;
+  document.addEventListener('DOMContentLoaded', function(){
+    document.body.innerHTML = '';
+    var d = document.createElement('div');
+    d.style.cssText = 'display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;background:#0d0d0d;color:#f5f0e8;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif;padding:32px;text-align:center';
+    d.innerHTML = '<div style="font-size:12px;font-weight:800;letter-spacing:3px;color:#a67318;margin-bottom:32px">MIHI</div>'
+      +'<div style="font-size:52px;margin-bottom:20px">🔒</div>'
+      +'<div style="font-size:20px;font-weight:900;color:#ef4444;margin-bottom:12px">Dashboard non disponibile</div>'
+      +'<div style="font-size:14px;color:#8a7a60;line-height:1.7;max-width:320px;margin-bottom:28px">Accesso temporaneamente sospeso.<br>Contatta MIHI per informazioni.</div>'
+      +'<div style="background:#ef444415;border:1px solid #ef444430;border-radius:12px;padding:14px 24px;font-size:12px;color:#ef4444;font-weight:700">MIHI Milano · mihi@mihimilano.com</div>';
+    document.body.appendChild(d);
+  });
+})();
+</script>
 
 <!-- COVER -->
 <div id="view-cover" class="cover">
@@ -305,19 +324,116 @@ select{background:var(--card);color:var(--text);border:1px solid var(--bord2);pa
 
   <!-- ANALISI SALONE (coming soon) -->
   <div id="view-analisi" style="display:none">
-    <div class="as-wrap">
-      <div class="as-icon">📊</div>
-      <div class="as-title">Analisi Salone</div>
-      <div class="as-sub">Il modulo di analisi economica è in fase di sviluppo. Sarà disponibile a breve con conto economico completo, benchmark di settore e analisi delle potenzialità.</div>
-      <div class="as-badge">⏳ In sviluppo — disponibile a breve</div>
-      <div class="as-modules">
-        <div class="as-mod"><div class="as-mod-title">Conto Economico</div>Fatturato, costi fissi e variabili, margine operativo</div>
-        <div class="as-mod"><div class="as-mod-title">Benchmark Settore</div>Confronto con medie nazionali saloni italiani</div>
-        <div class="as-mod"><div class="as-mod-title">Potenzialità</div>Saturazione agenda, ore disponibili vs prodotte</div>
-        <div class="as-mod"><div class="as-mod-title">Break-Even Salone</div>Punto di pareggio totale inclusi costi generali</div>
+
+  <!-- Badge ultimo aggiornamento costi -->
+  <div id="an-update-badge" style="display:none;padding:6px 16px;background:var(--bg2);border-bottom:1px solid var(--bord);font-size:11px;color:var(--text2);display:flex;align-items:center;gap:6px">
+    <span style="font-size:13px">🕐</span>
+    <span>Costi aggiornati: <b id="an-update-date" style="color:var(--text)"></b></span>
+  </div>
+
+  <!-- Sub-nav Analisi -->
+  <div class="an-nav" id="an-nav">
+    <div class="an-tab active" onclick="anSwitch('cruscotto')">📊 Cruscotto</div>
+    <div class="an-tab" onclick="anSwitch('pl')">📋 Conto Eco.</div>
+    <div class="an-tab" onclick="anSwitch('cashflow')">💸 Cash Flow</div>
+    <div class="an-tab" onclick="anSwitch('sked')">📅 Scadenziario</div>
+    <div class="an-tab" onclick="anSwitch('redd')">👤 Redditività</div>
+    <div class="an-tab" onclick="anSwitch('budget')">🎯 Budget</div>
+  </div>
+
+  <!-- PANE 1: CRUSCOTTO -->
+  <div class="an-pane active" id="an-cruscotto"></div>
+
+  <!-- PANE 2: CONTO ECONOMICO -->
+  <div class="an-pane" id="an-pl"></div>
+
+  <!-- PANE 3: CASH FLOW -->
+  <div class="an-pane" id="an-cashflow"></div>
+
+  <!-- PANE 4: SCADENZIARIO -->
+  <div class="an-pane" id="an-sked"></div>
+
+  <!-- PANE 5: REDDITIVITÀ COLLABORATORI -->
+  <div class="an-pane" id="an-redd"></div>
+
+  <!-- PANE 6: BUDGET VS CONSUNTIVO -->
+  <div class="an-pane" id="an-budget"></div>
+
+</div>
+
+<!-- MODAL SCADENZIARIO -->
+<div class="an-modal-bg" id="an-modal-bg" onclick="if(event.target===this)anModalClose()">
+  <div class="an-modal">
+    <div class="an-modal-title" id="an-modal-title">Nuova Scadenza</div>
+    <input type="hidden" id="an-sked-edit-id">
+    <div class="an-field">
+      <label>Descrizione</label>
+      <input type="text" id="an-f-desc" placeholder="Es. Fattura fornitore prodotti">
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+      <div class="an-field">
+        <label>Importo (€)</label>
+        <input type="number" id="an-f-importo" placeholder="0.00" step="0.01">
+      </div>
+      <div class="an-field">
+        <label>Tipo</label>
+        <select id="an-f-tipo">
+          <option value="uscita">Uscita (da pagare)</option>
+          <option value="entrata">Entrata (da incassare)</option>
+        </select>
       </div>
     </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+      <div class="an-field">
+        <label>Data Scadenza</label>
+        <input type="date" id="an-f-data">
+      </div>
+      <div class="an-field">
+        <label>Categoria</label>
+        <select id="an-f-cat">
+          <option value="fornitore">Fornitore</option>
+          <option value="affitto">Affitto</option>
+          <option value="utenze">Utenze</option>
+          <option value="personale">Personale</option>
+          <option value="tasse">Tasse / F24</option>
+          <option value="leasing">Leasing / Finanziamento</option>
+          <option value="cliente">Cliente</option>
+          <option value="altro">Altro</option>
+        </select>
+      </div>
+    </div>
+    <div class="an-field">
+      <label>Note (opzionale)</label>
+      <input type="text" id="an-f-note" placeholder="">
+    </div>
+    <div class="an-modal-btns">
+      <button class="an-modal-cancel" onclick="anModalClose()">Annulla</button>
+      <button class="an-modal-ok" onclick="anSkedSave()">Salva</button>
+    </div>
   </div>
+</div>
+
+  <!-- COMPARE VIEW -->
+  <div id="view-cmp" style="display:none">
+    <div class="cmp-topbar">
+      <button class="btn-hdr" onclick="closeCompare()" style="border-color:var(--bord2);color:var(--text2)">← Indietro</button>
+      <span style="font-size:12px;font-weight:700;color:var(--text2)">Confronto Collaboratori</span>
+      <span></span>
+    </div>
+    <div id="cmp-wrap"></div>
+  </div>
+
+  <div class="foot">MIHI Milano · Uso interno riservato · Aggiornato: <span id="last-upd">mai</span></div>
+</div>
+
+<!-- COMPARE PICKER OVERLAY -->
+<div id="cpicker" class="cpicker" style="display:none" onclick="if(event.target===this)closeComparePicker()">
+  <div class="cpicker-box">
+    <div class="cpicker-title">Seleziona collaboratore da confrontare</div>
+    <div id="cpicker-list"></div>
+    <button class="cpicker-cancel" onclick="closeComparePicker()">Annulla</button>
+  </div>
+</div>
 
   <!-- COMPARE VIEW -->
   <div id="view-cmp" style="display:none">
@@ -961,7 +1077,9 @@ const KD=[
   {k:'rit',  lbl:'Clienti di ritorno',   tw:'rit_tw',   tm:'rit_tm',   fmt:num,    sum:true},
   {k:'nuovi',lbl:'Nuovi',     tw:'nuovi_tw', tm:'nuovi_tm', fmt:num,    sum:true},
   {k:'rich', lbl:'Preferenze',tw:'rich_tw',  tm:'rich_tm',  fmt:num,    sum:true},
-  {k:'sat',  lbl:'Saturaz.',  tw:'sat_tw',   tm:'sat_tm',   fmt:pctVal, sum:false}
+  {k:'sat',  lbl:'Saturaz.',  tw:'sat_tw',   tm:'sat_tm',   fmt:pctVal, sum:false},
+  {k:'fiche',lbl:'Ticket medio',tw:'fiche_t',  tm:'fiche_t',  fmt:v=>v!=null?'€'+v.toFixed(1):'–', sum:false},
+  {k:'serv', lbl:'Serv./cliente',tw:'serv_t', tm:'serv_t',  fmt:v=>v!=null?v.toFixed(2):'–',  sum:false}
 ];
 function getTot(mk,cid){
   const st=STORICO[mk];if(!st)return{};
@@ -1188,6 +1306,198 @@ body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Segoe UI',sa
   body{background:white!important}
   .no-print{display:none!important}
 }
+
+/* ══════════════════════ ANALISI ECONOMICA ══════════════════════ */
+.an-nav{background:var(--card);border-bottom:1px solid var(--bord);display:flex;overflow-x:auto;gap:0;position:sticky;top:56px;z-index:89;flex-shrink:0}
+.an-tab{padding:11px 15px;font-size:12px;font-weight:700;color:var(--text2);cursor:pointer;border-bottom:3px solid transparent;white-space:nowrap;transition:all .2s;letter-spacing:.3px;flex-shrink:0}
+.an-tab.active{color:var(--gold);border-bottom-color:var(--gold)}
+.an-tab:hover:not(.active){color:var(--text)}
+.an-pane{display:none;padding:14px 16px 32px;max-width:720px;margin:0 auto}
+.an-pane.active{display:block}
+.an-card{background:var(--card);border:1px solid var(--bord);border-radius:14px;padding:16px;margin-bottom:12px}
+.an-card-title{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1.2px;color:var(--text2);margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;padding-bottom:8px;border-bottom:1px solid var(--bord)}
+.an-kpi-row{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+@media(min-width:480px){.an-kpi-row{grid-template-columns:repeat(4,1fr)}}
+.an-kpi{background:var(--bg2);border-radius:11px;padding:13px 10px;text-align:center}
+.an-kpi-val{font-size:20px;font-weight:900;color:var(--text);line-height:1.1}
+.an-kpi-lbl{font-size:8px;text-transform:uppercase;letter-spacing:.7px;color:var(--text2);margin-top:4px}
+.an-kpi-sub{font-size:10px;color:var(--text2);margin-top:3px;font-weight:600}
+/* progress bars */
+.an-prog-wrap{margin:4px 0 8px}
+.an-prog-lbl{display:flex;justify-content:space-between;font-size:11px;font-weight:700;margin-bottom:5px}
+.an-prog-bar{height:10px;background:var(--bord);border-radius:5px;overflow:hidden}
+.an-prog-fill{height:100%;border-radius:5px;transition:width 1s ease}
+/* P&L input rows */
+.an-inp-row{display:flex;flex-direction:column;gap:0}
+.an-inp-group{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--bg2)}
+.an-inp-group:last-child{border-bottom:none}
+.an-inp-lbl{flex:1;min-width:0}
+.an-inp-lbl span{display:block;font-size:12px;font-weight:600;color:var(--text)}
+.an-inp-lbl small{display:block;font-size:10px;color:var(--text2);margin-top:1px}
+.an-inp{width:100px;background:var(--bg2);border:1px solid var(--bord);border-radius:8px;padding:7px 10px;font-size:13px;font-weight:700;color:var(--text);font-family:inherit;text-align:right;flex-shrink:0}
+.an-inp:focus{outline:none;border-color:var(--gold);background:#fff}
+.an-inp-unit{font-size:11px;color:var(--text2);font-weight:600;flex-shrink:0;width:16px}
+/* P&L summary rows */
+.an-pe-section{margin-bottom:12px}
+.an-pe-row{display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--bg2);font-size:12px}
+.an-pe-row:last-child{border-bottom:none}
+.an-pe-lbl{color:var(--text2);font-weight:600}
+.an-pe-val{font-weight:800;text-align:right}
+.an-pe-pos{color:var(--green)}
+.an-pe-neg{color:var(--red)}
+.an-pe-tot{font-size:15px;font-weight:900}
+.an-pe-tot-row{display:flex;align-items:center;justify-content:space-between;padding:10px;background:var(--bg2);border-radius:9px;margin-top:4px;font-size:13px;font-weight:800}
+/* Save button */
+.an-save-btn{width:100%;padding:12px;background:var(--gold);color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:800;cursor:pointer;font-family:inherit;letter-spacing:.3px;margin-top:10px;transition:opacity .15s}
+.an-save-btn:hover{opacity:.85}
+.an-save-btn:active{opacity:.7}
+/* Scadenziario */
+.sked-item{background:var(--card);border:1px solid var(--bord);border-radius:12px;padding:13px 14px;margin-bottom:8px;border-left:4px solid var(--bord2);transition:opacity .3s}
+.sked-item.sked-ok{border-left-color:var(--green)}
+.sked-item.sked-warn{border-left-color:var(--amber)}
+.sked-item.sked-exp{border-left-color:var(--red)}
+.sked-item.sked-paid{opacity:.5;border-left-color:var(--bord2)}
+.sked-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:5px}
+.sked-desc{font-size:13px;font-weight:700;flex:1}
+.sked-badge{font-size:9px;font-weight:800;padding:3px 8px;border-radius:20px;text-transform:uppercase;letter-spacing:.4px;flex-shrink:0}
+.sked-badge-ok{background:#dcfce7;color:#15803d}
+.sked-badge-warn{background:#fef9c3;color:#b45309}
+.sked-badge-exp{background:#fee2e2;color:#b91c1c}
+.sked-badge-paid{background:var(--bg2);color:var(--text2)}
+.sked-meta{font-size:11px;color:var(--text2);display:flex;gap:14px;flex-wrap:wrap;margin-bottom:8px}
+.sked-meta b{color:var(--text);font-weight:700}
+.sked-actions{display:flex;gap:6px}
+.sked-btn{padding:5px 11px;border-radius:7px;font-size:10px;font-weight:800;cursor:pointer;border:1px solid var(--bord);background:var(--bg2);color:var(--text2);font-family:inherit;transition:all .15s;letter-spacing:.3px}
+.sked-btn-pay{border-color:#86efac;color:var(--green);background:#f0fdf4}
+.sked-btn-pay:hover{background:#dcfce7}
+.sked-btn-del{border-color:#fca5a5;color:var(--red);background:#fff5f5}
+.sked-btn-del:hover{background:#fee2e2}
+.sked-add-btn{width:100%;padding:13px;background:none;border:2px dashed var(--bord2);color:var(--text2);border-radius:12px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;transition:all .2s;margin-bottom:12px}
+.sked-add-btn:hover{border-color:var(--gold);color:var(--gold)}
+/* Filter pills */
+.an-filter-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.an-pill{padding:5px 12px;border-radius:20px;border:1px solid var(--bord2);background:var(--card);color:var(--text2);cursor:pointer;font-size:11px;font-weight:700;font-family:inherit;transition:all .15s}
+.an-pill.active{background:var(--gold);color:#fff;border-color:var(--gold)}
+/* Modal */
+.an-modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:400;display:none;align-items:flex-end;justify-content:center}
+.an-modal-bg.open{display:flex}
+.an-modal{background:var(--bg);border-radius:20px 20px 0 0;width:100%;max-width:600px;padding:24px 20px 36px;max-height:88vh;overflow-y:auto}
+.an-modal-title{font-size:16px;font-weight:800;margin-bottom:20px}
+.an-field{margin-bottom:14px}
+.an-field label{display:block;font-size:10px;font-weight:800;color:var(--text2);margin-bottom:6px;text-transform:uppercase;letter-spacing:.6px}
+.an-field input,.an-field select,.an-field textarea{width:100%;background:var(--card);border:1px solid var(--bord);border-radius:9px;padding:11px 13px;font-size:13px;font-weight:600;color:var(--text);font-family:inherit;-webkit-appearance:none}
+.an-field input:focus,.an-field select:focus{outline:none;border-color:var(--gold)}
+.an-modal-btns{display:flex;gap:8px;margin-top:18px}
+.an-modal-cancel{flex:1;padding:12px;background:none;border:1px solid var(--bord2);color:var(--text2);border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit}
+.an-modal-ok{flex:2;padding:12px;background:var(--gold);color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:800;cursor:pointer;font-family:inherit}
+/* Collab profit */
+.cp-item{margin-bottom:14px}
+.cp-name-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:5px}
+.cp-name{font-size:13px;font-weight:800}
+.cp-pct{font-size:12px;font-weight:800}
+.cp-bar-track{height:12px;background:var(--bord);border-radius:6px;overflow:hidden;margin-bottom:3px}
+.cp-bar-fat{height:12px;border-radius:6px;transition:width 1s ease}
+.cp-details{display:flex;gap:12px;font-size:10px;color:var(--text2);flex-wrap:wrap}
+.cp-details b{color:var(--text);font-weight:700}
+/* Cash Flow SVG */
+.an-cf-svg{width:100%;display:block}
+/* Forecast */
+.an-forecast-card{background:linear-gradient(135deg,rgba(166,115,24,.08),rgba(166,115,24,.03));border:1px solid rgba(166,115,24,.3);border-radius:12px;padding:14px;display:flex;align-items:center;gap:14px}
+.an-forecast-icon{font-size:28px;flex-shrink:0}
+.an-forecast-val{font-size:22px;font-weight:900;color:var(--gold)}
+.an-forecast-lbl{font-size:11px;color:var(--text2);font-weight:600;margin-top:2px}
+/* Revenue week pills */
+.an-week-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+.an-week-pill{flex:1;min-width:0;background:var(--bg2);border-radius:9px;padding:8px 6px;text-align:center}
+.an-week-pill-lbl{font-size:9px;text-transform:uppercase;letter-spacing:.5px;color:var(--text2)}
+.an-week-pill-val{font-size:13px;font-weight:800;margin-top:2px}
+.an-week-pill-val.missing{color:var(--bord2)}
+/* Budget table */
+.bvc-row{display:grid;grid-template-columns:80px 1fr 1fr 1fr;gap:0;align-items:center;padding:9px 0;border-bottom:1px solid var(--bg2);font-size:12px}
+.bvc-row:last-child{border-bottom:none}
+.bvc-lbl{font-weight:700;color:var(--text2);font-size:11px}
+.bvc-val{text-align:right;font-weight:700;padding-right:6px}
+.bvc-delta.pos{color:var(--green)}.bvc-delta.neg{color:var(--red)}
+.bvc-hdr{font-size:9px;text-transform:uppercase;letter-spacing:.6px;color:var(--text2);font-weight:800}
+
+/* ── CALCOLATORE COSTO PERSONALE ─────────────────────────────── */
+.pers-calc{background:linear-gradient(135deg,rgba(166,115,24,.05),rgba(166,115,24,.02));border:1px solid rgba(166,115,24,.25);border-radius:12px;padding:14px;margin-bottom:12px}
+.pers-calc-title{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--gold);margin-bottom:12px;display:flex;align-items:center;gap:6px}
+.pers-tot-input{display:flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--bord);border-radius:10px;padding:10px 14px;margin-bottom:12px}
+.pers-tot-lbl{flex:1;font-size:12px;font-weight:700;color:var(--text)}
+.pers-tot-lbl small{display:block;font-size:10px;color:var(--text2);font-weight:500;margin-top:1px}
+.pers-nette-grid{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
+.pers-netta-row{display:flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--bord);border-radius:9px;padding:8px 12px}
+.pers-netta-name{flex:1;font-size:12px;font-weight:700;color:var(--text)}
+.pers-inp{width:100px;background:var(--bg2);border:1px solid var(--bord);border-radius:8px;padding:7px 10px;font-size:13px;font-weight:700;color:var(--text);font-family:inherit;text-align:right;flex-shrink:0}
+.pers-inp:focus{outline:none;border-color:var(--gold);background:#fff}
+.pers-inp-unit{font-size:11px;color:var(--text2);font-weight:600;flex-shrink:0}
+.pers-breakdown{background:var(--card);border:1px solid var(--bord);border-radius:10px;overflow:hidden}
+.pers-bk-hdr{display:grid;grid-template-columns:1fr 80px 90px 90px;gap:0;padding:8px 12px;background:var(--bg2);font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:var(--text2);border-bottom:1px solid var(--bord)}
+.pers-bk-row{display:grid;grid-template-columns:1fr 80px 90px 90px;gap:0;padding:9px 12px;border-bottom:1px solid var(--bg2);align-items:center;font-size:12px}
+.pers-bk-row:last-child{border-bottom:none}
+.pers-bk-tot{background:rgba(166,115,24,.06);font-weight:900;font-size:13px;border-top:2px solid rgba(166,115,24,.2)}
+.pers-bk-name{font-weight:700}
+.pers-bk-val{text-align:right;font-weight:700;padding-right:8px}
+.pers-bk-extra{text-align:right;font-weight:700;color:var(--amber);padding-right:8px}
+.pers-bk-tot-val{text-align:right;font-weight:900;color:var(--gold)}
+.pers-check{display:flex;align-items:center;gap:8px;margin-top:10px;padding:8px 12px;border-radius:8px;font-size:11px;font-weight:700}
+.pers-check-ok{background:#f0fdf4;color:var(--green);border:1px solid #86efac}
+.pers-check-err{background:#fff5f5;color:var(--red);border:1px solid #fca5a5}
+
+/* ── COSTI VARIABILI DINAMICI ──────────────────────────────── */
+.var-items-wrap{display:flex;flex-direction:column;gap:6px;margin-bottom:10px}
+.var-item-row{display:grid;grid-template-columns:1fr 90px 18px 28px;gap:6px;align-items:center}
+.var-inp-nome{background:var(--bg2);border:1px solid var(--bord);border-radius:7px;padding:7px 10px;font-size:12px;color:var(--text);font-family:inherit;outline:none;width:100%}
+.var-inp-nome:focus{border-color:var(--gold)}
+.var-inp-imp{background:var(--bg2);border:1px solid var(--bord);border-radius:7px;padding:7px 8px;font-size:13px;font-weight:700;color:var(--text);text-align:right;outline:none;width:100%}
+.var-inp-imp:focus{border-color:var(--gold)}
+.var-del-btn{background:none;border:1px solid var(--bord);border-radius:6px;color:var(--text2);font-size:11px;cursor:pointer;padding:4px 6px;line-height:1;transition:all .2s}
+.var-del-btn:hover{background:rgba(185,28,28,.15);border-color:var(--red);color:var(--red)}
+.var-add-btn{background:var(--bg2);border:1px dashed var(--gold);border-radius:8px;color:var(--gold);font-size:12px;font-weight:700;padding:8px 16px;cursor:pointer;width:100%;transition:all .2s;margin-top:2px}
+.var-add-btn:hover{background:rgba(166,115,24,.1)}
+
+/* ── REDDITIVITÀ AVANZATA ──────────────────────────────────────── */
+.redd-card{background:var(--card);border:1px solid var(--bord);border-radius:14px;padding:16px;margin-bottom:12px}
+.redd-card.redd-ok{border-left:4px solid var(--green)}
+.redd-card.redd-warn{border-left:4px solid var(--amber)}
+.redd-card.redd-bad{border-left:4px solid var(--red)}
+.redd-card.redd-nodata{border-left:4px solid var(--bord2);opacity:.7}
+.redd-hdr{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.redd-av{width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:900;flex-shrink:0}
+.redd-name{font-size:16px;font-weight:800;flex:1}
+.redd-verdict{font-size:11px;font-weight:800;padding:4px 10px;border-radius:20px;flex-shrink:0}
+.redd-verdict-ok{background:#dcfce7;color:#15803d}
+.redd-verdict-warn{background:#fef9c3;color:#b45309}
+.redd-verdict-bad{background:#fee2e2;color:#b91c1c}
+.redd-verdict-nd{background:var(--bg2);color:var(--text2)}
+/* progress bar verso break-even */
+.redd-prog-wrap{margin-bottom:14px}
+.redd-prog-labels{display:flex;justify-content:space-between;font-size:10px;font-weight:700;margin-bottom:4px}
+.redd-prog-track{height:12px;background:var(--bord);border-radius:6px;overflow:visible;position:relative}
+.redd-prog-fill{height:100%;border-radius:6px;transition:width 1s ease;position:relative}
+.redd-be-marker{position:absolute;top:-4px;width:2px;height:20px;background:var(--amber);opacity:.8}
+.redd-be-label{position:absolute;top:-18px;font-size:8px;font-weight:800;color:var(--amber);transform:translateX(-50%);white-space:nowrap}
+/* P&L per collaboratore */
+.redd-pl{background:var(--bg2);border-radius:10px;padding:10px 12px}
+.redd-pl-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;font-size:12px}
+.redd-pl-lbl{color:var(--text2);font-weight:600}
+.redd-pl-val{font-weight:700;text-align:right}
+.redd-pl-sep{border-top:1px solid var(--bord);margin:4px 0}
+.redd-pl-result{display:flex;justify-content:space-between;align-items:center;padding:8px 10px;border-radius:8px;margin-top:6px;font-size:13px;font-weight:800}
+.redd-pl-result-ok{background:rgba(21,128,61,.1);color:var(--green)}
+.redd-pl-result-bad{background:rgba(185,28,28,.08);color:var(--red)}
+/* break-even boxes */
+.redd-be-row{display:flex;gap:8px;margin-top:12px}
+.redd-be-box{flex:1;background:var(--bg2);border-radius:9px;padding:10px;text-align:center}
+.redd-be-val{font-size:15px;font-weight:900}
+.redd-be-lbl{font-size:9px;text-transform:uppercase;letter-spacing:.5px;color:var(--text2);margin-top:2px}
+.redd-be-sub{font-size:9px;color:var(--text2);margin-top:2px;font-weight:600}
+/* Nota metodologica */
+.redd-note{background:var(--bg2);border-radius:10px;padding:12px 14px;font-size:11px;color:var(--text2);line-height:1.6;margin-top:8px}
+.redd-note b{color:var(--text)}
+
+
 </style>
 </head>
 <body>
@@ -1837,6 +2147,2599 @@ document.getElementById('cover-update').textContent=ua?`Aggiornato: ${ua}`:'';
   if(document.getElementById('hdr-month'))document.getElementById('hdr-month').textContent=m?.label||'';
   renderLive();
 })();
+</script>
+
+<script>
+
+// ╔══════════════════════════════════════════════════════════════╗
+// ║  ANALISI ECONOMICA — Isola                                   ║
+// ╚══════════════════════════════════════════════════════════════╝
+
+const ANA_KEY   = 'binetti_ana_v2';
+const SKED_KEY  = 'binetti_sked_v2';
+const BUD_KEY   = 'binetti_bud_v2';
+let anSkedFilter = 'tutti';
+
+// ── Default data ─────────────────────────────────────────────────
+const ANA_DEF = {
+  fissi: { affitto:2500, utenze:300, assicurazione:150, marketing:200, altro:100 },
+  variabili: [],  // array di {id, nome, importo}
+  fissiExtra: []  // voci extra {id, nome, importo}
+};
+const BUD_DEF = { mensile: 0 };
+
+// ── LocalStorage helpers ──────────────────────────────────────────
+function loadAna(){
+  try{
+    const raw=JSON.parse(localStorage.getItem(ANA_KEY)||'{}');
+    const d=Object.assign({},ANA_DEF,raw);
+    // Migrazione: se variabili è ancora il vecchio oggetto, converti in array
+    if(d.variabili && !Array.isArray(d.variabili)){
+      const labelMap={prodotti:'Prodotti',consumabili:'Consumabili',pulizia:'Pulizia & Igiene',manutenzioni:'Manutenzioni',altro:'Altro variabile'};
+      d.variabili=Object.entries(d.variabili)
+        .filter(([,v])=>+v>0)
+        .map(([k,v],i)=>({id:'v'+(i+1),nome:labelMap[k]||k,importo:+v}));
+    }
+    return d;
+  }catch(e){ return Object.assign({},ANA_DEF); }
+}
+function saveAna(d){ localStorage.setItem(ANA_KEY,JSON.stringify(d)); }
+
+// ── Costi variabili helpers ───────────────────────────────────────
+function varTotal(ana){
+  if(!ana||!Array.isArray(ana.variabili)) return 0;
+  return ana.variabili.reduce((s,r)=>s+(+r.importo||0),0);
+}
+
+function renderVariabiliList(){
+  const ana=loadAna();
+  const items=Array.isArray(ana.variabili)?ana.variabili:[];
+  const tot=varTotal(ana);
+  const rows=items.map(item=>`
+    <div class="var-item-row" id="var-row-${item.id}">
+      <input class="var-inp-nome" type="text" value="${item.nome.replace(/"/g,'&quot;')}" placeholder="Es: Tinture Wella" oninput="varSaveNome('${item.id}',this.value)">
+      <input class="var-inp-imp" type="number" value="${item.importo||''}" placeholder="0" min="0" step="1" oninput="varSaveImp('${item.id}',+this.value)">
+      <span class="var-inp-unit">€</span>
+      <button class="var-del-btn" onclick="varDelItem('${item.id}')" title="Elimina voce">✕</button>
+    </div>`).join('');
+  return `<div id="var-list-inner">
+    <div class="var-items-wrap">${rows}</div>
+    <button class="var-add-btn" onclick="varAddItem()">＋ Aggiungi voce</button>
+    <div class="an-pe-tot-row" style="margin-top:10px"><span>Totale Variabili</span><span class="an-pe-tot" id="an-vp-tot">${anFmt2(tot)}</span></div>
+  </div>`;
+}
+
+function varAddItem(){
+  const ana=loadAna();
+  if(!Array.isArray(ana.variabili)) ana.variabili=[];
+  const id='v'+Date.now();
+  ana.variabili.push({id,nome:'',importo:0});
+  saveAna(ana);
+  const wrap=document.getElementById('var-list-wrap');
+  if(wrap) wrap.innerHTML=renderVariabiliList();
+}
+
+function varDelItem(id){
+  const ana=loadAna();
+  if(!Array.isArray(ana.variabili)) return;
+  ana.variabili=ana.variabili.filter(r=>r.id!==id);
+  saveAna(ana);
+  const wrap=document.getElementById('var-list-wrap');
+  if(wrap) wrap.innerHTML=renderVariabiliList();
+  renderPLResult();
+}
+
+function varSaveNome(id, val){
+  const ana=loadAna();
+  const item=Array.isArray(ana.variabili)?ana.variabili.find(r=>r.id===id):null;
+  if(item){ item.nome=val; saveAna(ana); }
+  // Aggiorna solo il totale senza re-renderizzare
+  const tot=varTotal(ana);
+  const el=document.getElementById('an-vp-tot');
+  if(el) el.textContent=anFmt2(tot);
+}
+
+function varSaveImp(id, val){
+  const ana=loadAna();
+  const item=Array.isArray(ana.variabili)?ana.variabili.find(r=>r.id===id):null;
+  if(item){ item.importo=+val||0; saveAna(ana); }
+  const tot=varTotal(ana);
+  const el=document.getElementById('an-vp-tot');
+  if(el) el.textContent=anFmt2(tot);
+  anSaveUpdateTs();
+  renderPLResult();
+}
+
+// ── Costi fissi extra (dinamici) ─────────────────────────────────
+function fissiExtraTotal(ana){
+  if(!ana||!Array.isArray(ana.fissiExtra)) return 0;
+  return ana.fissiExtra.reduce((s,r)=>s+(+r.importo||0),0);
+}
+
+function renderFissiExtraList(){
+  const ana=loadAna();
+  const items=Array.isArray(ana.fissiExtra)?ana.fissiExtra:[];
+  const rows=items.map(item=>`
+    <div class="var-item-row" id="fex-row-${item.id}">
+      <input class="var-inp-nome" type="text" value="${item.nome.replace(/"/g,'&quot;')}" placeholder="Es: IVA da versare" oninput="fexSaveNome('${item.id}',this.value)">
+      <input class="var-inp-imp" type="number" value="${item.importo||''}" placeholder="0" min="0" step="1" oninput="fexSaveImp('${item.id}',+this.value)">
+      <span class="var-inp-unit">€</span>
+      <button class="var-del-btn" onclick="fexDelItem('${item.id}')" title="Elimina">✕</button>
+    </div>`).join('');
+  return rows ? `<div class="var-items-wrap" style="margin-top:8px">${rows}</div>` : '';
+}
+
+function fexAddItem(){
+  const ana=loadAna();
+  if(!Array.isArray(ana.fissiExtra)) ana.fissiExtra=[];
+  const id='f'+Date.now();
+  ana.fissiExtra.push({id,nome:'',importo:0});
+  saveAna(ana);
+  const wrap=document.getElementById('fex-list-wrap');
+  if(wrap) wrap.innerHTML=renderFissiExtraList();
+}
+
+function fexDelItem(id){
+  const ana=loadAna();
+  if(!Array.isArray(ana.fissiExtra)) return;
+  ana.fissiExtra=ana.fissiExtra.filter(r=>r.id!==id);
+  saveAna(ana);
+  const wrap=document.getElementById('fex-list-wrap');
+  if(wrap) wrap.innerHTML=renderFissiExtraList();
+  _updateFissiTot(ana); renderPLResult();
+}
+
+function fexSaveNome(id,val){
+  const ana=loadAna();
+  const item=Array.isArray(ana.fissiExtra)?ana.fissiExtra.find(r=>r.id===id):null;
+  if(item){item.nome=val;saveAna(ana);}
+}
+
+function fexSaveImp(id,val){
+  const ana=loadAna();
+  const item=Array.isArray(ana.fissiExtra)?ana.fissiExtra.find(r=>r.id===id):null;
+  if(item){item.importo=+val||0;saveAna(ana);}
+  _updateFissiTot(ana); anSaveUpdateTs(); renderPLResult();
+}
+
+function _updateFissiTot(ana){
+  const tot=Object.values(ana.fissi||{}).reduce((s,v)=>s+(+v||0),0)+fissiExtraTotal(ana);
+  const el=document.getElementById('an-fi-tot');
+  if(el) el.textContent=anFmt2(tot);
+}
+
+function loadSked(){ try{ return JSON.parse(localStorage.getItem(SKED_KEY)||'[]'); }catch(e){ return []; } }
+function saveSked(d){ localStorage.setItem(SKED_KEY,JSON.stringify(d)); }
+function loadBud(){ try{ return Object.assign({},BUD_DEF,JSON.parse(localStorage.getItem(BUD_KEY)||'{}')); }catch(e){ return Object.assign({},BUD_DEF); } }
+function saveBud(d){ localStorage.setItem(BUD_KEY,JSON.stringify(d)); }
+
+// ── Revenue helpers (reads global STORICO/MESI) ───────────────────
+function anGetMk(){ return Object.keys(MESI).sort().reverse()[0]; }
+
+function anMonthRevenue(mk){
+  const sto=STORICO[mk]; const m=MESI[mk];
+  if(!sto||!m) return {total:null,byWeek:{}};
+  let total=null; const byWeek={};
+  for(const sw of m.settimane){
+    const week=sto[sw.id]; if(!week){ byWeek[sw.id]={fat:null,label:sw.label}; continue; }
+    let wFat=null;
+    for(const c of m.collaboratori){
+      const d=week[c.id]; if(d&&d.fat!=null) wFat=(wFat||0)+d.fat;
+    }
+    byWeek[sw.id]={fat:wFat,label:sw.label};
+    if(wFat!=null) total=(total||0)+wFat;
+  }
+  return {total,byWeek};
+}
+
+function anCollabMonthFat(mk,cid){
+  const sto=STORICO[mk]; const m=MESI[mk]; if(!sto||!m) return null;
+  let total=null;
+  for(const sw of m.settimane){
+    const d=sto?.[sw.id]?.[cid]; if(d&&d.fat!=null) total=(total||0)+d.fat;
+  }
+  return total;
+}
+
+function anGetPersonale(mk){
+  return (MESI[mk]?.collaboratori||[]).reduce((s,c)=>s+(c.costo_m||0),0);
+}
+
+function anGetForecast(mk){
+  const m=MESI[mk]; if(!m) return null;
+  const {byWeek}=anMonthRevenue(mk);
+  const today=new Date();
+  // find current and completed weeks
+  const sw=getSW(mk);
+  let completedFat=0,completedWeeks=0;
+  let curFat=0, curWeekIdx=-1;
+  for(let i=0;i<m.settimane.length;i++){
+    const s=m.settimane[i];
+    const wEnd=new Date(s.a); wEnd.setHours(23,59,59);
+    const wFat=byWeek[s.id]?.fat||0;
+    if(wEnd<today && s.id!==sw.id){ completedFat+=wFat; completedWeeks++; }
+    else if(s.id===sw.id){ curFat=wFat||0; curWeekIdx=i; }
+  }
+  if(curWeekIdx<0) return null;
+  // days elapsed in current week
+  const swStart=new Date(m.settimane[curWeekIdx].da);
+  const diffMs=today-swStart;
+  const daysElapsed=Math.max(1,Math.min(5,Math.floor(diffMs/86400000)+1));
+  const curWeekForecast=curFat*(5/daysElapsed);
+  // remaining weeks
+  const remWeeks=m.settimane.length-curWeekIdx-1;
+  const avgWeek=completedWeeks>0?completedFat/completedWeeks:curWeekForecast;
+  return Math.round(completedFat+curWeekForecast+remWeeks*avgWeek);
+}
+
+function anFmt(v){ if(v==null||isNaN(v)) return '—'; return '€'+Math.round(v).toLocaleString('it-IT'); }
+function anFmt2(v){ if(v==null||isNaN(v)) return '—'; return '€'+v.toLocaleString('it-IT',{minimumFractionDigits:0,maximumFractionDigits:0}); }
+function anPct(v){ if(v==null||isNaN(v)) return '—'; return Math.round(v)+'%'; }
+
+// ── Sub-tab switch ────────────────────────────────────────────────
+function anSwitch(name){
+  document.querySelectorAll('.an-tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.an-pane').forEach(p=>p.classList.remove('active'));
+  const tabEl=document.querySelector(`.an-tab[onclick="anSwitch('${name}')"]`);
+  if(tabEl) tabEl.classList.add('active');
+  const pane=document.getElementById('an-'+name);
+  if(pane){ pane.classList.add('active'); }
+  if(name==='cruscotto') renderCruscotto();
+  if(name==='pl')        renderPL();
+  if(name==='cashflow')  renderCashFlow();
+  if(name==='sked')      renderSked();
+  if(name==='redd')      renderRedd();
+  if(name==='budget')    renderBudget();
+}
+
+function renderAnalisi(){
+  // Mostra badge data aggiornamento se esiste
+  try{ const a=loadAna(); if(a.lastUpdate) anShowUpdateBadge(a.lastUpdate); }catch(e){}
+  // Render the active pane
+  const active=document.querySelector('.an-pane.active');
+  if(!active) return;
+  const id=active.id.replace('an-','');
+  anSwitch(id);
+}
+
+// ══════════════════════════════════════════════════════════════════
+// CRUSCOTTO
+// ══════════════════════════════════════════════════════════════════
+function renderCruscotto(){
+  const mk=anGetMk(); const m=MESI[mk]; if(!m){
+    document.getElementById('an-cruscotto').innerHTML='<p class="no-data">Nessun dato disponibile.</p>'; return;
+  }
+  const {total:fatMese,byWeek}=anMonthRevenue(mk);
+  const tgMese=m.collaboratori.reduce((s,c)=>s+(c.fat_tm||0),0);
+  const ana=loadAna();
+  const {totale:personale}=calcPersCost(mk);
+  const fissiTot=Object.values(ana.fissi||{}).reduce((s,v)=>s+(+v||0),0)+fissiExtraTotal(ana);
+  const varTot=varTotal(ana);
+  const costiTot=fissiTot+personale+varTot;
+  const ebitda=fatMese!=null?fatMese-costiTot:null;
+  const margPct=fatMese&&fatMese>0?ebitda/fatMese*100:null;
+  const forecast=anGetForecast(mk);
+  const pct=tgMese>0&&fatMese!=null?Math.min(200,fatMese/tgMese*100):null;
+  const bePct=costiTot>0&&fatMese!=null?Math.min(200,fatMese/costiTot*100):null;
+
+  const sw=getSW(mk);
+  const swFat=byWeek[sw?.id]?.fat;
+
+  // Color logic
+  const pctColor=pct==null?'var(--bord2)':pct>=85?'var(--green)':pct>=60?'var(--amber)':'var(--red)';
+  const beColor=bePct==null?'var(--bord2)':bePct>=100?'var(--green)':bePct>=80?'var(--amber)':'var(--red)';
+  const mrgColor=margPct==null?'var(--text)':margPct>=15?'var(--green)':margPct>=5?'var(--amber)':'var(--red)';
+
+  document.getElementById('an-cruscotto').innerHTML=`
+  <div style="padding:14px 0 4px;font-size:11px;font-weight:800;color:var(--text2);text-transform:uppercase;letter-spacing:1px">${m.label}</div>
+
+  <div class="an-kpi-row" style="margin-bottom:12px">
+    <div class="an-kpi">
+      <div class="an-kpi-val">${anFmt2(fatMese)}</div>
+      <div class="an-kpi-lbl">Fat. Mese</div>
+    </div>
+    <div class="an-kpi">
+      <div class="an-kpi-val">${anFmt2(tgMese)}</div>
+      <div class="an-kpi-lbl">Target Mese</div>
+    </div>
+    <div class="an-kpi">
+      <div class="an-kpi-val" style="color:${mrgColor}">${ebitda!=null?(ebitda>=0?'+':'')+anFmt2(ebitda):'—'}</div>
+      <div class="an-kpi-lbl">EBITDA</div>
+    </div>
+    <div class="an-kpi">
+      <div class="an-kpi-val" style="color:${mrgColor}">${margPct!=null?Math.round(margPct)+'%':'—'}</div>
+      <div class="an-kpi-lbl">Margine %</div>
+    </div>
+  </div>
+
+  <div class="an-card">
+    <div class="an-card-title">📈 Avanzamento Target</div>
+    <div class="an-prog-wrap">
+      <div class="an-prog-lbl">
+        <span>Fatturato vs Target</span>
+        <span style="color:${pctColor};font-size:13px;font-weight:900">${anPct(pct)}</span>
+      </div>
+      <div class="an-prog-bar">
+        <div class="an-prog-fill" style="width:${Math.min(100,pct||0)}%;background:${pctColor}"></div>
+      </div>
+      <div style="font-size:10px;color:var(--text2);margin-top:3px">${anFmt2(fatMese)} su ${anFmt2(tgMese)} obiettivo mensile</div>
+    </div>
+    <div class="an-prog-wrap" style="margin-top:14px">
+      <div class="an-prog-lbl">
+        <span>Break-Even Coverage</span>
+        <span style="color:${beColor};font-size:13px;font-weight:900">${anPct(bePct)}</span>
+      </div>
+      <div class="an-prog-bar">
+        <div class="an-prog-fill" style="width:${Math.min(100,bePct||0)}%;background:${beColor}"></div>
+      </div>
+      <div style="font-size:10px;color:var(--text2);margin-top:3px">Copertura costi mensili: ${anFmt2(fatMese)} su ${anFmt2(costiTot)} stimati</div>
+    </div>
+  </div>
+
+  <div class="an-forecast-card" style="margin-bottom:12px">
+    <div class="an-forecast-icon">🔮</div>
+    <div style="flex:1">
+      <div class="an-forecast-val">${forecast!=null?anFmt2(forecast):'—'}</div>
+      <div class="an-forecast-lbl">Forecast fatturato a fine mese<br><span style="font-size:9px;opacity:.7">Estrapolazione basata su settimane già acquisite</span></div>
+    </div>
+    ${forecast!=null&&tgMese>0?`<div style="text-align:center;flex-shrink:0"><div style="font-size:16px;font-weight:900;color:${forecast>=tgMese?'var(--green)':'var(--amber)'}">${Math.round(forecast/tgMese*100)}%</div><div style="font-size:9px;color:var(--text2)">del target</div></div>`:''}
+  </div>
+
+  <div class="an-card">
+    <div class="an-card-title">📅 Settimane del Mese</div>
+    <div class="an-week-row">
+    ${m.settimane.map(s=>{
+      const wf=byWeek[s.id]?.fat;
+      const tgW=m.collaboratori.reduce((sum,c)=>sum+(c.fat_tw||0),0);
+      const isCur=s.id===sw?.id;
+      const wp=tgW>0&&wf!=null?Math.round(wf/tgW*100):null;
+      const wc=wp==null?'var(--bord2)':wp>=85?'var(--green)':wp>=60?'var(--amber)':'var(--red)';
+      return `<div class="an-week-pill" style="${isCur?'border:1px solid var(--gold);background:rgba(166,115,24,.05)':''}">
+        <div class="an-week-pill-lbl">${s.id}${isCur?' ●':''}</div>
+        <div class="an-week-pill-val ${wf==null?'missing':''}" style="color:${wf!=null?wc:'var(--bord2)'}">${wf!=null?anFmt2(wf):'—'}</div>
+        ${wp!=null?`<div style="font-size:9px;color:${wc};font-weight:700">${wp}%</div>`:''}
+      </div>`;
+    }).join('')}
+    </div>
+  </div>
+
+  <div class="an-card">
+    <div class="an-card-title">💰 Struttura Costi (mese)</div>
+    <div class="an-pe-row"><span class="an-pe-lbl">Personale (collaboratori)</span><span class="an-pe-val">${anFmt2(personale)}</span></div>
+    <div class="an-pe-row"><span class="an-pe-lbl">Costi Fissi</span><span class="an-pe-val">${anFmt2(fissiTot)}</span></div>
+    <div class="an-pe-row"><span class="an-pe-lbl">Costi Variabili</span><span class="an-pe-val">${anFmt2(varTot)}</span></div>
+    <div class="an-pe-tot-row"><span>Totale Costi</span><span class="an-pe-tot">${anFmt2(costiTot)}</span></div>
+    <div style="margin-top:8px;font-size:10px;color:var(--text2);text-align:center">Configura i costi in <b style="color:var(--gold);cursor:pointer" onclick="anSwitch('pl')">Conto Economico →</b></div>
+  </div>`;
+}
+
+// ══════════════════════════════════════════════════════════════════
+// CONTO ECONOMICO / P&L
+// ══════════════════════════════════════════════════════════════════
+function renderPL(){
+  const mk=anGetMk(); const m=MESI[mk];
+  const {total:fatMese,byWeek}=anMonthRevenue(mk);
+  const ana=loadAna();
+  const {totale:personale}=calcPersCost(mk);
+  const varTot=varTotal(ana);
+  const fissiTot=Object.values(ana.fissi||{}).reduce((s,v)=>s+(+v||0),0)+fissiExtraTotal(ana);
+  const costiTot=fissiTot+personale+varTot;
+  const ebitda=fatMese!=null?fatMese-costiTot:null;
+  const margPct=fatMese&&fatMese>0?ebitda/fatMese*100:null;
+
+  document.getElementById('an-pl').innerHTML=`
+  <div class="an-card">
+    <div class="an-card-title">📥 Ricavi — ${m?.label||''}</div>
+    <div class="an-week-row">
+    ${(m?.settimane||[]).map(s=>{
+      const wf=byWeek[s.id]?.fat;
+      return `<div class="an-week-pill">
+        <div class="an-week-pill-lbl">${s.id}</div>
+        <div class="an-week-pill-val ${wf==null?'missing':''}">${wf!=null?anFmt2(wf):'—'}</div>
+      </div>`;
+    }).join('')}
+    </div>
+    <div class="an-pe-tot-row" style="margin-top:4px"><span>TOTALE RICAVI</span><span class="an-pe-tot" style="color:var(--green)">${anFmt2(fatMese)}</span></div>
+  </div>
+
+  <div class="an-card">
+    <div class="an-card-title">🔧 Costi Fissi Mensili <span style="font-size:9px;font-weight:600;color:var(--text2)">(clicca per modificare)</span></div>
+    <div class="an-inp-row">
+      ${[['affitto','Affitto / Canone locazione'],['utenze','Utenze (luce, gas, acqua)'],['assicurazione','Assicurazione'],['marketing','Marketing & comunicazione'],['altro','Altro fisso']].map(([k,lbl])=>`
+      <div class="an-inp-group">
+        <div class="an-inp-lbl"><span>${lbl}</span></div>
+        <input class="an-inp" type="number" id="an-fi-${k}" value="${ana.fissi?.[k]??0}" min="0" step="10" oninput="anAutoSave()">
+        <span class="an-inp-unit">€</span>
+      </div>`).join('')}
+    </div>
+    <div id="fex-list-wrap">${renderFissiExtraList()}</div>
+    <button class="var-add-btn" onclick="fexAddItem()" style="margin-top:8px">＋ Aggiungi voce (IVA, tasse, ecc.)</button>
+    <div class="an-pe-tot-row" style="margin-top:8px"><span>Totale Costi Fissi</span><span class="an-pe-tot" id="an-fi-tot">${anFmt2(fissiTot)}</span></div>
+  </div>
+
+  <div id="pers-calc-wrap">${renderPersCalc(mk)}</div>
+
+  <div class="an-card">
+    <div class="an-card-title">📦 Costi Variabili Mensili <span style="font-size:9px;font-weight:600;color:var(--text2)">(voci reali da fatture)</span></div>
+    <div id="var-list-wrap">${renderVariabiliList()}</div>
+  </div>
+
+  <div id="an-pl-result"></div>`;
+  renderPLResult();
+}
+
+function renderPLResult(){
+  const mk=anGetMk();
+  const {total:fatMese}=anMonthRevenue(mk);
+  const ana=loadAna();
+  const {totale:personale}=calcPersCost(mk);
+  const fissiTot=Object.values(ana.fissi||{}).reduce((s,v)=>s+(+v||0),0)+fissiExtraTotal(ana);
+  const varTot=varTotal(ana);
+  const costiTot=fissiTot+personale+varTot;
+  const ebitda=fatMese!=null?fatMese-costiTot:null;
+  const margPct=fatMese&&fatMese>0?ebitda/fatMese*100:null;
+  const el=document.getElementById('an-pl-result'); if(!el) return;
+  el.innerHTML=`<div class="an-card" style="border-color:${ebitda!=null&&ebitda>=0?'rgba(21,128,61,.3)':'rgba(185,28,28,.2)'}">
+    <div class="an-card-title">📊 Risultato Operativo</div>
+    <div class="an-pe-row"><span class="an-pe-lbl">RICAVI TOTALI</span><span class="an-pe-val an-pe-pos" style="font-size:14px">${anFmt2(fatMese)}</span></div>
+    <div class="an-pe-row"><span class="an-pe-lbl">Costi Fissi</span><span class="an-pe-val" style="color:var(--red)">- ${anFmt2(fissiTot)}</span></div>
+    <div class="an-pe-row"><span class="an-pe-lbl">Personale</span><span class="an-pe-val" style="color:var(--red)">- ${anFmt2(personale)}</span></div>
+    <div class="an-pe-row"><span class="an-pe-lbl">Costi Variabili</span><span class="an-pe-val" style="color:var(--red)">- ${anFmt2(varTot)}</span></div>
+    <div class="an-pe-row"><span class="an-pe-lbl" style="font-weight:800">TOTALE COSTI</span><span class="an-pe-val" style="font-size:14px;font-weight:900;color:var(--red)">- ${anFmt2(costiTot)}</span></div>
+    <div class="an-pe-tot-row" style="background:${ebitda!=null&&ebitda>=0?'rgba(21,128,61,.08)':'rgba(185,28,28,.07)'};margin-top:8px">
+      <span style="font-size:14px">EBITDA</span>
+      <span class="an-pe-tot" style="font-size:20px;color:${ebitda!=null&&ebitda>=0?'var(--green)':'var(--red)'}">${ebitda!=null?(ebitda>=0?'+':'')+anFmt2(ebitda):'—'}</span>
+    </div>
+    ${margPct!=null?`<div style="text-align:center;margin-top:8px;font-size:13px;font-weight:800;color:${margPct>=15?'var(--green)':margPct>=5?'var(--amber)':'var(--red)'}">Margine Operativo: ${Math.round(margPct)}%</div>`:''}
+  </div>`;
+}
+
+
+function anSaveUpdateTs(){
+  const ana=loadAna();
+  ana.lastUpdate=new Date().toISOString();
+  saveAna(ana);
+  anShowUpdateBadge(ana.lastUpdate);
+}
+
+function anShowUpdateBadge(iso){
+  if(!iso) return;
+  const d=new Date(iso);
+  const opts={day:'2-digit',month:'long',year:'numeric',hour:'2-digit',minute:'2-digit'};
+  const label=d.toLocaleString('it-IT',opts).replace(',','  ore');
+  const el=document.getElementById('an-update-date');
+  const badge=document.getElementById('an-update-badge');
+  if(el) el.textContent=label;
+  if(badge) badge.style.display='flex';
+}
+function anAutoSave(){
+  const ana=loadAna();
+  ['affitto','utenze','assicurazione','marketing','altro'].forEach(k=>{
+    const el=document.getElementById('an-fi-'+k); if(el) ana.fissi[k]=+el.value||0;
+  });
+  saveAna(ana);
+  // Aggiorna totale fissi e ricalcola EBITDA
+  _updateFissiTot(ana);
+  anSaveUpdateTs();
+  renderPLResult();
+}
+
+// ══════════════════════════════════════════════════════════════════
+// CASH FLOW
+// ══════════════════════════════════════════════════════════════════
+function renderCashFlow(){
+  const mk=anGetMk(); const m=MESI[mk];
+  const {byWeek}=anMonthRevenue(mk);
+  const ana=loadAna();
+  const {totale:personale}=calcPersCost(mk);
+  const fissiTot=Object.values(ana.fissi||{}).reduce((s,v)=>s+(+v||0),0)+fissiExtraTotal(ana);
+  const varTot=varTotal(ana);
+  const costiMensili=fissiTot+personale+varTot;
+  const costiSett=costiMensili/4;
+
+  const weeks=(m?.settimane||[]).map(s=>({
+    id:s.id, label:s.id,
+    entrate:byWeek[s.id]?.fat||0,
+    uscite:costiSett
+  }));
+  const maxVal=Math.max(...weeks.map(w=>Math.max(w.entrate,w.uscite)),1);
+  const svgH=160;
+  const barW=40; const gap=20; const totW=(barW*2+gap)*weeks.length+(weeks.length-1)*20;
+  let saldo=0;
+
+  const bars=weeks.map((w,i)=>{
+    const x=i*((barW*2+gap)+20);
+    const hE=Math.round((w.entrate/maxVal)*(svgH-30));
+    const hU=Math.round((w.uscite/maxVal)*(svgH-30));
+    saldo+=w.entrate-w.uscite;
+    const netColor=w.entrate>=w.uscite?'var(--green)':'var(--red)';
+    return `
+    <g transform="translate(${x},0)">
+      <rect x="0" y="${svgH-30-hE}" width="${barW}" height="${hE}" rx="3" fill="var(--green)" opacity=".8"/>
+      <rect x="${barW+gap}" y="${svgH-30-hU}" width="${barW}" height="${hU}" rx="3" fill="var(--red)" opacity=".6"/>
+      <text x="${barW}" y="${svgH-14}" text-anchor="middle" font-size="10" fill="var(--text2)" font-weight="800">${w.label}</text>
+      <text x="${barW/2}" y="${svgH-30-hE-4}" text-anchor="middle" font-size="9" fill="var(--green)" font-weight="800">${w.entrate>0?anFmt2(w.entrate):''}</text>
+      <line x1="${barW}" y1="${svgH-30-hE}" x2="${barW}" y2="${svgH-30}" stroke="${netColor}" stroke-width="1.5" stroke-dasharray="3,2" opacity=".5"/>
+    </g>`;
+  }).join('');
+
+  document.getElementById('an-cashflow').innerHTML=`
+  <div class="an-card">
+    <div class="an-card-title">💸 Cash Flow Settimanale — ${m?.label||''}</div>
+    <div style="display:flex;gap:14px;font-size:10px;color:var(--text2);margin-bottom:12px;flex-wrap:wrap">
+      <span style="display:flex;align-items:center;gap:5px"><span style="display:inline-block;width:12px;height:12px;background:var(--green);border-radius:2px;opacity:.8"></span>Entrate</span>
+      <span style="display:flex;align-items:center;gap:5px"><span style="display:inline-block;width:12px;height:12px;background:var(--red);border-radius:2px;opacity:.6"></span>Uscite stimate</span>
+    </div>
+    <div style="overflow-x:auto">
+      <svg class="an-cf-svg" viewBox="-10 0 ${totW+30} ${svgH+10}" style="min-width:${totW+20}px">
+        ${bars}
+        <line x1="-10" y1="${svgH-30}" x2="${totW+20}" y2="${svgH-30}" stroke="var(--bord)" stroke-width="1"/>
+      </svg>
+    </div>
+    <div class="an-pe-tot-row" style="margin-top:8px;background:${saldo>=0?'rgba(21,128,61,.08)':'rgba(185,28,28,.07)'}">
+      <span>Saldo Netto Stimato</span>
+      <span class="an-pe-tot" style="color:${saldo>=0?'var(--green)':'var(--red)'}">${saldo>=0?'+':''}${anFmt2(saldo)}</span>
+    </div>
+  </div>
+
+  <div class="an-card">
+    <div class="an-card-title">📊 Riepilogo Settimane</div>
+    <div style="display:grid;grid-template-columns:60px 1fr 1fr 1fr;gap:0;font-size:10px;font-weight:800;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;padding:6px 0;border-bottom:1px solid var(--bord)">
+      <span></span><span>Entrate</span><span>Uscite</span><span>Saldo</span>
+    </div>
+    ${weeks.map(w=>{
+      const net=w.entrate-w.uscite;
+      return `<div style="display:grid;grid-template-columns:60px 1fr 1fr 1fr;gap:0;align-items:center;padding:9px 0;border-bottom:1px solid var(--bg2);font-size:12px">
+        <span style="font-weight:800;color:var(--text2)">${w.label}</span>
+        <span style="font-weight:700;color:var(--green)">${w.entrate>0?anFmt2(w.entrate):'—'}</span>
+        <span style="font-weight:700;color:var(--text2)">≈${anFmt2(w.uscite)}</span>
+        <span style="font-weight:800;color:${net>=0?'var(--green)':'var(--red)'}">${net>=0?'+':''}${anFmt2(net)}</span>
+      </div>`;
+    }).join('')}
+    <div style="font-size:10px;color:var(--text2);margin-top:10px;line-height:1.5;font-style:italic">Le uscite settimanali sono una stima (costi mensili ÷ 4). Configura i costi in Conto Economico.</div>
+  </div>`;
+}
+
+// ══════════════════════════════════════════════════════════════════
+// SCADENZIARIO
+// ══════════════════════════════════════════════════════════════════
+function skedStatus(item){
+  if(item.pagato) return {cls:'sked-paid',badge:'sked-badge-paid',label:'Pagato'};
+  const days=Math.round((new Date(item.data)-new Date())/(1000*60*60*24));
+  if(days<0) return {cls:'sked-exp',badge:'sked-badge-exp',label:'Scaduto '+Math.abs(days)+' gg fa'};
+  if(days<=7) return {cls:'sked-warn',badge:'sked-badge-warn',label:'Scade in '+days+' gg'};
+  return {cls:'sked-ok',badge:'sked-badge-ok',label:'In '+(days)+' gg'};
+}
+
+function renderSked(){
+  const items=loadSked();
+  const filter=anSkedFilter;
+  const today=new Date();
+  const filtered=items.filter(it=>{
+    if(filter==='tutti') return true;
+    if(filter==='pagati') return it.pagato;
+    if(filter==='scaduti') return !it.pagato&&new Date(it.data)<today;
+    if(filter==='in_scadenza'){const d=Math.round((new Date(it.data)-today)/(1000*60*60*24)); return !it.pagato&&d>=0&&d<=14;}
+    return true;
+  }).sort((a,b)=>{
+    if(a.pagato!==b.pagato) return a.pagato?1:-1;
+    return new Date(a.data)-new Date(b.data);
+  });
+
+  // Summary counts
+  const scaduti=items.filter(i=>!i.pagato&&new Date(i.data)<today).length;
+  const inSc=items.filter(i=>{const d=Math.round((new Date(i.data)-today)/(1000*60*60*24));return !i.pagato&&d>=0&&d<=7;}).length;
+  const totOpen=items.filter(i=>!i.pagato).reduce((s,i)=>s+(+i.importo||0),0);
+
+  document.getElementById('an-sked').innerHTML=`
+  <button class="sked-add-btn" onclick="anModalOpen()">+ Aggiungi Scadenza</button>
+
+  ${scaduti>0||inSc>0?`<div style="background:rgba(185,28,28,.06);border:1px solid rgba(185,28,28,.2);border-radius:10px;padding:10px 14px;margin-bottom:12px;display:flex;gap:14px;align-items:center;flex-wrap:wrap">
+    ${scaduti>0?`<span style="font-size:11px;font-weight:700;color:var(--red)">🔴 ${scaduti} scadut${scaduti===1?'o':'i'}</span>`:''}
+    ${inSc>0?`<span style="font-size:11px;font-weight:700;color:var(--amber)">⚠️ ${inSc} in scadenza (7gg)</span>`:''}
+    <span style="font-size:11px;font-weight:700;color:var(--text2);margin-left:auto">Aperto: ${anFmt2(totOpen)}</span>
+  </div>`:''}
+
+  <div class="an-filter-row">
+    ${[['tutti','Tutti'],['in_scadenza','In scadenza'],['scaduti','Scaduti'],['pagati','Pagati']].map(([v,lbl])=>
+      `<button class="an-pill ${filter===v?'active':''}" onclick="anSkedFilter='${v}';renderSked()">${lbl}</button>`
+    ).join('')}
+  </div>
+
+  ${filtered.length===0?`<div class="no-data" style="padding:32px 20px">
+    ${items.length===0?'Nessuna scadenza registrata.<br><small style="color:var(--text2)">Aggiungi fatture, utenze, affitto...</small>':'Nessuna scadenza in questa categoria.'}
+  </div>`:''}
+
+  ${filtered.map(item=>{
+    const st=skedStatus(item);
+    const dataFmt=new Date(item.data).toLocaleDateString('it-IT',{day:'numeric',month:'short',year:'numeric'});
+    const catLabel={fornitore:'Fornitore',affitto:'Affitto',utenze:'Utenze',personale:'Personale',tasse:'Tasse',leasing:'Leasing',cliente:'Cliente',altro:'Altro'}[item.cat]||item.cat;
+    return `<div class="sked-item ${st.cls}" id="sked-${item.id}">
+      <div class="sked-top">
+        <span class="sked-desc">${item.desc}</span>
+        <span class="sked-badge ${st.badge}">${st.label}</span>
+      </div>
+      <div class="sked-meta">
+        <span><b>${item.tipo==='uscita'?'💸':'💰'} ${anFmt2(item.importo)}</b></span>
+        <span>📅 ${dataFmt}</span>
+        <span>${catLabel}</span>
+        ${item.note?`<span>📝 ${item.note}</span>`:''}
+      </div>
+      <div class="sked-actions">
+        ${!item.pagato?`<button class="sked-btn sked-btn-pay" onclick="anSkedPay('${item.id}')">✓ Segna pagato</button>`:''}
+        <button class="sked-btn" onclick="anSkedEdit('${item.id}')">✏️ Modifica</button>
+        <button class="sked-btn sked-btn-del" onclick="anSkedDel('${item.id}')">🗑</button>
+      </div>
+    </div>`;
+  }).join('')}`;
+}
+
+function anModalOpen(editId){
+  document.getElementById('an-modal-bg').classList.add('open');
+  document.getElementById('an-sked-edit-id').value='';
+  if(!editId){
+    document.getElementById('an-modal-title').textContent='Nuova Scadenza';
+    document.getElementById('an-f-desc').value='';
+    document.getElementById('an-f-importo').value='';
+    document.getElementById('an-f-tipo').value='uscita';
+    document.getElementById('an-f-cat').value='fornitore';
+    const today=new Date(); today.setDate(today.getDate()+14);
+    document.getElementById('an-f-data').value=today.toISOString().split('T')[0];
+    document.getElementById('an-f-note').value='';
+  }
+}
+function anModalClose(){
+  document.getElementById('an-modal-bg').classList.remove('open');
+}
+function anSkedEdit(id){
+  const items=loadSked(); const item=items.find(i=>i.id===id); if(!item) return;
+  document.getElementById('an-sked-edit-id').value=id;
+  document.getElementById('an-modal-title').textContent='Modifica Scadenza';
+  document.getElementById('an-f-desc').value=item.desc;
+  document.getElementById('an-f-importo').value=item.importo;
+  document.getElementById('an-f-tipo').value=item.tipo||'uscita';
+  document.getElementById('an-f-cat').value=item.cat||'altro';
+  document.getElementById('an-f-data').value=item.data;
+  document.getElementById('an-f-note').value=item.note||'';
+  document.getElementById('an-modal-bg').classList.add('open');
+}
+function anSkedSave(){
+  const desc=document.getElementById('an-f-desc').value.trim();
+  const importo=+document.getElementById('an-f-importo').value||0;
+  const tipo=document.getElementById('an-f-tipo').value;
+  const cat=document.getElementById('an-f-cat').value;
+  const data=document.getElementById('an-f-data').value;
+  const note=document.getElementById('an-f-note').value.trim();
+  if(!desc||!data){ alert('Inserisci almeno descrizione e data.'); return; }
+  const items=loadSked();
+  const editId=document.getElementById('an-sked-edit-id').value;
+  if(editId){
+    const i=items.findIndex(x=>x.id===editId);
+    if(i>=0) items[i]={...items[i],desc,importo,tipo,cat,data,note};
+  } else {
+    items.push({id:'s'+Date.now(),desc,importo,tipo,cat,data,note,pagato:false,creato:new Date().toISOString()});
+  }
+  saveSked(items);
+  anModalClose();
+  renderSked();
+}
+function anSkedPay(id){
+  const items=loadSked(); const i=items.findIndex(x=>x.id===id); if(i<0) return;
+  items[i].pagato=!items[i].pagato; items[i].pagato_il=new Date().toISOString();
+  saveSked(items); renderSked();
+}
+function anSkedDel(id){
+  if(!confirm('Eliminare questa scadenza?')) return;
+  const items=loadSked().filter(i=>i.id!==id); saveSked(items); renderSked();
+}
+
+// ══════════════════════════════════════════════════════════════════
+// REDDITIVITÀ COLLABORATORI
+// ══════════════════════════════════════════════════════════════════
+function renderRedd(){
+  const mk=anGetMk(); const m=MESI[mk];
+  if(!m){ document.getElementById('an-redd').innerHTML='<p class="no-data">Nessun dato.</p>'; return; }
+
+  const ana=loadAna();
+  const {totale:costoPers, perCollab, hasData:hasPersCost}=calcPersCost(mk);
+  const varTot=varTotal(ana);
+  const fissiTot=Object.values(ana.fissi||{}).reduce((s,v)=>s+(+v||0),0)+fissiExtraTotal(ana);
+
+  // P&L per collaboratore
+  const collabs=m.collaboratori.map(c=>{
+    const fat=anCollabMonthFat(mk,c.id)||0;
+    const costoP=perCollab[c.id]||c.costo_m||0;
+    // Quota costi fissi proporzionale al costo personale
+    const quotaFissi=costoPers>0 ? (costoP/costoPers)*fissiTot : fissiTot/m.collaboratori.length;
+    const quotaVar=costoPers>0?(costoP/costoPers)*varTot:varTot/m.collaboratori.length;
+    const varCosto=quotaVar;
+    const margLordo=fat-varCosto;
+    const contribuzione=margLordo-costoP;
+    const risultato=contribuzione-quotaFissi;
+    // Break-even: quanto fatturato serve per coprire i costi (al netto dei variabili)
+    const be_personale=costoP+quotaVar;
+    const be_totale=costoP+quotaFissi+quotaVar;
+    const copertura=be_totale>0 ? fat/be_totale : null;
+    return {c, fat, costoP, quotaFissi, varCosto, margLordo, contribuzione, risultato, be_personale, be_totale, copertura};
+  });
+
+  const totalFat=collabs.reduce((s,d)=>s+d.fat,0);
+  const totalCosto=collabs.reduce((s,d)=>s+d.costoP,0);
+  const totalRisultato=collabs.reduce((s,d)=>s+d.risultato,0);
+  const fissiCoperti=fissiTot>0&&totalFat>0;
+
+  // Avvisi configurazione
+  const warningHtml = (!hasPersCost||fissiTot===0) ? `
+  <div style="background:rgba(180,83,9,.07);border:1px solid rgba(180,83,9,.25);border-radius:10px;padding:12px 14px;margin-bottom:12px;font-size:11px;color:var(--amber);font-weight:600;line-height:1.6">
+    ⚙️ ${!hasPersCost?'Inserisci i costi personale nel <b style="cursor:pointer;text-decoration:underline" onclick="anSwitch(\'pl\')">Conto Economico</b> per l\'analisi completa.':''}
+    ${fissiTot===0?'<br>Inserisci i <b style="cursor:pointer;text-decoration:underline" onclick="anSwitch(\'pl\')">costi fissi mensili</b> per vedere la redditività totale.':''}
+  </div>` : '';
+
+  // KPI di riepilogo
+  const kpiHtml=`
+  <div class="an-kpi-row" style="margin-bottom:12px">
+    <div class="an-kpi">
+      <div class="an-kpi-val">${anFmt2(totalFat)}</div>
+      <div class="an-kpi-lbl">Fat. Mese</div>
+    </div>
+    <div class="an-kpi">
+      <div class="an-kpi-val">${anFmt2(totalCosto)}</div>
+      <div class="an-kpi-lbl">Costo Personale</div>
+    </div>
+    <div class="an-kpi">
+      <div class="an-kpi-val">${anFmt2(fissiTot)}</div>
+      <div class="an-kpi-lbl">Costi Fissi</div>
+    </div>
+    <div class="an-kpi">
+      <div class="an-kpi-val" style="color:${totalRisultato>=0?'var(--green)':'var(--red)'}">${totalRisultato>=0?'+':''}${anFmt2(totalRisultato)}</div>
+      <div class="an-kpi-lbl">Risultato Netto</div>
+    </div>
+  </div>`;
+
+  // Cards per collaboratore
+  const cardsHtml=collabs.map(({c,fat,costoP,quotaFissi,varCosto,margLordo,contribuzione,risultato,be_personale,be_totale,copertura})=>{
+    const hasRev=fat>0;
+    const status=!hasRev?'nodata':copertura>=1?'ok':copertura>=0.8?'warn':'bad';
+    const verdict=!hasRev?'Nessun dato':copertura>=1?'✓ Redditiva':copertura>=0.8?'⚠ Quasi':copertura<0?'✗ In perdita':'✗ Sotto break-even';
+    const verdictCls=!hasRev?'nd':copertura>=1?'ok':copertura>=0.8?'warn':'bad';
+    const pctLabel=copertura!=null?Math.round(copertura*100)+'% break-even':'—';
+    const progW=copertura!=null?Math.min(100,Math.round(copertura*100)):0;
+    const progColor=copertura>=1?'var(--green)':copertura>=0.8?'var(--amber)':'var(--red)';
+    // Posizione marker break-even personale sulla barra totale
+    const bePersonalePct=be_totale>0?Math.min(98,Math.round(be_personale/be_totale*100)):50;
+    // Avatar color
+    const avColors=['#a67318','#15803d','#0369a1','#6d28d9','#be185d'];
+    const avColor=avColors[m.collaboratori.findIndex(x=>x.id===c.id)%avColors.length];
+    const initials=c.nome.slice(0,2).toUpperCase();
+
+    return `<div class="redd-card redd-${status}">
+      <div class="redd-hdr">
+        <div class="redd-av" style="background:${avColor}20;color:${avColor};border:2px solid ${avColor}40">${initials}</div>
+        <div>
+          <div class="redd-name">${c.nome}</div>
+          <div style="font-size:10px;color:var(--text2);font-weight:600">${c.ruolo}</div>
+        </div>
+        <span class="redd-verdict redd-verdict-${verdictCls}">${verdict}</span>
+      </div>
+
+      ${hasRev&&be_totale>0?(()=>{
+        // Scala la barra: se fat > be_totale, la barra mostra TUTTO
+        const _scale=Math.max(fat, be_totale);
+        const _costW=Math.round(Math.min(fat,be_totale)/_scale*100);
+        const _utileW=fat>be_totale?Math.round((fat-be_totale)/_scale*100):0;
+        const _bePersonW=Math.round(be_personale/_scale*100);
+        const _beTotW=Math.round(be_totale/_scale*100); // = 100 se fat<be_totale
+        const _utile=fat-be_totale;
+        const _costColor=fat>=be_totale?'var(--amber)':'var(--red)';
+        return `
+      <div class="redd-prog-wrap">
+        <div class="redd-prog-labels">
+          <span>Fatturato: ${anFmt2(fat)}</span>
+          <span style="color:${fat>=be_totale?'var(--green)':progColor}">${fat>=be_totale?'✓ Utile: +'+anFmt2(_utile):pctLabel}</span>
+        </div>
+        <div class="redd-prog-track" style="overflow:visible">
+          <div style="position:absolute;left:0;top:0;height:100%;width:${_costW}%;background:${_costColor};border-radius:${_utileW>0?'4px 0 0 4px':'4px'};transition:width .3s"></div>
+          ${_utileW>0?`<div style="position:absolute;left:${_costW}%;top:0;height:100%;width:${_utileW}%;background:var(--green);border-radius:0 4px 4px 0;transition:width .3s"></div>`:''}
+          <div class="redd-be-marker" style="left:${_bePersonW}%"><div class="redd-be-label">costo</div></div>
+          ${fat<be_totale?`<div class="redd-be-marker" style="left:99%;background:var(--red)"><div class="redd-be-label" style="color:var(--red)">totale</div></div>`:`<div class="redd-be-marker" style="left:${_beTotW}%;background:var(--green)"><div class="redd-be-label" style="color:var(--green)">BE ✓</div></div>`}
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:9px;color:var(--text2);margin-top:3px">
+          <span>€0</span>
+          <span style="color:var(--amber)">BE pers. ${anFmt2(be_personale)}</span>
+          <span style="color:${fat>=be_totale?'var(--green)':'var(--red)'}">${fat>=be_totale?'✓ '+anFmt2(be_totale):'BE tot. '+anFmt2(be_totale)}</span>
+        </div>
+      </div>`;
+      })() : ''}
+
+      <div class="redd-pl">
+        <div class="redd-pl-row"><span class="redd-pl-lbl">Fatturato</span><span class="redd-pl-val an-pe-pos">${hasRev?anFmt2(fat):'—'}</span></div>
+        ${hasRev&&varCosto>0?`<div class="redd-pl-row"><span class="redd-pl-lbl">− Costi variabili (quota)</span><span class="redd-pl-val" style="color:var(--red)">− ${anFmt2(varCosto)}</span></div>`:''}
+        ${hasRev?`<div class="redd-pl-row" style="font-weight:800;color:var(--text)"><span class="redd-pl-lbl" style="font-weight:800;color:var(--text)">= Margine lordo</span><span class="redd-pl-val">${anFmt2(margLordo)}</span></div>`:''}
+        <div class="redd-pl-sep"></div>
+        <div class="redd-pl-row"><span class="redd-pl-lbl">− Costo personale</span><span class="redd-pl-val" style="color:var(--red)">− ${anFmt2(costoP)}</span></div>
+        ${hasRev?`<div class="redd-pl-row" style="font-weight:800"><span class="redd-pl-lbl" style="font-weight:800;color:var(--text)">= Contribuzione ai fissi</span><span class="redd-pl-val" style="color:${contribuzione>=0?'var(--green)':'var(--red)'}">${contribuzione>=0?'+':''}${anFmt2(contribuzione)}</span></div>`:''}
+        ${fissiTot>0?`
+        <div class="redd-pl-sep"></div>
+        <div class="redd-pl-row"><span class="redd-pl-lbl">− Quota costi fissi</span><span class="redd-pl-val" style="color:var(--red)">− ${anFmt2(quotaFissi)}</span></div>`:''}
+      </div>
+
+      ${hasRev?`<div class="redd-pl-result ${risultato>=0?'redd-pl-result-ok':'redd-pl-result-bad'}">
+        <span>Risultato netto</span>
+        <span>${risultato>=0?'+':''}${anFmt2(risultato)}</span>
+      </div>`:''}
+
+      <div class="redd-be-row">
+        <div class="redd-be-box">
+          <div class="redd-be-val" style="color:${fat>0&&fat>=be_personale?'var(--green)':'var(--amber)'}">${anFmt2(be_personale)}</div>
+          <div class="redd-be-lbl">Break-Even Personale</div>
+          <div class="redd-be-sub">per coprire solo il suo costo</div>
+        </div>
+        <div class="redd-be-box">
+          <div class="redd-be-val" style="color:${fat>0&&fat>=be_totale?'var(--green)':'var(--red)'}">${anFmt2(be_totale)}</div>
+          <div class="redd-be-lbl">Break-Even Totale</div>
+          <div class="redd-be-sub">costo + quota costi fissi</div>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+
+  const noteHtml=`<div class="redd-note">
+    <b>Come si legge:</b> il Break-Even Personale è il fatturato minimo per coprire solo lo stipendio.
+    Il Break-Even Totale aggiunge la quota di costi fissi (affitto, utenze, ecc.) proporzionale al peso di ogni collaboratore.
+    La barra mostra dove si trova il fatturato reale rispetto ai due obiettivi.<br>
+    <b>Quota fissi:</b> ripartita in proporzione al costo personale (chi costa di più, contribuisce di più ai fissi).
+  </div>`;
+
+  document.getElementById('an-redd').innerHTML=warningHtml+kpiHtml+cardsHtml+noteHtml;
+}
+
+// ══════════════════════════════════════════════════════════════════
+// BUDGET VS CONSUNTIVO
+// ══════════════════════════════════════════════════════════════════
+function renderBudget(){
+  const mk=anGetMk(); const m=MESI[mk];
+  if(!m){ document.getElementById('an-budget').innerHTML='<p class="no-data">Nessun dato.</p>'; return; }
+  const bud=loadBud();
+  const mensile=+bud.mensile||0;
+  const settBud=mensile/4;
+  const {total:fatMese,byWeek}=anMonthRevenue(mk);
+  const tgMese=m.collaboratori.reduce((s,c)=>s+(c.fat_tm||0),0);
+
+  document.getElementById('an-budget').innerHTML=`
+  <div class="an-card">
+    <div class="an-card-title">🎯 Budget Mensile</div>
+    <div class="an-inp-row">
+      <div class="an-inp-group">
+        <div class="an-inp-lbl"><span>Budget Fatturato Mensile</span><small>Obiettivo gestionale custom</small></div>
+        <input class="an-inp" type="number" id="an-bud-mens" value="${mensile}" min="0" step="100" oninput="anBudSave()">
+        <span class="an-inp-unit">€</span>
+      </div>
+    </div>
+    <div style="margin-top:8px;font-size:10px;color:var(--text2)">Target KPI Team (da contratto): <b style="color:var(--text)">${anFmt2(tgMese)}</b></div>
+  </div>
+
+  <div class="an-card">
+    <div class="an-card-title">📊 Budget vs Consuntivo — ${m.label}</div>
+    <div style="display:grid;grid-template-columns:60px 1fr 1fr 1fr;gap:0;font-size:9px;font-weight:800;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;padding:6px 0;border-bottom:1px solid var(--bord)">
+      <span></span><span>Budget</span><span>Reale</span><span>Scostamento</span>
+    </div>
+    ${m.settimane.map(s=>{
+      const wFat=byWeek[s.id]?.fat;
+      const delta=wFat!=null?wFat-settBud:null;
+      return `<div style="display:grid;grid-template-columns:60px 1fr 1fr 1fr;gap:0;align-items:center;padding:9px 0;border-bottom:1px solid var(--bg2);font-size:12px">
+        <span style="font-weight:800;color:var(--text2)">${s.id}</span>
+        <span style="font-weight:700">${anFmt2(settBud)}</span>
+        <span style="font-weight:700;color:${wFat!=null?(wFat>=settBud?'var(--green)':'var(--amber)'):'var(--bord2)'}">${wFat!=null?anFmt2(wFat):'—'}</span>
+        <span style="font-weight:800;color:${delta==null?'var(--bord2)':delta>=0?'var(--green)':'var(--red)'}">${delta!=null?(delta>=0?'+':'')+anFmt2(delta):'—'}</span>
+      </div>`;
+    }).join('')}
+    <div style="display:grid;grid-template-columns:60px 1fr 1fr 1fr;gap:0;align-items:center;padding:11px 0;font-size:13px;font-weight:900;background:var(--bg2);border-radius:8px;margin-top:4px;padding-left:8px">
+      <span style="color:var(--text2)">MESE</span>
+      <span>${anFmt2(mensile)}</span>
+      <span style="color:${fatMese!=null?(fatMese>=mensile?'var(--green)':'var(--amber)'):'var(--bord2)'}">${fatMese!=null?anFmt2(fatMese):'—'}</span>
+      <span style="color:${fatMese==null?'var(--bord2)':fatMese-mensile>=0?'var(--green)':'var(--red)'}">${fatMese!=null?((fatMese-mensile>=0?'+':'')+anFmt2(fatMese-mensile)):'—'}</span>
+    </div>
+  </div>
+
+  ${mensile>0&&tgMese>0?`<div class="an-card" style="background:var(--bg2)">
+    <div class="an-card-title">🔍 Confronto Budget vs Target KPI</div>
+    <div class="an-pe-row"><span class="an-pe-lbl">Budget custom</span><span class="an-pe-val">${anFmt2(mensile)}</span></div>
+    <div class="an-pe-row"><span class="an-pe-lbl">Target KPI Team</span><span class="an-pe-val">${anFmt2(tgMese)}</span></div>
+    <div class="an-pe-row"><span class="an-pe-lbl">Differenza</span><span class="an-pe-val" style="color:${mensile>=tgMese?'var(--green)':'var(--amber)'}">${mensile>=tgMese?'+':''}${anFmt2(mensile-tgMese)}</span></div>
+  </div>`:''}`;
+}
+
+function anBudSave(){
+  const el=document.getElementById('an-bud-mens'); if(!el) return;
+  saveBud({mensile:+el.value||0});
+}
+
+
+// ══════════════════════════════════════════════════════════════════
+// COSTO PERSONALE — Calcolatore
+// ══════════════════════════════════════════════════════════════════
+const PERS_KEY = 'isola_pers_v2';
+
+function persStorageKey(mk){ return PERS_KEY + '_' + mk; }
+function loadPers(mk){ try{ return JSON.parse(localStorage.getItem(persStorageKey(mk))) || {}; } catch(e){ return {}; } }
+function savePers(mk, d){ localStorage.setItem(persStorageKey(mk), JSON.stringify(d)); }
+
+function calcPersCost(mk){
+  const m = MESI[mk]; if(!m) return {totale:0, perCollab:{}};
+  const pers = loadPers(mk);
+  const costoTot = +pers.costo_totale || 0;
+  const collabs = m.collaboratori;
+  const nette = {};
+  let totNette = 0;
+  for(const c of collabs){
+    const n = +pers.nette?.[c.id] || 0;
+    nette[c.id] = n;
+    totNette += n;
+  }
+  const quota = costoTot - totNette;
+  const perCollab = {};
+  for(const c of collabs){
+    const n = nette[c.id];
+    perCollab[c.id] = totNette > 0 ? n + (n / totNette) * quota : n;
+  }
+  const hasData = costoTot > 0 && totNette > 0;
+  if(!hasData){
+    for(const c of collabs) perCollab[c.id] = c.costo_m || 0;
+    return { totale: collabs.reduce((s,c)=>s+(c.costo_m||0),0), perCollab, hasData:false };
+  }
+  return { totale: costoTot, perCollab, hasData:true };
+}
+
+function renderPersCalc(mk){
+  const m = MESI[mk]; if(!m) return '';
+  const pers = loadPers(mk);
+  const collabs = m.collaboratori;
+  const costoTot = +pers.costo_totale || 0;
+  let totNette = 0;
+  const nette = {};
+  for(const c of collabs){
+    const n = +pers.nette?.[c.id] || 0;
+    nette[c.id] = n;
+    totNette += n;
+  }
+  const quota = costoTot > 0 ? costoTot - totNette : 0;
+  const hasData = costoTot > 0 && totNette > 0;
+
+  const rows = collabs.map(c => {
+    const n = nette[c.id] || 0;
+    const extra = hasData && totNette > 0 ? (n / totNette) * quota : 0;
+    const tot = n + extra;
+    const pct = costoTot > 0 ? Math.round(tot / costoTot * 100) : 0;
+    return `<div class="pers-bk-row">
+      <span class="pers-bk-name">${c.nome}</span>
+      <span class="pers-bk-val">${n > 0 ? anFmt2(n) : '—'}</span>
+      <span class="pers-bk-extra">${extra > 0 ? '+'+anFmt2(extra) : '—'}</span>
+      <span class="pers-bk-tot-val" style="color:${tot>0?'var(--gold)':'var(--bord2)'}">${tot > 0 ? anFmt2(tot) : '—'}<span style="font-size:9px;color:var(--text2);font-weight:600;margin-left:3px">${pct>0?pct+'%':''}</span></span>
+    </div>`;
+  }).join('');
+
+  const checkHtml = costoTot > 0 && totNette > 0
+    ? `<div class="pers-check pers-check-ok">✓ Verificato: ${anFmt2(totNette)} nette + ${anFmt2(quota)} F24/TFR = ${anFmt2(costoTot)}</div>`
+    : costoTot > 0 && totNette === 0
+    ? `<div class="pers-check pers-check-err">⚠ Inserisci le buste nette per calcolare la ripartizione</div>`
+    : `<div class="pers-check" style="background:var(--bg2);color:var(--text2);border:1px solid var(--bord)">💡 Inserisci il costo totale per attivare il calcolatore</div>`;
+
+  return `<div class="pers-calc">
+    <div class="pers-calc-title">👥 Calcolatore Costo Personale</div>
+    <div class="pers-tot-input">
+      <div class="pers-tot-lbl">
+        <span>Costo Totale Aziendale</span>
+        <small>Cedolini netti + F24 + TFR — tutto incluso</small>
+      </div>
+      <input class="pers-inp" type="number" id="pers-tot" value="${costoTot||''}" placeholder="0.00" step="0.01" min="0" oninput="persAutoSave('${mk}')">
+      <span class="pers-inp-unit">€</span>
+    </div>
+    <div style="font-size:10px;font-weight:800;color:var(--text2);text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px">Buste Paga Nette</div>
+    <div class="pers-nette-grid">
+      ${collabs.map(c => `<div class="pers-netta-row">
+        <span class="pers-netta-name">${c.nome}</span>
+        <input class="pers-inp" type="number" id="pers-n-${c.id}" value="${nette[c.id]||''}" placeholder="0.00" step="0.01" min="0" oninput="persAutoSave('${mk}')">
+        <span class="pers-inp-unit">€</span>
+      </div>`).join('')}
+    </div>
+    <div id="pers-bk-wrap">${hasData ? `
+    <div style="font-size:10px;font-weight:800;color:var(--text2);text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px;padding-top:4px">Ripartizione Automatica</div>
+    <div class="pers-breakdown">
+      <div class="pers-bk-hdr">
+        <span>Collaboratore</span>
+        <span style="text-align:right;padding-right:8px">Netta</span>
+        <span style="text-align:right;padding-right:8px">F24+TFR</span>
+        <span style="text-align:right">Costo Totale</span>
+      </div>
+      ${rows}
+      <div class="pers-bk-row pers-bk-tot">
+        <span class="pers-bk-name">TOTALE</span>
+        <span class="pers-bk-val">${anFmt2(totNette)}</span>
+        <span class="pers-bk-extra">+${anFmt2(quota)}</span>
+        <span class="pers-bk-tot-val">${anFmt2(costoTot)}</span>
+      </div>
+    </div>` : ''}
+    ${checkHtml}
+  </div></div>`;
+}
+
+function persAutoSave(mk){
+  const m = MESI[mk]; if(!m) return;
+  const pers = loadPers(mk);
+  const totEl = document.getElementById('pers-tot');
+  if(totEl) pers.costo_totale = +totEl.value || 0;
+  pers.nette = pers.nette || {};
+  for(const c of m.collaboratori){
+    const el = document.getElementById('pers-n-'+c.id);
+    if(el) pers.nette[c.id] = +el.value || 0;
+  }
+  savePers(mk, pers);
+  // Aggiorna solo il breakdown senza distruggere gli input
+  const bkWrap = document.getElementById('pers-bk-wrap');
+  if(bkWrap) bkWrap.outerHTML = renderPersBK(mk);
+  anSaveUpdateTs();
+  renderPLResult();
+}
+
+function renderPersBK(mk){
+  const m = MESI[mk]; if(!m) return '<div id="pers-bk-wrap"></div>';
+  const pers = loadPers(mk);
+  const costoTot = pers.costo_totale || 0;
+  const nette = pers.nette || {};
+  const totNette = Object.values(nette).reduce((s,v)=>s+(+v||0),0);
+  const quota = costoTot > 0 ? costoTot - totNette : 0;
+  const hasData = costoTot > 0 && totNette > 0;
+  const collabs = m.collaboratori;
+
+  const rows = collabs.map(c => {
+    const n = nette[c.id] || 0;
+    const extra = hasData && totNette > 0 ? (n / totNette) * quota : 0;
+    const tot = n + extra;
+    const pct = costoTot > 0 ? Math.round(tot / costoTot * 100) : 0;
+    return `<div class="pers-bk-row">
+      <span class="pers-bk-name">${c.nome}</span>
+      <span class="pers-bk-val">${n > 0 ? anFmt2(n) : '—'}</span>
+      <span class="pers-bk-extra">${extra > 0 ? '+'+anFmt2(extra) : '—'}</span>
+      <span class="pers-bk-tot-val" style="color:${tot>0?'var(--gold)':'var(--bord2)'}">${tot > 0 ? anFmt2(tot) : '—'}<span style="font-size:9px;color:var(--text2);font-weight:600;margin-left:3px">${pct>0?pct+'%':''}</span></span>
+    </div>`;
+  }).join('');
+
+  const checkHtml = costoTot > 0 && totNette > 0
+    ? `<div class="pers-check pers-check-ok">✓ Verificato: ${anFmt2(totNette)} nette + ${anFmt2(quota)} F24/TFR = ${anFmt2(costoTot)}</div>`
+    : costoTot > 0 && totNette === 0
+    ? `<div class="pers-check pers-check-err">⚠ Inserisci le buste nette per calcolare la ripartizione</div>`
+    : `<div class="pers-check" style="background:var(--bg2);color:var(--text2);border:1px solid var(--bord)">💡 Inserisci il costo totale per attivare il calcolatore</div>`;
+
+  return `<div id="pers-bk-wrap">${hasData ? `
+    <div style="font-size:10px;font-weight:800;color:var(--text2);text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px;padding-top:4px">Ripartizione Automatica</div>
+    <div class="pers-breakdown">
+      <div class="pers-bk-hdr">
+        <span>Collaboratore</span>
+        <span style="text-align:right;padding-right:8px">Netta</span>
+        <span style="text-align:right;padding-right:8px">F24+TFR</span>
+        <span style="text-align:right">Costo Totale</span>
+      </div>
+      ${rows}
+      <div class="pers-bk-row pers-bk-tot">
+        <span class="pers-bk-name">TOTALE</span>
+        <span class="pers-bk-val">${anFmt2(totNette)}</span>
+        <span class="pers-bk-extra">+${anFmt2(quota)}</span>
+        <span class="pers-bk-tot-val">${anFmt2(costoTot)}</span>
+      </div>
+    </div>` : ''}
+    ${checkHtml}
+  </div>`;
+}
+
+
+// ── Break-even helper per Target Team ────────────────────────────
+function getCollabBE(mk, cid){
+  const m=MESI[mk]; if(!m) return null;
+  const ana=loadAna();
+  const {totale:costoPers, perCollab}=calcPersCost(mk);
+  const fissiTot=Object.values(ana.fissi||{}).reduce((s,v)=>s+(+v||0),0)+fissiExtraTotal(ana);
+  const varTot=varTotal(ana);
+  const costoP=perCollab[cid]||0;
+  if(costoP===0&&fissiTot===0) return null;
+  const quotaFissi=costoPers>0?(costoP/costoPers)*fissiTot:0;
+  const quotaVar=costoPers>0?(costoP/costoPers)*varTot:0;
+  const be_personale=costoP+quotaVar;
+  const be_totale=costoP+quotaFissi+quotaVar;
+  // Fatturato mese corrente (tutte le settimane disponibili)
+  const fatMese=anCollabMonthFat(mk,cid)||0;
+  return {costoP, quotaFissi, quotaVar, be_personale, be_totale, fatMese};
+}
+
+function renderBEIndicator(mk, cid){
+  const be=getCollabBE(mk,cid);
+  if(!be||be.be_totale===0) return '';
+  const pct=Math.round(be.fatMese/be.be_totale*100);
+  const pctP=Math.round(be.fatMese/be.be_personale*100);
+  const color=pct>=100?'var(--green)':pct>=75?'var(--amber)':'var(--red)';
+  const icon=pct>=100?'✓':pct>=75?'⚠':'✗';
+  const bePersonalePctOnBar=Math.min(97,Math.round(be.be_personale/be.be_totale*100));
+  const progW=Math.min(100,pct);
+  return `<div style="margin-top:10px;padding:10px 12px;background:var(--bg2);border-radius:9px;border-left:3px solid ${color}">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+      <span style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--text2)">Analisi Economica</span>
+      <span style="font-size:11px;font-weight:800;color:${color}">${icon} ${pct}% break-even</span>
+    </div>
+    <div style="height:8px;background:var(--bord);border-radius:4px;overflow:hidden;position:relative;margin-bottom:5px">
+      <div style="height:100%;width:${progW}%;background:${color};border-radius:4px;transition:width 1s"></div>
+      <div style="position:absolute;top:0;left:${bePersonalePctOnBar}%;width:2px;height:100%;background:var(--amber);opacity:.9"></div>
+    </div>
+    <div style="display:flex;justify-content:space-between;font-size:9px;color:var(--text2)">
+      <span>Fatto mese: <b style="color:var(--text)">${anFmt2(be.fatMese)}</b></span>
+      <span style="color:var(--amber)">Solo costo: ${anFmt2(be.be_personale)}</span>
+      <span style="color:var(--red)">Con fissi: ${anFmt2(be.be_totale)}</span>
+    </div>
+  </div>`;
+}
+
+// ── Hook into showModule ──────────────────────────────────────────
+(function(){
+  const _orig=window.showModule;
+  window.showModule=function(mod){
+    _orig.call(this,mod);
+    if(mod==='analisi'){ renderAnalisi(); }
+  };
+})();
+
+</script>
+
+<script>
+// === BEGIN_COLLAB_STATO ===
+
+// ╔══════════════════════════════════════════════════════════════╗
+// ║  SEZIONE 1 — TARGET MENSILI                                  ║
+// ║  Aggiornare all'inizio di ogni mese                         ║
+// ╚══════════════════════════════════════════════════════════════╝
+const MESI = {
+  "2026-05": {
+    "label": "Maggio 2026",
+    "settimane": [
+      {
+        "id": "S1",
+        "da": "2026-05-02",
+        "a": "2026-05-09",
+        "label": "S1 · 2-9 mag"
+      },
+      {
+        "id": "S2",
+        "da": "2026-05-12",
+        "a": "2026-05-16",
+        "label": "S2 · 12-16 mag"
+      },
+      {
+        "id": "S3",
+        "da": "2026-05-19",
+        "a": "2026-05-23",
+        "label": "S3 · 19-23 mag"
+      },
+      {
+        "id": "S4",
+        "da": "2026-05-26",
+        "a": "2026-05-30",
+        "label": "S4 · 26-30 mag"
+      }
+    ],
+    "collaboratori": [
+      {
+        "id": "stefano",
+        "nome": "Stefano",
+        "ruolo": "Stilista",
+        "costo_m": 3509,
+        "fat_tw": 1927,
+        "fat_tm": 7708,
+        "pre_tw": 50,
+        "pre_tm": 200,
+        "ret_tw": 2,
+        "ret_tm": 8,
+        "rit_tw": 32,
+        "rit_tm": 128,
+        "nuovi_tw": 17,
+        "nuovi_tm": 68,
+        "rich_tw": 15,
+        "rich_tm": 59,
+        "serv_t": 2,
+        "fiche_t": 40,
+        "sat_tw": 70,
+        "sat_tm": 70
+      },
+      {
+        "id": "simona",
+        "nome": "Simona",
+        "ruolo": "Phonista",
+        "costo_m": 2447,
+        "fat_tw": 1337,
+        "fat_tm": 5347,
+        "pre_tw": 29,
+        "pre_tm": 115,
+        "ret_tw": 2,
+        "ret_tm": 8,
+        "rit_tw": 15,
+        "rit_tm": 58,
+        "nuovi_tw": 17,
+        "nuovi_tm": 68,
+        "rich_tw": 3,
+        "rich_tm": 13,
+        "serv_t": 2,
+        "fiche_t": 40,
+        "sat_tw": 70,
+        "sat_tm": 70
+      }
+    ]
+  }
+};
+
+// ╔══════════════════════════════════════════════════════════════╗
+// ║  SEZIONE 2 — STORICO DATI REALI                             ║
+// ║  ⚠️  AGGIORNATO AUTOMATICAMENTE — Non modificare manualmente ║
+// ╚══════════════════════════════════════════════════════════════╝
+// === BEGIN_STORICO ===
+const STORICO = {
+  "2026-05": {
+    "chiuso": false,
+    "ultimo_aggiornamento": "12 mag 2026",
+    "S1": {
+      "stefano": {
+        "fat": 2006.5,
+        "pre": 60,
+        "nuovi": 14,
+        "rit": 44,
+        "ret": 1,
+        "rich": 23,
+        "serv": 1.33,
+        "fiche": 33.44,
+        "servizi": [
+          {
+            "nome": "Taglio Uomo",
+            "qta": 41,
+            "ricavi": 835.7
+          },
+          {
+            "nome": "Taglio Donna",
+            "qta": 11,
+            "ricavi": 285.0
+          },
+          {
+            "nome": "piega full",
+            "qta": 7,
+            "ricavi": 210.0
+          },
+          {
+            "nome": "Colore Base",
+            "qta": 4,
+            "ricavi": 148.2
+          },
+          {
+            "nome": "Piega classic",
+            "qta": 5,
+            "ricavi": 130.0
+          },
+          {
+            "nome": "colpi di sole stagnola",
+            "qta": 1,
+            "ricavi": 120.0
+          },
+          {
+            "nome": "colpi di sole spatola",
+            "qta": 2,
+            "ricavi": 90.0
+          },
+          {
+            "nome": "Creative Color",
+            "qta": 1,
+            "ricavi": 60.0
+          },
+          {
+            "nome": "Regolazione Barba",
+            "qta": 5,
+            "ricavi": 42.6
+          },
+          {
+            "nome": "Gloss",
+            "qta": 1,
+            "ricavi": 30.0
+          },
+          {
+            "nome": "Prodotti",
+            "qta": 1,
+            "ricavi": 33.0
+          },
+          {
+            "nome": "fresh mask",
+            "qta": 1,
+            "ricavi": 18.0
+          },
+          {
+            "nome": "Finish",
+            "qta": 1,
+            "ricavi": 4.0
+          }
+        ],
+        "sat": 50
+      },
+      "simona": {
+        "fat": 1286.0,
+        "pre": 27,
+        "nuovi": 14,
+        "rit": 17,
+        "ret": 0,
+        "rich": 1,
+        "serv": 1.7,
+        "fiche": 47.63,
+        "servizi": [
+          {
+            "nome": "piega full",
+            "qta": 13,
+            "ricavi": 379.79
+          },
+          {
+            "nome": "Colore Base",
+            "qta": 9,
+            "ricavi": 367.0
+          },
+          {
+            "nome": "Piega classic",
+            "qta": 9,
+            "ricavi": 203.5
+          },
+          {
+            "nome": "Taglio Donna",
+            "qta": 7,
+            "ricavi": 170.24
+          },
+          {
+            "nome": "Taglio Bambina",
+            "qta": 2,
+            "ricavi": 50.0
+          },
+          {
+            "nome": "Creative Color",
+            "qta": 1,
+            "ricavi": 40.48
+          },
+          {
+            "nome": "Piega Base",
+            "qta": 1,
+            "ricavi": 27.0
+          },
+          {
+            "nome": "Trattamento Penetraitt",
+            "qta": 1,
+            "ricavi": 25.0
+          },
+          {
+            "nome": "supplemento ferro piastra",
+            "qta": 1,
+            "ricavi": 10.0
+          },
+          {
+            "nome": "Taglio Frangia",
+            "qta": 1,
+            "ricavi": 9.0
+          },
+          {
+            "nome": "Finish",
+            "qta": 1,
+            "ricavi": 4.0
+          }
+        ],
+        "sat": 28
+      }
+    },
+    "S2": {
+      "stefano": {
+        "fat": 321.3,
+        "pre": 7,
+        "fiche": 45.9,
+        "rit": 6,
+        "rich": 4,
+        "nuovi": 3,
+        "ret": 1,
+        "serv": 1.71,
+        "sat": 53,
+        "servizi": [
+          {
+            "nome": "Gloss",
+            "qta": 2,
+            "ricavi": 57.0
+          },
+          {
+            "nome": "Piega Base",
+            "qta": 2,
+            "ricavi": 45.0
+          },
+          {
+            "nome": "Piega Classic",
+            "qta": 2,
+            "ricavi": 50.0
+          },
+          {
+            "nome": "Taglio Bimbo",
+            "qta": 2,
+            "ricavi": 40.0
+          },
+          {
+            "nome": "Taglio Donna",
+            "qta": 3,
+            "ricavi": 75.0
+          },
+          {
+            "nome": "Taglio Uomo",
+            "qta": 1,
+            "ricavi": 24.3
+          },
+          {
+            "nome": "Prodotti",
+            "qta": 1,
+            "ricavi": 30.0
+          }
+        ]
+      },
+      "simona": {
+        "fat": 229.0,
+        "pre": 4,
+        "fiche": 57.25,
+        "rit": 2,
+        "rich": 0,
+        "nuovi": 3,
+        "ret": 1,
+        "serv": 1.75,
+        "sat": 29,
+        "servizi": [
+          {
+            "nome": "Colore Base",
+            "qta": 1,
+            "ricavi": 40.0
+          },
+          {
+            "nome": "Creative Color",
+            "qta": 1,
+            "ricavi": 60.0
+          },
+          {
+            "nome": "Piega Base",
+            "qta": 1,
+            "ricavi": 30.0
+          },
+          {
+            "nome": "Piega Classic",
+            "qta": 1,
+            "ricavi": 22.5
+          },
+          {
+            "nome": "Taglio Donna",
+            "qta": 1,
+            "ricavi": 22.5
+          },
+          {
+            "nome": "Piega Full",
+            "qta": 2,
+            "ricavi": 54.0
+          }
+        ]
+      }
+    },
+    "S3": {
+      "stefano": {
+        "fat": null,
+        "pre": null,
+        "ret": null,
+        "rit": null,
+        "nuovi": null,
+        "rich": null,
+        "serv": null,
+        "fiche": null,
+        "servizi": null,
+        "sat": null
+      },
+      "simona": {
+        "fat": null,
+        "pre": null,
+        "ret": null,
+        "rit": null,
+        "nuovi": null,
+        "rich": null,
+        "serv": null,
+        "fiche": null,
+        "servizi": null,
+        "sat": null
+      }
+    },
+    "S4": {
+      "stefano": {
+        "fat": null,
+        "pre": null,
+        "ret": null,
+        "rit": null,
+        "nuovi": null,
+        "rich": null,
+        "serv": null,
+        "fiche": null,
+        "servizi": null,
+        "sat": null
+      },
+      "simona": {
+        "fat": null,
+        "pre": null,
+        "ret": null,
+        "rit": null,
+        "nuovi": null,
+        "rich": null,
+        "serv": null,
+        "fiche": null,
+        "servizi": null,
+        "sat": null
+      }
+    }
+  }
+};
+// === END_STORICO ===
+// === BEGIN_COLLAB_STATO ===
+const COLLAB_STATO_KEY = 'binetti_collab_stato_v1';
+const COLLAB_STATO_DEF = {
+  "miky": {
+    "attivo": true
+  },
+  "valentina": {
+    "attivo": true
+  },
+  "antonella": {
+    "attivo": true
+  },
+  "andrea": {
+    "attivo": true
+  },
+  "mariangela": {
+    "attivo": true
+  },
+  "mariarita": {
+    "attivo": true
+  },
+  "dario": {
+    "attivo": true
+  }
+};
+function loadCollabStato(){
+  try{ return Object.assign({}, COLLAB_STATO_DEF, JSON.parse(localStorage.getItem(COLLAB_STATO_KEY)||'{}')); }catch(e){ return Object.assign({}, COLLAB_STATO_DEF); }
+}
+function saveCollabStato(s){ localStorage.setItem(COLLAB_STATO_KEY, JSON.stringify(s)); }
+function toggleCollab(id){
+  const s=loadCollabStato();
+  s[id]={attivo: !(s[id]?.attivo??true)};
+  saveCollabStato(s);
+  renderCollabLinks();
+  const nomeEl=document.getElementById('collab-toggle-msg');
+  const mk=typeof getMk==='function'?getMk():'';
+  const mesi_info=MESI[mk]||{};
+  const collab=(mesi_info.collaboratori||[]).find(c=>c.id===id);
+  const nome=collab?collab.nome:id;
+  const dash=COLLAB_STATO_KEY.split('_')[0];
+  const azione=s[id].attivo?'attiva':'disattiva';
+  if(nomeEl){
+    nomeEl.textContent=`Scrivi a Claude: "${azione} ${nome} ${dash}"`;
+    nomeEl.style.display='block';
+    setTimeout(()=>{nomeEl.style.display='none';}, 8000);
+  }
+}
+function renderCollabLinks(){
+  const wrap=document.getElementById('collab-links-wrap');
+  if(!wrap)return;
+  const mk=typeof getMk==='function'?getMk():'';
+  const mesi_info=MESI[mk]||{};
+  const collaboratori=mesi_info.collaboratori||[];
+  const stato=loadCollabStato();
+  const prefix=COLLAB_STATO_KEY.split('_')[0];
+  let rows='';
+  for(const c of collaboratori){
+    const attivo=(stato[c.id]?.attivo??true);
+    const color=attivo?'#22c55e':'#ef4444';
+    const dot=`<span style="width:8px;height:8px;border-radius:50%;background:${color};display:inline-block;margin-right:6px;flex-shrink:0"></span>`;
+    const cid=c.id.replace(/ /g,'_');
+    const url=`https://mihimilano.github.io/mihi-kpi/${prefix}_${cid}.html`;
+    const copyBtn=attivo
+      ? `<button onclick="navigator.clipboard.writeText('${url}');this.textContent='\u2705';setTimeout(()=>this.textContent='\ud83d\udccb Copia',2000)" style="background:var(--card);border:1px solid var(--bord);border-radius:8px;padding:6px 12px;font-size:11px;font-weight:700;color:var(--gold);cursor:pointer;font-family:inherit;white-space:nowrap">\ud83d\udccb Copia</button>`
+      : `<span style="font-size:10px;color:#ef4444;font-weight:700;padding:6px 12px;background:#ef444415;border-radius:8px">DISATTIVATO</span>`;
+    const bc=attivo?'#ef444415':'#22c55e15';
+    const bcc=attivo?'#ef444440':'#22c55e40';
+    const tc=attivo?'#ef4444':'#22c55e';
+    const tlbl=attivo?'\ud83d\udd34 Disattiva':'\ud83d\udfe2 Attiva';
+    const toggleBtn=`<button onclick="toggleCollab('${c.id}')" style="background:${bc};border:1px solid ${bcc};border-radius:8px;padding:6px 10px;font-size:11px;font-weight:700;color:${tc};cursor:pointer;font-family:inherit;white-space:nowrap">${tlbl}</button>`;
+    rows+=`<div style="display:flex;align-items:center;gap:8px;padding:10px 0;border-bottom:1px solid var(--bord)">${dot}<span style="flex:1;font-size:13px;font-weight:700;color:var(--text)">${c.nome}</span>${copyBtn}${toggleBtn}</div>`;
+  }
+  wrap.innerHTML=rows;
+}
+// === END_COLLAB_STATO ===
+document.addEventListener('DOMContentLoaded', ()=>{ if(typeof renderCollabLinks==='function') renderCollabLinks(); });
+
+
+// ╔══════════════════════════════════════════════════════════════╗
+// ║  UTILITY                                                     ║
+// ╚══════════════════════════════════════════════════════════════╝
+const RC = {"Stilista":"#6d28d9","Estetista":"#be185d","Manager":"#92400e","Barbiere":"#0369a1","Phonista":"#0891b2"};
+function rc(r){return RC[r]||'#64748b'}
+function ini(n){return n.charAt(0)}
+function getMk(){const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`}
+function getSW(mk){
+  const m=MESI[mk];if(!m)return null;
+  const t=new Date();t.setHours(12,0,0,0);
+  for(const s of m.settimane){
+    const da=new Date(s.da);da.setHours(0,0,0,0);
+    const a=new Date(s.a);a.setHours(23,59,59,0);
+    if(t>=da&&t<=a)return s;
+  }
+  return [...m.settimane].reverse().find(s=>new Date(s.da)<=t)||m.settimane[0];
+}
+function sem(a,t){
+  if(a===null||a===undefined)return'n';
+  if(!t)return'n';
+  const p=a/t;return p>=1?'g':p>=0.8?'a':'r';
+}
+function eur(v){if(v===null||v===undefined)return'–';return'€'+Math.round(v).toLocaleString('it-IT')}
+function num(v,d=0){if(v===null||v===undefined)return'–';return d?v.toFixed(d):String(Math.round(v))}
+function pct(a,t){if(a===null||!t)return'';return Math.round((a/t)*100)+'%'}
+function pctVal(v){if(v===null||v===undefined)return'–';return v.toFixed(1)+'%'}
+function semSat(v){if(v===null||v===undefined)return'n';if(v>=70)return'g';if(v>=60)return'a';return'r';}
+function semKpi(k,av,tv){return k==='sat'?semSat(av):sem(av,tv);}
+function getPaceRatio(sw){
+  if(!sw)return 1;
+  const today=new Date();today.setHours(12,0,0,0);
+  const da=new Date(sw.da);da.setHours(0,0,0,0);
+  const a=new Date(sw.a);a.setHours(23,59,59,0);
+  if(today>a)return 1;
+  if(today<da)return 0;
+  let total=0,elapsed=0;
+  const cur=new Date(da);
+  while(cur<=a){
+    const wd=cur.getDay();
+    if(wd!==0&&wd!==1){total++;if(cur<=today)elapsed++;}
+    cur.setDate(cur.getDate()+1);
+  }
+  return total>0?Math.min(elapsed/total,1):1;
+}
+function semPace(k,av,tv,pace){
+  if(k==='sat')return semSat(av);
+  return sem(av,tv!==null&&tv!==undefined?tv*Math.max(pace,0.01):tv);
+}
+function pctPace(av,tv,pace){
+  if(av===null||av===undefined||!tv||pace===0)return'';
+  return'('+Math.round((av/(tv*pace))*100)+'%)';
+}
+const KD=[
+  {k:'fat',  lbl:'Fatturato', tw:'fat_tw',   tm:'fat_tm',   fmt:eur,    sum:true},
+  {k:'pre',  lbl:'Clienti fatti',  tw:'pre_tw',   tm:'pre_tm',   fmt:num,    sum:true},
+  {k:'ret',  lbl:'Retail',    tw:'ret_tw',   tm:'ret_tm',   fmt:num,    sum:true},
+  {k:'rit',  lbl:'Clienti di ritorno',   tw:'rit_tw',   tm:'rit_tm',   fmt:num,    sum:true},
+  {k:'nuovi',lbl:'Nuovi',     tw:'nuovi_tw', tm:'nuovi_tm', fmt:num,    sum:true},
+  {k:'rich', lbl:'Preferenze',tw:'rich_tw',  tm:'rich_tm',  fmt:num,    sum:true},
+  {k:'sat',  lbl:'Saturaz.',  tw:'sat_tw',   tm:'sat_tm',   fmt:pctVal, sum:false},
+  {k:'fiche',lbl:'Ticket medio',tw:'fiche_t',  tm:'fiche_t',  fmt:v=>v!=null?'€'+v.toFixed(1):'–', sum:false},
+  {k:'serv', lbl:'Serv./cliente',tw:'serv_t', tm:'serv_t',  fmt:v=>v!=null?v.toFixed(2):'–',  sum:false}
+];
+function getTot(mk,cid){
+  const st=STORICO[mk];if(!st)return{};
+  const t={fat:null,pre:null,ret:null,rit:null,nuovi:null,rich:null,serv:null,fiche:null};
+  for(const sid of['S1','S2','S3','S4']){
+    const d=st[sid]?.[cid];if(!d)continue;
+    for(const k of['fat','pre','ret','rit','nuovi','rich'])
+      if(d[k]!==null&&d[k]!==undefined)t[k]=(t[k]||0)+d[k];
+  }
+  for(const k of['serv','fiche','sat']){
+    const vs=['S1','S2','S3','S4'].map(s=>STORICO[mk]?.[s]?.[cid]?.[k]).filter(v=>v!==null&&v!==undefined);
+    t[k]=vs.length?vs.reduce((a,b)=>a+b,0)/vs.length:null;
+  }
+  return t;
+}
+
+// ╔══════════════════════════════════════════════════════════════╗
+// ║  v3: PROFILO SERVIZI & SUGGERIMENTI                         ║
+// ╚══════════════════════════════════════════════════════════════╝
+
+// Classifica un servizio in: punta / medi / rari
+function categorizaServizio(s, tutti){
+  if(!tutti||!tutti.length)return'medi';
+  const totR=tutti.reduce((a,x)=>a+(x.ricavi||0),0);
+  const maxQ=Math.max(...tutti.map(x=>x.qta||0));
+  const pR=totR>0?(s.ricavi||0)/totR:0;
+  const pQ=maxQ>0?(s.qta||0)/maxQ:0;
+  if(pR>=0.25||pQ>=0.40)return'punta';
+  if((s.qta||0)<=1&&pR<0.15)return'rari';
+  return'medi';
+}
+
+// Renderizza le barre del profilo servizi
+function renderServizi(servizi, color){
+  if(!servizi||!servizi.length)
+    return'<div class="no-serv-msg">📋 Profilo servizi disponibile dopo il primo aggiornamento settimanale. I servizi verranno classificati automaticamente in Punta, Regolari e Rari.</div>';
+  const cats={punta:[],medi:[],rari:[]};
+  servizi.forEach(s=>cats[categorizaServizio(s,servizi)].push(s));
+  const totR=servizi.reduce((a,x)=>a+(x.ricavi||0),0);
+  const maxQ=Math.max(...servizi.map(x=>x.qta||0));
+  const catInfo=[
+    {key:'punta',icon:'⭐',lbl:'Servizi di Punta', desc:'Alto valore o alta frequenza',color:'#a67318'},
+    {key:'medi', icon:'💼',lbl:'Servizi Regolari', desc:'Frequenza media',             color:'#0369a1'},
+    {key:'rari', icon:'🔍',lbl:'Servizi Rari',     desc:'Eseguiti raramente',           color:'#7c3aed'}
+  ];
+  let html='';
+  for(const cat of catInfo){
+    const items=cats[cat.key];
+    if(!items.length)continue;
+    html+=`<div class="serv-cat"><div class="serv-cat-lbl" style="font-size:12px;font-weight:800;color:${cat.color};background:${cat.color}18;border-left:3px solid ${cat.color};padding:6px 10px;border-radius:6px;margin-bottom:8px"><span>${cat.icon}</span> ${cat.lbl}<span style="font-weight:500;opacity:.6;margin-left:6px;text-transform:none;letter-spacing:0;font-size:10px">— ${cat.desc}</span></div>`;
+    for(const s of items){
+      const pctR=totR>0?Math.round((s.ricavi/totR)*100):0;
+      const barW=maxQ>0?Math.round((s.qta/maxQ)*100):0;
+      html+=`<div class="serv-row">
+        <div class="serv-info">
+          <span class="serv-nome">${s.nome}</span>
+          <span class="serv-meta">€${s.ricavi.toLocaleString('it-IT')} · ${pctR}% del fatturato</span>
+        </div>
+        <div class="serv-bar-wrap"><div class="serv-bar-fill" style="width:${barW}%;background:${cat.color}"></div></div>
+        <span class="serv-qty">${s.qta}×</span>
+      </div>`;
+    }
+    html+='</div>';
+  }
+  return html;
+}
+
+// Genera suggerimenti AI personalizzati
+function genSuggerimenti(c, d, servizi){
+  if(d.fat===null&&d.pre===null&&d.serv===null&&d.fiche===null)
+    return[{icon:'⏳',cls:'sugg-card-ok',title:'In attesa di dati',text:'Inserisci i dati di questa settimana per ricevere suggerimenti personalizzati.'}];
+
+  const suggs=[];
+
+  // 1. Serv/Cliente ≤ target: 2 è il MINIMO, spingiamo sempre oltre
+  if(d.serv!==null&&d.serv!==undefined&&c.serv_t>0&&d.serv<=c.serv_t){
+    const atTarget=d.serv>=c.serv_t;
+    suggs.push({icon:'➕',cls:'sugg-card-fat',title:'Aumenta i servizi per cliente',
+      text:atTarget
+        ?`Sei al minimo di ${c.serv_t} serv/cliente — non fermarti qui. Ogni cliente è un'occasione: proponi un trattamento, un finish, una cura specifica. Punta a ${(c.serv_t+0.5).toFixed(1)}+ e il ticket si alza da solo.`
+        :`Media attuale ${d.serv.toFixed(1)} vs target ${c.serv_t}. Proponi almeno 1 servizio aggiuntivo per ogni cliente: un trattamento, un finish, una cura specifica. Ogni +0.5 serv/cliente si traduce in fatturato reale.`});
+  }
+
+  // 2. Fiche media sotto target
+  if(suggs.length<2&&d.fiche!==null&&d.fiche!==undefined&&c.fiche_t>0&&d.fiche<c.fiche_t){
+    const gap=Math.round(c.fiche_t-d.fiche);
+    let txt=`Ticket medio €${d.fiche.toFixed(2)} vs target €${c.fiche_t}. `;
+    if(servizi&&servizi.length){
+      const prem=servizi.filter(s=>s.qta>0&&(s.ricavi/s.qta)>=(c.fiche_t||0)).sort((a,b)=>(b.ricavi/b.qta)-(a.ricavi/a.qta));
+      if(prem.length)txt+=`Valorizza "${prem[0].nome}" e proponi upgrade: ogni €${gap} in più per cliente chiude il gap.`;
+      else txt+=`Proponi trattamenti ad alto valore — ogni €${gap} in più per cliente chiude il gap.`;
+    } else txt+=`Proponi upgrade e trattamenti ad alto valore — ogni €${gap} in più per cliente chiude il gap.`;
+    suggs.push({icon:'💎',cls:'sugg-card-fat',title:'Alza il ticket medio',text:txt});
+  }
+
+  // 3. Saturazione bassa → esperienza wow + rifissa appuntamento
+  if(suggs.length<2&&d.sat!==null&&d.sat!==undefined&&d.sat<70){
+    const lvl=d.sat<50?'molto bassa':'sotto soglia';
+    suggs.push({icon:'✨',cls:'sugg-card-fat',title:'Crea un\'esperienza wow',
+      text:`Saturazione ${lvl} (${d.sat}%). Ogni cliente che entra deve vivere una consulenza memorabile: analisi del capello, proposta personalizzata, styling finale. Rifissa l'appuntamento prima che esca — è il momento giusto. Un'esperienza wow genera passaparola.`});
+  }
+
+  // 4. Ritorni bassi se c'è ancora spazio (solo se dato presente e sotto metà target)
+  if(suggs.length<2&&d.rit!==null&&c.rit_tw>0&&d.rit/c.rit_tw<0.4)
+    suggs.push({icon:'🔄',cls:'sugg-card-fat',title:'Fidelizza i clienti',
+      text:'I clienti di ritorno sono sotto soglia. Rifissa sempre l\'appuntamento in cassa prima che il cliente esca — è l\'abitudine più importante per costruire una clientela solida.'});
+
+  // Se tutto ok
+  if(suggs.length===0)
+    suggs.push({icon:'🌟',cls:'sugg-card-ok',title:'KPI in linea — ottimo!',
+      text:'Serv/cliente e ticket medio sono in target. Mantieni il ritmo e punta a chiudere la settimana in verde!'});
+
+  // SEMPRE slot 3: Retail motivazionale
+  const retOk=d.ret!==null&&c.ret_tw>0&&d.ret>=c.ret_tw*0.8;
+  suggs.push({icon:'🛍️',cls:'sugg-card-retail',
+    title:retOk?'Mantieni il ritmo sui prodotti':'Spingi i prodotti',
+    text:retOk
+      ?'Ottimo sui prodotti! Continua a consigliare 1 prodotto personalizzato per ogni cliente: rafforza la fidelizzazione e aumenta il fatturato in modo naturale.'
+      :'Non vendere — consiglia. Dopo ogni servizio scegli 1 prodotto specifico per quel cliente e spiegagli perché è perfetto per lui. Un consiglio personalizzato vale più di qualsiasi promozione.'
+  });
+
+  return suggs.slice(0,3);
+}
+
+// Toggle espansione card
+function toggleProfilo(id){
+  const wrap=document.getElementById('profilo-'+id);
+  const btn=document.getElementById('btn-profilo-'+id);
+  if(!wrap)return;
+  const open=wrap.style.display!=='none';
+  wrap.style.display=open?'none':'block';
+  btn.classList.toggle('open',!open);
+  btn.innerHTML=open?'▾ Profilo &amp; Suggerimenti':'▴ Nascondi';
+}
+
+// ── v3: STAMPA SCHEDA INDIVIDUALE ──────────────────────────────────────────
+function stampaProfilo(cid){
+  const mk=getMk();const m=MESI[mk];if(!m)return;
+  const c=m.collaboratori.find(x=>x.id===cid);if(!c)return;
+  const sw=getSW(mk);const sid=sw?.id||'S1';
+  const d=STORICO[mk]?.[sid]?.[cid]||{};
+  const color=rc(c.ruolo);
+  const servizi=d.servizi||null;
+  const suggs=genSuggerimenti(c,d,servizi);
+  const SC={g:'#15803d',a:'#b45309',r:'#b91c1c',n:'#6b6055'};
+  const SCD={g:'#15803d',a:'#b45309',r:'#b91c1c',n:'#c8c3bb'};
+  const now=new Date();
+  const ds=now.toLocaleDateString('it-IT',{day:'2-digit',month:'long',year:'numeric'});
+
+  // KPI grid
+  let kpiH='';
+  for(const kpi of KD){
+    const av=d[kpi.k],tv=c[kpi.tw],s=semPace(kpi.k,av,tv,getPaceRatio(sw)),p=kpi.k==='sat'?'':pctPace(av,tv,getPaceRatio(sw));
+    if(tv===null||tv===undefined)continue;
+    kpiH+=`<div style="background:#eeecea;border-radius:10px;padding:10px 6px;text-align:center">
+      <div style="font-size:9px;text-transform:uppercase;letter-spacing:.5px;color:#6b6055;margin-bottom:4px">${kpi.lbl}</div>
+      <div style="font-size:15px;font-weight:800;color:${SC[s]}"><span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:${SCD[s]};margin-right:3px;vertical-align:middle"></span>${kpi.fmt(av)}${p?`<span style="font-size:9px;opacity:.55;margin-left:1px">${p}</span>`:''}</div>
+      <div style="font-size:9px;color:#6b6055;margin-top:2px">▸ ${kpi.fmt(tv)}</div>
+    </div>`;
+  }
+
+  // Extra (fiche + serv)
+  const sf_fi=sem(d.fiche,c.fiche_t),sf_se=sem(d.serv,c.serv_t);
+  let extraH=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:6px">
+    <div style="background:#fff;border:1px solid #dedad3;border-radius:10px;padding:10px;text-align:center">
+      <div style="font-size:9px;text-transform:uppercase;letter-spacing:.5px;color:#6b6055;margin-bottom:4px">Ticket Medio</div>
+      <div style="font-size:15px;font-weight:800;color:${SC[sf_fi]}"><span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:${SCD[sf_fi]};margin-right:3px;vertical-align:middle"></span>${num(d.fiche,2)}</div>
+      <div style="font-size:10px;font-weight:700;color:#3a3028;margin-top:2px;opacity:.75">▸ ${num(c.fiche_t,2)}</div>
+    </div>
+    <div style="background:#fff;border:1px solid #dedad3;border-radius:10px;padding:10px;text-align:center">
+      <div style="font-size:9px;text-transform:uppercase;letter-spacing:.5px;color:#6b6055;margin-bottom:4px">Serv/Cliente</div>
+      <div style="font-size:15px;font-weight:800;color:${SC[sf_se]}"><span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:${SCD[sf_se]};margin-right:3px;vertical-align:middle"></span>${num(d.serv,1)}</div>
+      <div style="font-size:10px;font-weight:700;color:#3a3028;margin-top:2px;opacity:.75">▸ ${num(c.serv_t,1)}</div>
+    </div>
+  </div>`;
+
+  // Suggerimenti
+  let suggH='';
+  for(const sg of suggs){
+    suggH+=`<div style="display:flex;gap:10px;align-items:flex-start;background:#eeecea;border-radius:10px;padding:11px 13px;margin-bottom:8px">
+      <span style="font-size:20px;flex-shrink:0">${sg.icon}</span>
+      <div><div style="font-size:12px;font-weight:800;margin-bottom:3px">${sg.title}</div>
+      <div style="font-size:11px;color:#6b6055;line-height:1.55">${sg.text}</div></div>
+    </div>`;
+  }
+
+  // Profilo servizi
+  const serviziH=renderServizi(servizi,color);
+
+  // Sezione cumulato mese
+  const tot=getTot(mk,cid);
+  const nW=['S1','S2','S3','S4'].filter(s=>STORICO[mk]?.[s]?.[cid]?.fat!==null&&STORICO[mk]?.[s]?.[cid]?.fat!==undefined).length;
+  let cumH='';
+  for(const kpi of KD){
+    const av=tot[kpi.k],tv=c[kpi.tm],s=semKpi(kpi.k,av,tv);
+    if(tv===null||tv===undefined)continue;
+    cumH+=`<div style="background:#eeecea;border-radius:8px;padding:8px 5px;text-align:center">
+      <div style="font-size:9px;text-transform:uppercase;letter-spacing:.5px;color:#6b6055;margin-bottom:3px">${kpi.lbl}</div>
+      <div style="font-size:13px;font-weight:800;color:${SC[s]}">${kpi.fmt(av)}</div>
+      <div style="font-size:9px;color:#6b6055">/ ${kpi.fmt(tv)}</div>
+    </div>`;
+  }
+
+  const salonName=document.querySelector('.hsub')?.textContent||'MIHI';
+  const html=`<!DOCTYPE html><html lang="it"><head><meta charset="UTF-8">
+<title>MIHI · ${c.nome} · Scheda Personale</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Segoe UI',sans-serif;background:#f5f4ef;color:#1a1510;padding:0}
+.page{max-width:520px;margin:0 auto;padding:0 0 32px}
+.sec-lbl{font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:1.2px;color:#6b6055;margin:18px 0 8px;padding-bottom:5px;border-bottom:1px solid #dedad3}
+.serv-cat{margin-bottom:10px}
+.serv-cat-lbl{font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.8px;color:#6b6055;margin-bottom:5px;display:flex;align-items:center;gap:4px}
+.serv-row{display:flex;align-items:center;gap:6px;margin-bottom:5px}
+.serv-info{min-width:0;flex:1}
+.serv-nome{display:block;font-size:11px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.serv-meta{display:block;font-size:9px;color:#6b6055;margin-top:1px}
+.serv-bar-wrap{width:55px;flex-shrink:0;background:#dedad3;border-radius:2px;height:5px;overflow:hidden}
+.serv-bar-fill{height:5px;border-radius:2px;opacity:.75}
+.serv-qty{font-size:10px;color:#6b6055;font-weight:700;flex-shrink:0;width:22px;text-align:right}
+.no-serv-msg{font-size:11px;color:#6b6055;padding:8px 0;font-style:italic;line-height:1.5}
+@media print{
+  @page{margin:10mm 12mm;size:A4}
+  body{background:white!important}
+  .no-print{display:none!important}
+}
+</style>
+</head>
+<body>
+<div class="page">
+  <!-- HEADER -->
+  <div style="background:#1a1510;padding:22px 22px 18px;margin-bottom:0">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start">
+      <div>
+        <div style="font-size:22px;font-weight:900;letter-spacing:5px;color:#a67318">MIHI</div>
+        <div style="font-size:11px;color:#a09080;letter-spacing:1.5px;text-transform:uppercase;margin-top:3px">${salonName}</div>
+      </div>
+      <div style="text-align:right">
+        <div style="font-size:10px;color:#a09080">${sw?.label||'Settimana'}</div>
+        <div style="font-size:10px;color:#6b5f54;margin-top:2px">${MESI[mk]?.label||''}</div>
+      </div>
+    </div>
+  </div>
+  <!-- COLLABORATORE -->
+  <div style="background:#fff;padding:18px 22px;border-bottom:1px solid #dedad3">
+    <div style="display:flex;align-items:center;gap:14px">
+      <div style="width:52px;height:52px;border-radius:50%;background:${color}18;color:${color};display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:800;flex-shrink:0">${ini(c.nome)}</div>
+      <div>
+        <div style="font-size:22px;font-weight:900;color:#1a1510">${c.nome}</div>
+        <div style="font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;background:${color}18;color:${color};display:inline-block;margin-top:4px">${c.ruolo}</div>
+      </div>
+    </div>
+  </div>
+  <!-- BODY -->
+  <div style="padding:16px 22px">
+    <!-- KPI settimana -->
+    <div class="sec-lbl">📊 KPI Settimana vs Target</div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px">${kpiH}</div>
+    ${extraH}
+    <!-- Cumulato mese -->
+    <div class="sec-lbl">📈 Cumulato ${MESI[mk]?.label||''} (${nW}/4 settimane)</div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px">${cumH}</div>
+    <!-- Suggerimenti -->
+    <div class="sec-lbl">💡 Suggerimenti Personalizzati</div>
+    ${suggH}
+    <!-- Profilo Servizi -->
+    <div class="sec-lbl">📊 Profilo Servizi</div>
+    ${serviziH}
+  </div>
+  <!-- FOOTER -->
+  <div style="margin:0 22px;padding:14px 0;border-top:1px solid #dedad3;display:flex;justify-content:space-between;align-items:center">
+    <span style="font-size:9px;color:#6b6055;letter-spacing:.5px;text-transform:uppercase">MIHI · Uso riservato — solo per ${c.nome}</span>
+    <span style="font-size:9px;color:#6b6055">${ds}</span>
+  </div>
+  <!-- PULSANTE STAMPA (sparisce in stampa) -->
+  <div class="no-print" style="text-align:center;padding:16px 0">
+    <button onclick="window.print()" style="background:#1a1510;color:#a67318;border:none;padding:12px 28px;border-radius:10px;font-size:13px;font-weight:800;cursor:pointer;font-family:inherit;letter-spacing:.5px">🖨 Stampa / Salva PDF</button>
+  </div>
+</div>
+</body></html>`;
+
+  const win=window.open('','_blank','width=560,height=800');
+  win.document.write(html);
+  win.document.close();
+}
+
+// ╔══════════════════════════════════════════════════════════════╗
+// ║  COLLABORATORE URL PARAM                                    ║
+// ╚══════════════════════════════════════════════════════════════╝
+function getUrlCollab(){return new URLSearchParams(window.location.search).get('c');}
+
+// ╔══════════════════════════════════════════════════════════════╗
+// ║  NAVIGATION                                                  ║
+// ╚══════════════════════════════════════════════════════════════╝
+function goHome(){
+  document.getElementById('view-cover').style.display='flex';
+  document.getElementById('view-app').style.display='none';
+}
+function showModule(mod){
+  document.getElementById('view-cover').style.display='none';
+  document.getElementById('view-app').style.display='block';
+  document.getElementById('view-analisi').style.display='none';
+  document.getElementById('view-cmp').style.display='none';
+  const tabs=document.getElementById('tabs-nav');
+  const sumbar=document.getElementById('sumbar');
+  if(mod==='team'){
+    tabs.style.display='flex';sumbar.style.display='flex';
+    document.querySelectorAll('.tab-pane').forEach(p=>p.style.display='none');
+    document.querySelector('#pane-live').style.display='block';
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelector('.tab-btn').classList.add('active');
+    document.getElementById('nav-label').textContent='Target Team';
+    renderSumbar();renderLive();
+  } else {
+    tabs.style.display='none';sumbar.style.display='none';
+    document.querySelectorAll('.tab-pane').forEach(p=>p.style.display='none');
+    document.getElementById('view-analisi').style.display='block';
+    document.getElementById('nav-label').textContent='Analisi Economica';
+  }
+  const ua=STORICO[getMk()]?.ultimo_aggiornamento;
+  document.getElementById('last-upd').textContent=ua||'mai';
+  document.getElementById('cover-update').textContent=ua?`Aggiornato: ${ua}`:'';
+}
+function switchTab(name){
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.tab-pane').forEach(p=>p.style.display='none');
+  document.querySelector(`.tab-btn[onclick="switchTab('${name}')"]`).classList.add('active');
+  document.getElementById(`pane-${name}`).style.display='block';
+  if(name==='mese')renderMese();
+  if(name==='storico')renderStorico();
+}
+
+// ╔══════════════════════════════════════════════════════════════╗
+// ║  SUMMARY BAR                                                 ║
+// ╚══════════════════════════════════════════════════════════════╝
+function renderSumbar(){
+  const mk=getMk();const m=MESI[mk];if(!m)return;
+  const sw=getSW(mk);const sid=sw?.id||'S1';
+  const st=STORICO[mk]?.[sid]||{};
+  let fatW=null,fatM=null,tgW=0,tgM=0;
+  for(const c of m.collaboratori){
+    const dw=st[c.id];if(dw?.fat!==null&&dw?.fat!==undefined)fatW=(fatW||0)+dw.fat;
+    const dm=getTot(mk,c.id);if(dm.fat!==null)fatM=(fatM||0)+dm.fat;
+    tgW+=c.fat_tw||0;tgM+=c.fat_tm||0;
+  }
+  const items=[
+    {v:eur(fatW),l:'Fatturato Sett.'},{v:eur(tgW),l:'Target Sett.'},{v:pct(fatW,tgW)||'–',l:'% Sett.'},
+    {v:eur(fatM),l:'Cumul. Mese'},{v:eur(tgM),l:'Target Mese'},{v:pct(fatM,tgM)||'–',l:'% Mese'}
+  ];
+  document.getElementById('sumbar').innerHTML=items.map(i=>`<div class="ss"><div class="sv">${i.v}</div><div class="sl">${i.l}</div></div>`).join('');
+  document.getElementById('hdr-week').textContent=sw?.label||'–';
+  document.getElementById('hdr-month').textContent=m.label;
+}
+
+// ╔══════════════════════════════════════════════════════════════╗
+// ║  ALERT CRITICI AUTOMATICI                                   ║
+// ╚══════════════════════════════════════════════════════════════╝
+function renderAlert(sw, st, m, pace){
+  const alerts=[];
+  for(const c of m.collaboratori){
+    const d=st[c.id]||{};
+    if(d.fat===null||d.fat===undefined)continue;
+    if(c.fat_tw>0){
+      const expected=c.fat_tw*pace;
+      if(expected>0&&d.fat<expected*0.65)
+        alerts.push({lvl:'r',icon:'🔴',name:c.nome,msg:`Fatturato ${Math.round(d.fat/expected*100)}% del previsto — serve una spinta`});
+    }
+    if(d.pre>0&&d.rit!==null&&d.rit!==undefined){
+      const rifPct=Math.round(d.rit/d.pre*100);
+      if(rifPct<40)
+        alerts.push({lvl:'r',icon:'🔁',name:c.nome,msg:`Rifissazione ${rifPct}% — solo ${d.rit} cliente/i su ${d.pre} rifissati`});
+    }
+    if(d.sat!==null&&d.sat!==undefined&&d.sat<50)
+      alerts.push({lvl:'r',icon:'📅',name:c.nome,msg:`Saturazione ${d.sat}% — agenda poco piena`});
+    if(d.pre>2&&(d.ret===0||d.ret===null)&&c.ret_tw>0)
+      alerts.push({lvl:'a',icon:'🛍️',name:c.nome,msg:`Nessun prodotto venduto questa settimana`});
+  }
+  if(alerts.length===0)return '';
+  const sorted=alerts.sort((a,b)=>a.lvl==='r'&&b.lvl!=='r'?-1:1).slice(0,3);
+  let h=`<div style="margin-bottom:14px">
+    <div style="font-size:10px;font-weight:800;color:var(--text2);letter-spacing:.6px;text-transform:uppercase;margin-bottom:8px">⚠️ Situazioni da monitorare</div>`;
+  for(const al of sorted){
+    const bg=al.lvl==='r'?'#fff5f5':'#fffbf0';
+    const bc=al.lvl==='r'?'var(--red)':'var(--amber)';
+    h+=`<div style="background:${bg};border-left:3px solid ${bc};border-radius:0 10px 10px 0;padding:9px 12px;margin-bottom:6px;display:flex;gap:10px;align-items:flex-start">
+      <span style="font-size:16px;flex-shrink:0">${al.icon}</span>
+      <div>
+        <div style="font-size:12px;font-weight:800;color:${bc}">${al.name}</div>
+        <div style="font-size:11px;color:var(--text);margin-top:2px;line-height:1.4">${al.msg}</div>
+      </div>
+    </div>`;
+  }
+  h+=`</div>`;
+  return h;
+}
+
+// ╔══════════════════════════════════════════════════════════════╗
+// ║  RIEPILOGO SALONE                                           ║
+// ╚══════════════════════════════════════════════════════════════╝
+function renderRiepilogoSalone(sw, st, m, pace){
+  let fatTot=0,fatTgt=0,satSum=0,satCount=0,verde=0,ambra=0,rosso=0,active=0;
+  for(const c of m.collaboratori){
+    const d=st[c.id]||{};
+    if(d.fat===null||d.fat===undefined)continue;
+    active++;
+    fatTot+=d.fat; fatTgt+=c.fat_tw||0;
+    if(d.sat!==null&&d.sat!==undefined){satSum+=d.sat;satCount++;}
+    const s=semPace('fat',d.fat,c.fat_tw,pace);
+    if(s==='gre')verde++; else if(s==='amb')ambra++; else rosso++;
+  }
+  if(active===0)return '';
+  const satM=satCount>0?Math.round(satSum/satCount):null;
+  const pct2=fatTgt>0?Math.round(fatTot/fatTgt*pace*100):null;
+  const sf=semPace('fat',fatTot,fatTgt,pace);
+  const col=sf==='gre'?'var(--green)':sf==='amb'?'var(--amber)':'var(--red)';
+  const ranked=[...m.collaboratori]
+    .map(c=>({nome:c.nome,fat:st[c.id]?.fat??null,color:rc(c.ruolo)}))
+    .filter(x=>x.fat!==null)
+    .sort((a,b)=>b.fat-a.fat);
+  const medals=['🥇','🥈','🥉'];
+  let rankH='';
+  ranked.forEach((x,i)=>{
+    rankH+=`<div style="display:flex;align-items:center;gap:8px;padding:5px 0;${i<ranked.length-1?'border-bottom:1px solid var(--bord)':''}">
+      <span style="font-size:15px;width:22px;text-align:center">${medals[i]||`<span style="font-size:12px;color:var(--text2);font-weight:700">${i+1}</span>`}</span>
+      <span style="flex:1;font-size:13px;font-weight:700">${x.nome}</span>
+      <span style="font-size:13px;font-weight:800;color:${x.color}">${eur(x.fat)}</span>
+    </div>`;
+  });
+  const fatTmTot=m.collaboratori.reduce((s,c)=>s+(c.fat_tm||0),0);
+  const fatCum=['S1','S2','S3','S4'].reduce((s,sid2)=>{
+    const st2=STORICO[getMk()]?.[sid2]||{};
+    return s+m.collaboratori.reduce((ss,c)=>ss+(st2[c.id]?.fat||0),0);
+  },0);
+  const manca=Math.max(fatTmTot-fatCum,0);
+  const oggi2=new Date();const fine=new Date(oggi2.getFullYear(),oggi2.getMonth()+1,0);
+  let giorniRim=0;for(let d=new Date(oggi2);d<=fine;d.setDate(d.getDate()+1)){
+    const wd=d.getDay();if(wd>=2&&wd<=6)giorniRim++;
+  }
+  const perGiorno=giorniRim>0?Math.round(manca/giorniRim):0;
+  const pctCum=fatTmTot>0?Math.round(fatCum/fatTmTot*100):null;
+  const cumCol=pctCum===null?'var(--text2)':pctCum>=80?'var(--green)':pctCum>=50?'var(--amber)':'var(--red)';
+  return `<div style="background:var(--card);border-radius:14px;padding:14px 16px;margin-bottom:14px;border:2px solid ${col}22">
+    <div style="font-size:10px;font-weight:800;color:var(--text2);letter-spacing:.6px;margin-bottom:10px;text-transform:uppercase">📍 Salone · ${sw?.label||'Settimana'}</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;text-align:center;margin-bottom:12px">
+      <div>
+        <div style="font-size:20px;font-weight:900;color:${col}">${eur(fatTot)}</div>
+        <div style="font-size:10px;color:var(--text2);margin-top:2px">Fatturato${pct2?`<br><span style="font-weight:700">(${pct2}% atteso)</span>`:''}</div>
+      </div>
+      <div>
+        <div style="font-size:20px;font-weight:900">${satM!==null?satM+'%':'–'}</div>
+        <div style="font-size:10px;color:var(--text2);margin-top:2px">Saturaz. media</div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px">
+        <div style="font-size:13px;font-weight:800;letter-spacing:2px">
+          <span style="color:var(--green)">●${verde}</span>
+          <span style="color:var(--amber)"> ●${ambra}</span>
+          <span style="color:var(--red)"> ●${rosso}</span>
+        </div>
+        <div style="font-size:10px;color:var(--text2)">Collaboratori</div>
+      </div>
+    </div>
+    ${rankH.length>0?`<div style="border-top:1px solid var(--bord);padding-top:10px">
+      <div style="font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:var(--text2);margin-bottom:6px">🏆 Classifica settimana</div>
+      ${rankH}
+    </div>`:''}
+    ${fatTmTot>0?`<div style="border-top:1px solid var(--bord);padding-top:10px;margin-top:6px">
+      <div style="font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:var(--text2);margin-bottom:8px">⏳ Obiettivo mensile</div>
+      <div style="background:var(--bord);border-radius:4px;height:8px;overflow:hidden;margin-bottom:8px">
+        <div style="height:8px;border-radius:4px;width:${Math.min(pctCum,100)}%;background:${cumCol};transition:width .4s"></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px">
+        <span style="font-size:13px;font-weight:900;color:${cumCol}">${eur(fatCum)}</span>
+        <span style="font-size:11px;color:var(--text2)">su ${eur(fatTmTot)} (${pctCum}%)</span>
+      </div>
+      ${manca>0?`<div style="font-size:11px;color:var(--text);background:var(--bg2);border-radius:8px;padding:7px 10px;line-height:1.5">
+        Mancano <strong>${eur(manca)}</strong> · ${giorniRim} giorni lav. rimasti<br>
+        Serve <strong style="color:${cumCol}">${eur(perGiorno)}/giorno</strong> per chiudere in target
+      </div>`:'<div style="font-size:11px;color:var(--green);font-weight:800">✅ Obiettivo mensile raggiunto!</div>'}
+    </div>`:''}
+  </div>`;
+}
+
+// ╔══════════════════════════════════════════════════════════════╗
+// ║  TREND SETTIMANA SU SETTIMANA                               ║
+// ╚══════════════════════════════════════════════════════════════╝
+function getTrendArrow(mk, sid, cid){
+  const sids=['S1','S2','S3','S4'];
+  const idx=sids.indexOf(sid);
+  if(idx<=0)return '';
+  const prev=sids[idx-1];
+  const curr=STORICO[mk]?.[sid]?.[cid]?.fat;
+  const last=STORICO[mk]?.[prev]?.[cid]?.fat;
+  if(curr===null||curr===undefined||last===null||last===undefined||last===0)return '';
+  const pctT=Math.round((curr-last)/last*100);
+  if(curr>last*1.02)return `<span style="display:inline-flex;align-items:center;gap:2px;background:#e8f5e9;color:var(--green);font-size:11px;font-weight:700;padding:2px 7px;border-radius:20px;margin-left:6px">↑ fat. +${pctT}%</span>`;
+  if(curr<last*0.98)return `<span style="display:inline-flex;align-items:center;gap:2px;background:#fdecea;color:var(--red);font-size:11px;font-weight:700;padding:2px 7px;border-radius:20px;margin-left:6px">↓ fat. ${pctT}%</span>`;
+  return `<span style="display:inline-flex;align-items:center;gap:2px;background:#f5f5f5;color:var(--text2);font-size:11px;font-weight:600;padding:2px 7px;border-radius:20px;margin-left:6px">→ fat. ${pctT>0?'+':''}${pctT}%</span>`;
+}
+
+// ╔══════════════════════════════════════════════════════════════╗
+// ║  NOTA SETTIMANALE (localStorage)                            ║
+// ╚══════════════════════════════════════════════════════════════╝
+function notaKey(){const mk=getMk();const sid=getSW(mk)?.id||'S1';return `nota_mihi_${mk}_${sid}`;}
+function loadNota(){return localStorage.getItem(notaKey())||'';}
+function saveNota(v){localStorage.setItem(notaKey(),v);}
+function renderNota(){
+  const v=loadNota();
+  return `<div style="margin-top:18px">
+    <div class="sec-lbl" style="margin-bottom:8px">📝 Nota settimana</div>
+    <textarea id="nota-week" placeholder="Contesto: assenze, eventi, chiusura anticipata…"
+      style="width:100%;min-height:68px;border:1px solid var(--bord);border-radius:10px;padding:10px 12px;font-family:inherit;font-size:13px;background:var(--card);color:var(--text);resize:none;outline:none"
+      oninput="saveNota(this.value)">${v}</textarea>
+  </div>`;
+}
+
+// ╔══════════════════════════════════════════════════════════════╗
+// ║  TAB 1: SETTIMANA LIVE (v3)                                 ║
+// ╚══════════════════════════════════════════════════════════════╝
+function renderLive(){
+  const mk=getMk();const m=MESI[mk];
+  if(!m){document.getElementById('pane-live').innerHTML='<p class="no-data">Nessun dato configurato.</p>';return;}
+  const sw=getSW(mk);const sid=sw?.id||'S1';
+  const st=STORICO[mk]?.[sid]||{};
+  let html='';
+  const pace=getPaceRatio(sw);
+  const urlCollab=getUrlCollab();
+  if(urlCollab){
+    const myC=m.collaboratori.find(c=>c.id===urlCollab);
+    if(myC){const clr=rc(myC.ruolo);html+=`<div style="background:${clr}14;border-radius:14px;padding:14px 16px;margin-bottom:14px;display:flex;align-items:center;gap:12px">
+      <div style="width:44px;height:44px;border-radius:50%;background:${clr}28;color:${clr};display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:900;flex-shrink:0">${ini(myC.nome)}</div>
+      <div><div style="font-size:17px;font-weight:900">👋 Ciao, ${myC.nome.split(' ')[0]}!</div>
+      <div style="font-size:11px;color:var(--text2);margin-top:2px">I tuoi KPI · ${sw?.label||'Settimana'}</div></div>
+    </div>`;}
+  }
+  html+=renderAlert(sw,st,m,pace);
+  html+=renderRiepilogoSalone(sw,st,m,pace);
+  html+=`<div class="sec-lbl">📊 ${sw?.label||'Settimana'} · Semaforo vs Target</div>`;
+  for(const c of m.collaboratori){
+    if(urlCollab&&c.id!==urlCollab)continue;
+    const color=rc(c.ruolo);const d=st[c.id]||{};
+    const servizi=d.servizi||null;
+    const suggs=genSuggerimenti(c,d,servizi);
+
+    html+=`<div class="ccard" style="border-left-color:${color}">
+      <div class="ccard-hdr">
+        <div class="cav" style="background:${color}18;color:${color}">${ini(c.nome)}</div>
+        <div><div class="cname">${c.nome}${getTrendArrow(mk,sid,c.id)}</div><div class="crole" style="background:${color}18;color:${color}">${c.ruolo}</div></div>
+      </div>
+      <div class="kpi-grid">`;
+    for(const kpi of KD){
+      const av=d[kpi.k],tv=c[kpi.tw],s=semPace(kpi.k,av,tv,pace),p=kpi.k==='sat'?'':pctPace(av,tv,pace);
+      if(tv===null||tv===undefined)continue;
+      html+=`<div class="kc"><div class="kl">${kpi.lbl}</div>
+        <div class="kv ${s}"><span class="dot d${s}"></span>${kpi.fmt(av)}${p?`<span class="kp">${p}</span>`:''}</div>
+        <div class="kt">▸ ${kpi.fmt(tv)}</div></div>`;
+    }
+    html+=`</div>`;
+    {const sf=sem(d.fiche,c.fiche_t),ss=sem(d.serv,c.serv_t);
+    html+=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-top:5px">
+        <div class="kc" style="background:transparent;border:1px solid var(--bord)">
+          <div class="kl">Ticket Medio</div>
+          <div class="kv ${sf}"><span class="dot d${sf}"></span>${num(d.fiche,2)}</div>
+          <div class="kt">▸ ${num(c.fiche_t,2)}</div>
+        </div>
+        <div class="kc" style="background:transparent;border:1px solid var(--bord)">
+          <div class="kl">Serv/Cliente</div>
+          <div class="kv ${ss}"><span class="dot d${ss}"></span>${num(d.serv,1)}</div>
+          <div class="kt">▸ ${num(c.serv_t,1)}</div>
+        </div>
+      </div>`;}
+    {
+      const rifPct=(d.pre&&d.rit!==null&&d.rit!==undefined)?Math.round(d.rit/d.pre*100):null;
+      if(rifPct!==null){
+        const rifCol=rifPct>=70?'var(--green)':rifPct>=50?'var(--amber)':'var(--red)';
+        html+=`<div style="margin-top:8px;background:var(--bg2);border-radius:10px;padding:9px 12px;display:flex;align-items:center;gap:10px">
+          <div style="flex:1">
+            <div style="font-size:9px;text-transform:uppercase;letter-spacing:.6px;color:var(--text2);margin-bottom:4px;font-weight:800">🔁 Rifissazione clienti</div>
+            <div style="background:var(--bord);border-radius:3px;height:6px;overflow:hidden">
+              <div style="height:6px;border-radius:3px;width:${Math.min(rifPct,100)}%;background:${rifCol};transition:width .4s"></div>
+            </div>
+          </div>
+          <div style="font-size:18px;font-weight:900;color:${rifCol};min-width:42px;text-align:right">${rifPct}%</div>
+        </div>`;
+      }
+    }
+    if(urlCollab){
+      html+=`<div class="profilo-wrap">
+        <div class="psec-lbl">💡 Suggerimenti personalizzati</div>`;
+    } else {
+      html+=renderBEIndicator(mk, c.id);
+      html+=`<button class="expand-btn" id="btn-profilo-${c.id}" onclick="toggleProfilo('${c.id}')">▾ Profilo &amp; Suggerimenti</button>
+        <div id="profilo-${c.id}" class="profilo-wrap" style="display:none">
+          <button onclick="stampaProfilo('${c.id}')" style="width:100%;margin-bottom:12px;padding:9px;background:#1a1510;border:none;border-radius:9px;color:#a67318;font-size:11px;font-weight:800;cursor:pointer;font-family:inherit;letter-spacing:.5px;display:flex;align-items:center;justify-content:center;gap:6px">📄 Esporta scheda personale</button>
+          <div class="psec-lbl">💡 Suggerimenti personalizzati</div>`;
+    }
+
+    for(const sg of suggs){
+      html+=`<div class="sugg-card ${sg.cls}"><span class="sugg-icon">${sg.icon}</span><div><div class="sugg-title">${sg.title}</div><div class="sugg-text">${sg.text}</div></div></div>`;
+    }
+
+    html+=`<div class="psec-lbl" style="margin-top:14px">📊 Profilo Servizi</div>`;
+    html+=renderServizi(servizi, color);
+    html+=`</div></div>`;
+  }
+
+  if(!urlCollab)html+=renderNota();
+  html+=`<div class="sec-lbl" style="margin-top:18px">📈 Cumulato ${m.label}</div>`;
+  for(const c of m.collaboratori){
+    if(urlCollab&&c.id!==urlCollab)continue;
+    const color=rc(c.ruolo);const tot=getTot(mk,c.id);
+    const nW=['S1','S2','S3','S4'].filter(s=>STORICO[mk]?.[s]?.[c.id]?.fat!==null&&STORICO[mk]?.[s]?.[c.id]?.fat!==undefined).length;
+    html+=`<div class="ccard" style="border-left-color:${color};padding:11px 13px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+        <span style="font-weight:800;font-size:14px">${c.nome}</span>
+        <span style="font-size:10px;color:var(--text2)">${nW}/4 settimane</span>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:5px">`;
+    for(const kpi of KD){
+      const av=tot[kpi.k],tv=c[kpi.tm],s=semKpi(kpi.k,av,tv);
+      if(tv===null||tv===undefined)continue;
+      html+=`<div class="kc" style="padding:6px 4px"><div class="kl">${kpi.lbl}</div>
+        <div class="kv ${s}" style="font-size:12px">${kpi.fmt(av)}</div>
+        <div class="kt">/ ${kpi.fmt(tv)}</div></div>`;
+    }
+    html+=`</div>
+      <div style="margin-top:10px;display:flex;align-items:flex-end;gap:4px;height:36px">
+        ${['S1','S2','S3','S4'].map(sid2=>{
+          const v=STORICO[mk]?.[sid2]?.[c.id]?.fat;
+          const maxV=Math.max(...['S1','S2','S3','S4'].map(s2=>STORICO[mk]?.[s2]?.[c.id]?.fat||0));
+          const h2=v!=null&&maxV>0?Math.round((v/maxV)*32):0;
+          const isAct=getSW(mk)?.id===sid2;
+          return `<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px">
+            <div style="font-size:8px;color:${v!=null?color:'var(--bord)'};font-weight:${isAct?'800':'600'};opacity:${v!=null?1:.4}">${v!=null?eur(v):''}</div>
+            <div style="width:100%;height:${h2}px;background:${v!=null?color+'44':'var(--bord)'};border-radius:3px 3px 0 0;border-bottom:2px solid ${isAct?color:'transparent'};min-height:${v!=null?4:0}px"></div>
+            <div style="font-size:8px;color:var(--text2);font-weight:${isAct?'800':'500'}">${sid2}</div>
+          </div>`;
+        }).join('')}
+      </div></div>`;
+  }
+  document.getElementById('pane-live').innerHTML=html;
+}
+
+function openLinkModal(){
+  const mk=getMk();const m=MESI[mk];
+  if(!m)return;
+  const baseUrl=window.location.origin+window.location.pathname;
+  let rows='';
+  for(const c of m.collaboratori){
+    const link=baseUrl+'?c='+c.id;
+    rows+=`<div style="display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--bord)">
+      <span style="flex:1;font-size:14px;font-weight:700">${c.nome}</span>
+      <button onclick="navigator.clipboard.writeText('${link}');this.textContent='✅';setTimeout(()=>this.textContent='📋',1800)" style="width:36px;height:36px;background:var(--bg2);border:1px solid var(--bord);border-radius:10px;font-size:16px;cursor:pointer;font-family:inherit">📋</button>
+    </div>`;
+  }
+  document.getElementById('modal-links-body').innerHTML='<div style="font-size:11px;color:var(--text2);margin-bottom:12px">Ogni collaboratore vede solo i suoi dati, sempre aggiornati.</div>'+rows;
+  document.getElementById('modal-links').style.display='flex';
+}
+
+// ╔══════════════════════════════════════════════════════════════╗
+// ║  TAB 2: IL MESE                                              ║
+// ╚══════════════════════════════════════════════════════════════╝
+let meseKpi='fat';
+function renderMese(){
+  const mk=getMk();const m=MESI[mk];
+  if(!m){document.getElementById('pane-mese').innerHTML='<p class="no-data">Nessun dato.</p>';return;}
+  const sw=getSW(mk);const kd=KD.find(k=>k.k===meseKpi)||KD[0];
+  const icons={fat:'💰',pre:'👥',ret:'🛍️',rit:'🔄',nuovi:'✨',rich:'📞',sat:'📅',fiche:'🧾',serv:'✂️'};
+  // Calcola ticket medio e servizi/cliente salone per la summary card
+  let _totFat=null,_totPre=null,_totServ=null,_cntServ=0;
+  for(const sid of['S1','S2','S3','S4']){
+    const sdw=STORICO[mk]?.[sid];
+    if(!sdw)continue;
+    m.collaboratori.forEach(c=>{
+      const d=sdw[c.id];if(!d)return;
+      if(d.fat!=null)_totFat=(_totFat||0)+d.fat;
+      if(d.pre!=null)_totPre=(_totPre||0)+d.pre;
+      if(d.serv!=null){_totServ=(_totServ||0)+d.serv;_cntServ++;}
+    });
+  }
+  const _ficheSalone=(_totFat!=null&&_totPre)? _totFat/_totPre : null;
+  const _servSalone=_cntServ>0?_totServ/_cntServ:null;
+  let html=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px">
+    <div class="an-kpi" style="text-align:center">
+      <div class="an-kpi-val">${_ficheSalone!=null?'€'+_ficheSalone.toFixed(1):'—'}</div>
+      <div class="an-kpi-lbl">🧾 Ticket medio salone</div>
+    </div>
+    <div class="an-kpi" style="text-align:center">
+      <div class="an-kpi-val">${_servSalone!=null?_servSalone.toFixed(2):'—'}</div>
+      <div class="an-kpi-lbl">✂️ Servizi/cliente salone</div>
+    </div>
+  </div>`;
+  html+=`<div class="kpi-sel">`;
+  KD.forEach(k=>html+=`<button class="kbtn${k.k===meseKpi?' active':''}" onclick="meseKpi='${k.k}';renderMese()">${icons[k.k]||'•'} ${k.lbl}</button>`);
+  html+=`</div><div class="tbl-wrap"><table><thead><tr><th>Collaboratore</th>`;
+  m.settimane.forEach(s=>{
+    const live=s.id===sw?.id;
+    html+=`<th>${s.label}${live?'<br><span class="badge-live">live</span>':''}</th>`;
+  });
+  html+=`<th>TOT</th><th>TARGET</th><th>%</th></tr></thead><tbody>`;
+  for(const c of m.collaboratori){
+    const color=rc(c.ruolo);const tm=c[kd.tm];const tot=getTot(mk,c.id);const sf=semKpi(kd.k,tot[meseKpi],tm);
+    if(tm===null||tm===undefined)continue;
+    html+=`<tr><td><span style="color:${color};font-weight:800">${c.nome}</span></td>`;
+    m.settimane.forEach(s=>{
+      const v=STORICO[mk]?.[s.id]?.[c.id]?.[meseKpi];const sv=semKpi(kd.k,v,c[kd.tw]);const p=kd.k==='sat'?'':pct(v,c[kd.tw]);
+      html+=`<td class="${sv}">${kd.fmt(v)}${p?`<br><small style="opacity:.5;font-size:9px">${p}</small>`:''}</td>`;
+    });
+    html+=`<td class="${sf}" style="font-weight:800">${kd.fmt(tot[meseKpi])}</td>
+      <td style="color:var(--text2)">${kd.fmt(tm)}</td>
+      <td class="${sf}">${pct(tot[meseKpi],tm)||'–'}</td></tr>`;
+  }
+  let totAll=null,tgTot=0;const sums={};
+  const isAvg=!kd.sum;
+  for(const sid of['S1','S2','S3','S4']){
+    let sv=null,cnt=0;
+    m.collaboratori.forEach(c=>{const v=STORICO[mk]?.[sid]?.[c.id]?.[meseKpi];if(v!==null&&v!==undefined){sv=(sv||0)+v;cnt++;}});
+    sums[sid]=isAvg?(cnt>0?sv/cnt:null):sv;
+  }
+  if(isAvg){let cnt=0;m.collaboratori.forEach(c=>{const t=getTot(mk,c.id);if(t[meseKpi]!==null){totAll=(totAll||0)+t[meseKpi];cnt++;}});if(cnt)totAll/=cnt;tgTot=70;}
+  else{m.collaboratori.forEach(c=>{const t=getTot(mk,c.id);if(t[meseKpi]!==null)totAll=(totAll||0)+t[meseKpi];if(c[kd.tm])tgTot+=c[kd.tm];});}
+  // Per fiche: ticket medio salone = fat_tot/pre_tot; per serv: media pesata
+  if(meseKpi==='fiche'){
+    html+=`<tr class="tot-row"><td>MEDIA SALONE</td>`;
+    m.settimane.forEach(s=>{
+      let _sf=null,_sp=null;
+      m.collaboratori.forEach(c=>{const d=STORICO[mk]?.[s.id]?.[c.id];if(!d)return;if(d.fat!=null)_sf=(_sf||0)+d.fat;if(d.pre!=null)_sp=(_sp||0)+d.pre;});
+      html+=`<td>${_sf!=null&&_sp?'€'+(_sf/_sp).toFixed(1):'–'}</td>`;
+    });
+    const _sfT=totAll,_spT=m.collaboratori.reduce((s,c)=>{const t=getTot(mk,c.id);return t.pre!=null?s+t.pre:s;},0);
+    const _ficheTot=_sfT&&_spT?_sfT/_spT:null;
+    html+=`<td class="${semKpi('fiche',_ficheTot,70)}" style="font-weight:800">${_ficheTot?'€'+_ficheTot.toFixed(1):'–'}</td><td style="color:var(--text2)">€${m.collaboratori[0]?.fiche_t||40}</td><td>—</td></tr>`;
+  } else if(meseKpi==='serv'){
+    html+=`<tr class="tot-row"><td>MEDIA SALONE</td>`;
+    m.settimane.forEach(s=>{
+      let _sv=null,_sc=0;
+      m.collaboratori.forEach(c=>{const v=STORICO[mk]?.[s.id]?.[c.id]?.serv;if(v!=null){_sv=(_sv||0)+v;_sc++;}});
+      html+=`<td>${_sc>0?(_sv/_sc).toFixed(2):'–'}</td>`;
+    });
+    html+=`<td class="${semKpi('serv',totAll,2)}" style="font-weight:800">${totAll!=null?totAll.toFixed(2):'–'}</td><td style="color:var(--text2)">${m.collaboratori[0]?.serv_t||2}</td><td>—</td></tr>`;
+  } else {
+  html+=`<tr class="tot-row"><td>${isAvg?'MEDIA SALONE':'TOTALE SALONE'}</td>`;
+  m.settimane.forEach(s=>html+=`<td>${kd.fmt(sums[s.id])}</td>`);
+  const sf2=semKpi(kd.k,totAll,tgTot);
+  html+=`<td class="${sf2}">${kd.fmt(totAll)}</td><td style="color:var(--text2)">${isAvg?'70%':kd.fmt(tgTot)}</td><td class="${sf2}">${isAvg?'':pct(totAll,tgTot)||'–'}</td></tr>`;
+  } // fine else normale
+  html+=`</tbody></table></div>`;
+  document.getElementById('pane-mese').innerHTML=html;
+}
+
+// ╔══════════════════════════════════════════════════════════════╗
+// ║  TAB 3: STORICO                                              ║
+// ╚══════════════════════════════════════════════════════════════╝
+let stMk=getMk(),stKpi='fat';
+function renderStorico(){
+  const keys=Object.keys(STORICO).sort().reverse();
+  if(!keys.length){document.getElementById('pane-storico').innerHTML='<p class="no-data">Nessuno storico disponibile.</p>';return;}
+  const kd=KD.find(k=>k.k===stKpi)||KD[0];
+  const icons={fat:'💰',pre:'👥',ret:'🛍️',rit:'🔄',nuovi:'✨',rich:'📞',sat:'📅',fiche:'🧾',serv:'✂️'};
+  let html=`<div class="msel-wrap"<select onchange="stMk=this.value;renderStorico()">`;
+  keys.forEach(mk=>{
+    const lbl=MESI[mk]?.label||mk;const cl=STORICO[mk]?.chiuso?' ✅':'';
+    html+=`<option value="${mk}"${mk===stMk?' selected':''}>${lbl}${cl}</option>`;
+  });
+  html+=`</select>`;
+  if(STORICO[stMk]?.chiuso)html+=`<span class="badge-chiuso">Mese chiuso ✅</span>`;
+  html+=`</div><div class="kpi-sel">`;
+  KD.forEach(k=>html+=`<button class="kbtn${k.k===stKpi?' active':''}" onclick="stKpi='${k.k}';renderStorico()">${icons[k.k]} ${k.lbl}</button>`);
+  html+=`</div>`;
+  const m=MESI[stMk];const st=STORICO[stMk];
+  if(!m||!st){html+='<p class="no-data">Dati non disponibili.</p>';document.getElementById('pane-storico').innerHTML=html;return;}
+  html+=`<div class="tbl-wrap"><table><thead><tr><th>Collaboratore</th>`;
+  m.settimane.forEach(s=>html+=`<th>${s.label}</th>`);
+  html+=`<th>TOT</th><th>TARGET</th><th>%</th></tr></thead><tbody>`;
+  for(const c of m.collaboratori){
+    const color=rc(c.ruolo);const tm=c[kd.tm];const tot=getTot(stMk,c.id);const sf=semKpi(kd.k,tot[stKpi],tm);
+    if(tm===null||tm===undefined)continue;
+    html+=`<tr><td><span style="color:${color};font-weight:800">${c.nome}</span></td>`;
+    m.settimane.forEach(s=>{const v=st?.[s.id]?.[c.id]?.[stKpi];html+=`<td class="${semKpi(kd.k,v,c[kd.tw])}"> ${kd.fmt(v)}</td>`;});
+    html+=`<td class="${sf}" style="font-weight:800">${kd.fmt(tot[stKpi])}</td>
+      <td style="color:var(--text2)">${kd.fmt(tm)}</td>
+      <td class="${sf}">${pct(tot[stKpi],tm)||'–'}</td></tr>`;
+  }
+  let totAll=null,tgTot=0;const sums={};
+  const isAvgS=!kd.sum;
+  for(const sid of['S1','S2','S3','S4']){
+    let sv=null,cnt=0;
+    m.collaboratori.forEach(c=>{const v=st?.[sid]?.[c.id]?.[stKpi];if(v!==null&&v!==undefined){sv=(sv||0)+v;cnt++;}});
+    sums[sid]=isAvgS?(cnt>0?sv/cnt:null):sv;
+  }
+  if(isAvgS){let cnt=0;m.collaboratori.forEach(c=>{const t=getTot(stMk,c.id);if(t[stKpi]!==null){totAll=(totAll||0)+t[stKpi];cnt++;}});if(cnt)totAll/=cnt;tgTot=70;}
+  else{m.collaboratori.forEach(c=>{const t=getTot(stMk,c.id);if(t[stKpi]!==null)totAll=(totAll||0)+t[stKpi];if(c[kd.tm])tgTot+=c[kd.tm];});}
+  html+=`<tr class="tot-row"><td>${isAvgS?'MEDIA SALONE':'TOTALE SALONE'}</td>`;
+  m.settimane.forEach(s=>html+=`<td>${kd.fmt(sums[s.id])}</td>`);
+  const sf3=semKpi(kd.k,totAll,tgTot);
+  html+=`<td class="${sf3}">${kd.fmt(totAll)}</td><td style="color:var(--text2)">${isAvgS?'70%':kd.fmt(tgTot)}</td><td class="${sf3}">${isAvgS?'':pct(totAll,tgTot)||'–'}</td></tr>`;
+  html+=`</tbody></table></div>`;
+  document.getElementById('pane-storico').innerHTML=html;
+}
+
+// ╔══════════════════════════════════════════════════════════════╗
+// ║  CONFRONTA                                                   ║
+// ╚══════════════════════════════════════════════════════════════╝
+let cmpA=null,cmpB=null;
+const SCcol={g:'#15803d',a:'#b45309',r:'#b91c1c',n:'#c8c3bb'};
+function showComparePicker(){
+  const mk=getMk();const m=MESI[mk];if(!m)return;
+  document.getElementById('cpicker-list').innerHTML=m.collaboratori.map(c=>`
+    <div class="cpicker-item" onclick="startCompare('${c.id}','${mk}')">
+      <div class="cpicker-av" style="background:${rc(c.ruolo)}18;color:${rc(c.ruolo)}">${ini(c.nome)}</div>
+      <div><div style="font-size:13px;font-weight:700">${c.nome}</div><div style="font-size:11px;color:var(--text2)">${c.ruolo}</div></div>
+    </div>`).join('');
+  document.getElementById('cpicker').style.display='flex';
+}
+function closeComparePicker(){document.getElementById('cpicker').style.display='none';}
+function startCompare(idA,mk){
+  closeComparePicker();
+  const m=MESI[mk];if(!m)return;
+  cmpA=m.collaboratori.find(c=>c.id===idA);
+  const remaining=m.collaboratori.filter(c=>c.id!==idA);
+  document.getElementById('cpicker-list').innerHTML=`<p style="font-size:12px;color:var(--text2);margin-bottom:10px">Confronta <strong>${cmpA.nome}</strong> con:</p>`+
+    remaining.map(c=>`
+    <div class="cpicker-item" onclick="renderCompare('${idA}','${c.id}','${mk}')">
+      <div class="cpicker-av" style="background:${rc(c.ruolo)}18;color:${rc(c.ruolo)}">${ini(c.nome)}</div>
+      <div><div style="font-size:13px;font-weight:700">${c.nome}</div><div style="font-size:11px;color:var(--text2)">${c.ruolo}</div></div>
+    </div>`).join('');
+  document.getElementById('cpicker').style.display='flex';
+}
+function renderCompare(idA,idB,mk){
+  closeComparePicker();
+  const m=MESI[mk];if(!m)return;
+  const a=m.collaboratori.find(c=>c.id===idA);
+  const b=m.collaboratori.find(c=>c.id===idB);
+  const totA=getTot(mk,idA),totB=getTot(mk,idB);
+  function row(lbl,aA,aT,bA,bT,fmt){
+    const aPct=aA!==null&&aT?Math.round((aA/aT)*100):null;
+    const bPct=bA!==null&&bT?Math.round((bA/bT)*100):null;
+    const sA=sem(aA,aT),sB=sem(bA,bT);
+    const aBar=aA!==null&&aT?Math.min((aA/aT)*100,120):0;
+    const bBar=bA!==null&&bT?Math.min((bA/bT)*100,120):0;
+    const winner=aPct!==null&&bPct!==null?(aPct>bPct?a.nome:bPct>aPct?b.nome:'Pari'):null;
+    return `<div class="cmp-card">
+      <div class="cmp-lbl">${lbl}</div>
+      <div class="cmp-cols">
+        <div class="cmp-col">
+          <div class="cmp-cname">${a.nome}</div>
+          <div class="cmp-val ${sA}">${fmt(aA)}</div>
+          <div class="cmp-pct ${sA}">${aPct!==null?aPct+'%':'–'}</div>
+          <div class="cmp-bar"><div class="cmp-fill" style="width:${aBar}%;background:${SCcol[sA]||'#ccc'}"></div></div>
+        </div>
+        <div class="cmp-sep">VS</div>
+        <div class="cmp-col">
+          <div class="cmp-cname">${b.nome}</div>
+          <div class="cmp-val ${sB}">${fmt(bA)}</div>
+          <div class="cmp-pct ${sB}">${bPct!==null?bPct+'%':'–'}</div>
+          <div class="cmp-bar"><div class="cmp-fill" style="width:${bBar}%;background:${SCcol[sB]||'#ccc'}"></div></div>
+        </div>
+      </div>
+      ${winner?`<div class="cmp-winner">✦ ${winner} in vantaggio</div>`:''}
+    </div>`;
+  }
+  let html=`<div class="cmp-hdr">
+    <div class="cmp-av" style="background:${rc(a.ruolo)}18;color:${rc(a.ruolo)}">${ini(a.nome)}</div>
+    <div><div class="cmp-name">${a.nome}</div><div class="cmp-role">${a.ruolo}</div></div>
+    <div class="cmp-vs">VS</div>
+    <div class="cmp-av" style="background:${rc(b.ruolo)}18;color:${rc(b.ruolo)}">${ini(b.nome)}</div>
+    <div><div class="cmp-name">${b.nome}</div><div class="cmp-role">${b.ruolo}</div></div>
+  </div>
+  <div class="cmp-grid">
+    <p style="font-size:11px;color:var(--text2);margin-bottom:0">Confronto cumulato ${MESI[mk]?.label||mk}</p>`;
+  html+=row('💰 Fatturato',totA.fat,a.fat_tm,totB.fat,b.fat_tm,eur);
+  html+=row('👥 Clienti fatti',totA.pre,a.pre_tm,totB.pre,b.pre_tm,num);
+  html+=row('🔄 Clienti di ritorno',totA.rit,a.rit_tm,totB.rit,b.rit_tm,num);
+  html+=row('✨ Nuovi Clienti',totA.nuovi,a.nuovi_tm,totB.nuovi,b.nuovi_tm,num);
+  html+=row('🛍️ Retail',totA.ret,a.ret_tm,totB.ret,b.ret_tm,num);
+  html+=row('📞 Richiami',totA.rich,a.rich_tm,totB.rich,b.rich_tm,num);
+  html+=`</div>`;
+  document.getElementById('cmp-wrap').innerHTML=html;
+  document.getElementById('view-cmp').style.display='block';
+  document.getElementById('tabs-nav').style.display='none';
+  document.getElementById('sumbar').style.display='none';
+  document.querySelectorAll('.tab-pane').forEach(p=>p.style.display='none');
+  document.getElementById('nav-label').textContent='Confronto';
+  window.scrollTo(0,0);
+}
+function closeCompare(){
+  document.getElementById('view-cmp').style.display='none';
+  document.getElementById('tabs-nav').style.display='flex';
+  document.getElementById('sumbar').style.display='flex';
+  document.querySelector('#pane-live').style.display='block';
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelector('.tab-btn').classList.add('active');
+  document.getElementById('nav-label').textContent='Target Team';
+  window.scrollTo(0,0);
+}
+
+// ╔══════════════════════════════════════════════════════════════╗
+// ║  INIT                                                        ║
+// ╚══════════════════════════════════════════════════════════════╝
+const ua=STORICO[getMk()]?.ultimo_aggiornamento;
+document.getElementById('cover-update').textContent=ua?`Aggiornato: ${ua}`:'';
+
+// Auto-login per collaboratore se ?c= presente
+(function(){
+  const uc=getUrlCollab();
+  if(!uc)return;
+  // Modalità collaboratore: nascondi il FAB link team
+  const fab=document.getElementById('fab-links');if(fab)fab.style.display='none';
+  document.getElementById('view-cover').style.display='none';
+  document.getElementById('view-app').style.display='block';
+  document.getElementById('view-analisi').style.display='none';
+  document.getElementById('view-cmp').style.display='none';
+  document.getElementById('tabs-nav').style.display='none';
+  document.getElementById('sumbar').style.display='none';
+  const hdrBtns=document.querySelector('.hdr-btns');if(hdrBtns)hdrBtns.style.display='none';
+  const navBc=document.querySelector('.nav-bc');if(navBc)navBc.style.display='none';
+  document.querySelector('#pane-live').style.display='block';
+  const m=MESI[getMk()];const sw=getSW(getMk());
+  if(document.getElementById('hdr-week'))document.getElementById('hdr-week').textContent=sw?.label||'–';
+  if(document.getElementById('hdr-month'))document.getElementById('hdr-month').textContent=m?.label||'';
+  renderLive();
+})();
+
+// === END_COLLAB_STATO ===
 </script>
 </body>
 </html>
