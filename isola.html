@@ -1999,6 +1999,7 @@ function varDelItem(id){
   saveAna(ana);
   const wrap=document.getElementById('var-list-wrap');
   if(wrap) wrap.innerHTML=renderVariabiliList();
+  renderPLResult();
 }
 
 function varSaveNome(id, val){
@@ -2018,6 +2019,7 @@ function varSaveImp(id, val){
   const tot=varTotal(ana);
   const el=document.getElementById('an-vp-tot');
   if(el) el.textContent=anFmt2(tot);
+  renderPLResult();
 }
 function loadSked(){ try{ return JSON.parse(localStorage.getItem(SKED_KEY)||'[]'); }catch(e){ return []; } }
 function saveSked(d){ localStorage.setItem(SKED_KEY,JSON.stringify(d)); }
@@ -2271,7 +2273,23 @@ function renderPL(){
     <div id="var-list-wrap">${renderVariabiliList()}</div>
   </div>
 
-  <div class="an-card" style="border-color:${ebitda!=null&&ebitda>=0?'rgba(21,128,61,.3)':'rgba(185,28,28,.2)'}">
+  <div id="an-pl-result"></div>`;
+  renderPLResult();
+}
+}
+
+function renderPLResult(){
+  const mk=anGetMk();
+  const {total:fatMese}=anMonthRevenue(mk);
+  const ana=loadAna();
+  const {totale:personale}=calcPersCost(mk);
+  const fissiTot=Object.values(ana.fissi||{}).reduce((s,v)=>s+(+v||0),0);
+  const varTot=varTotal(ana);
+  const costiTot=fissiTot+personale+varTot;
+  const ebitda=fatMese!=null?fatMese-costiTot:null;
+  const margPct=fatMese&&fatMese>0?ebitda/fatMese*100:null;
+  const el=document.getElementById('an-pl-result'); if(!el) return;
+  el.innerHTML=`<div class="an-card" style="border-color:${ebitda!=null&&ebitda>=0?'rgba(21,128,61,.3)':'rgba(185,28,28,.2)'}">
     <div class="an-card-title">📊 Risultato Operativo</div>
     <div class="an-pe-row"><span class="an-pe-lbl">RICAVI TOTALI</span><span class="an-pe-val an-pe-pos" style="font-size:14px">${anFmt2(fatMese)}</span></div>
     <div class="an-pe-row"><span class="an-pe-lbl">Costi Fissi</span><span class="an-pe-val" style="color:var(--red)">- ${anFmt2(fissiTot)}</span></div>
@@ -2292,14 +2310,11 @@ function anAutoSave(){
     const el=document.getElementById('an-fi-'+k); if(el) ana.fissi[k]=+el.value||0;
   });
   saveAna(ana);
-  // Update derived totals
-  const mk=anGetMk();
-  const {total:fatMese}=anMonthRevenue(mk);
+  // Aggiorna totale fissi e ricalcola EBITDA
   const fissiTot=Object.values(ana.fissi).reduce((s,v)=>s+(+v||0),0);
-  const varTot=varTotal(ana);
   const fiTotEl=document.getElementById('an-fi-tot');
   if(fiTotEl) fiTotEl.textContent=anFmt2(fissiTot);
-
+  renderPLResult();
 }
 
 // ══════════════════════════════════════════════════════════════════
@@ -2848,6 +2863,7 @@ function persAutoSave(mk){
   // Aggiorna solo il breakdown senza distruggere gli input
   const bkWrap = document.getElementById('pers-bk-wrap');
   if(bkWrap) bkWrap.outerHTML = renderPersBK(mk);
+  renderPLResult();
 }
 
 function renderPersBK(mk){
