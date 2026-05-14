@@ -424,18 +424,13 @@ select{background:var(--card);color:var(--text);border:1px solid var(--bord2);pa
       <span class="mod-chev">›</span>
     </div>
   </div>
-  <!-- LINK COLLABORATORI (generato staticamente) -->
+  <!-- LINK COLLABORATORI (dinamico) -->
   <div style="padding:0 20px 16px">
   <div style="background:var(--card);border:1px solid var(--bord);border-radius:14px;padding:16px 16px 8px">
     <div style="font-size:12px;font-weight:800;color:var(--gold);letter-spacing:.5px;margin-bottom:6px">📱 LINK COLLABORATORI</div>
     <div style="font-size:11px;color:var(--text2);margin-bottom:10px">Invia su WhatsApp — ogni collaboratore vede solo i suoi dati.</div>
-    <div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--bord)">
-      <span style="flex:1;font-size:14px;font-weight:700;color:var(--text)">Stefano</span>
-      <button onclick="navigator.clipboard.writeText('https://mihimilano.github.io/mihi-kpi/isola_stefano.html');this.textContent='✅ Copiato!';setTimeout(()=>this.textContent='📋 Copia link',2000)" style="background:var(--card);border:1px solid var(--bord);border-radius:10px;padding:8px 14px;font-size:12px;font-weight:700;color:var(--gold);cursor:pointer;font-family:inherit;white-space:nowrap">📋 Copia link</button>
-    </div><div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--bord)">
-      <span style="flex:1;font-size:14px;font-weight:700;color:var(--text)">Simona</span>
-      <button onclick="navigator.clipboard.writeText('https://mihimilano.github.io/mihi-kpi/isola_simona.html');this.textContent='✅ Copiato!';setTimeout(()=>this.textContent='📋 Copia link',2000)" style="background:var(--card);border:1px solid var(--bord);border-radius:10px;padding:8px 14px;font-size:12px;font-weight:700;color:var(--gold);cursor:pointer;font-family:inherit;white-space:nowrap">📋 Copia link</button>
-    </div>
+    <div id="collab-links-wrap"></div>
+    <div id="collab-toggle-msg" style="display:none;margin-top:10px;padding:8px 12px;background:#f59e0b20;border:1px solid #f59e0b40;border-radius:8px;font-size:11px;color:#f59e0b;font-weight:700;text-align:center"></div>
   </div>
 </div>
 
@@ -991,6 +986,68 @@ const STORICO = {
   }
 };
 // === END_STORICO ===
+// === BEGIN_COLLAB_STATO ===
+const COLLAB_STATO_KEY = 'isola_collab_stato_v1';
+const COLLAB_STATO_DEF = {
+  "stefano": {
+    "attivo": true
+  },
+  "simona": {
+    "attivo": true
+  }
+};
+function loadCollabStato(){
+  try{ return Object.assign({}, COLLAB_STATO_DEF, JSON.parse(localStorage.getItem(COLLAB_STATO_KEY)||'{}')); }catch(e){ return Object.assign({}, COLLAB_STATO_DEF); }
+}
+function saveCollabStato(s){ localStorage.setItem(COLLAB_STATO_KEY, JSON.stringify(s)); }
+function toggleCollab(id){
+  const s=loadCollabStato();
+  s[id]={attivo: !(s[id]?.attivo??true)};
+  saveCollabStato(s);
+  renderCollabLinks();
+  const nomeEl=document.getElementById('collab-toggle-msg');
+  const mk=typeof getMk==='function'?getMk():'';
+  const mesi_info=MESI[mk]||{};
+  const collab=(mesi_info.collaboratori||[]).find(c=>c.id===id);
+  const nome=collab?collab.nome:id;
+  const dash=COLLAB_STATO_KEY.split('_')[0];
+  const azione=s[id].attivo?'attiva':'disattiva';
+  if(nomeEl){
+    nomeEl.textContent=`Scrivi a Claude: "${azione} ${nome} ${dash}"`;
+    nomeEl.style.display='block';
+    setTimeout(()=>{nomeEl.style.display='none';}, 8000);
+  }
+}
+function renderCollabLinks(){
+  const wrap=document.getElementById('collab-links-wrap');
+  if(!wrap)return;
+  const mk=typeof getMk==='function'?getMk():'';
+  const mesi_info=MESI[mk]||{};
+  const collaboratori=mesi_info.collaboratori||[];
+  const stato=loadCollabStato();
+  const prefix=COLLAB_STATO_KEY.split('_')[0];
+  let rows='';
+  for(const c of collaboratori){
+    const attivo=(stato[c.id]?.attivo??true);
+    const color=attivo?'#22c55e':'#ef4444';
+    const dot=`<span style="width:8px;height:8px;border-radius:50%;background:${color};display:inline-block;margin-right:6px;flex-shrink:0"></span>`;
+    const cid=c.id.replace(/ /g,'_');
+    const url=`https://mihimilano.github.io/mihi-kpi/${prefix}_${cid}.html`;
+    const copyBtn=attivo
+      ? `<button onclick="navigator.clipboard.writeText('${url}');this.textContent='\u2705';setTimeout(()=>this.textContent='\ud83d\udccb Copia',2000)" style="background:var(--card);border:1px solid var(--bord);border-radius:8px;padding:6px 12px;font-size:11px;font-weight:700;color:var(--gold);cursor:pointer;font-family:inherit;white-space:nowrap">\ud83d\udccb Copia</button>`
+      : `<span style="font-size:10px;color:#ef4444;font-weight:700;padding:6px 12px;background:#ef444415;border-radius:8px">DISATTIVATO</span>`;
+    const bc=attivo?'#ef444415':'#22c55e15';
+    const bcc=attivo?'#ef444440':'#22c55e40';
+    const tc=attivo?'#ef4444':'#22c55e';
+    const tlbl=attivo?'\ud83d\udd34 Disattiva':'\ud83d\udfe2 Attiva';
+    const toggleBtn=`<button onclick="toggleCollab('${c.id}')" style="background:${bc};border:1px solid ${bcc};border-radius:8px;padding:6px 10px;font-size:11px;font-weight:700;color:${tc};cursor:pointer;font-family:inherit;white-space:nowrap">${tlbl}</button>`;
+    rows+=`<div style="display:flex;align-items:center;gap:8px;padding:10px 0;border-bottom:1px solid var(--bord)">${dot}<span style="flex:1;font-size:13px;font-weight:700;color:var(--text)">${c.nome}</span>${copyBtn}${toggleBtn}</div>`;
+  }
+  wrap.innerHTML=rows;
+}
+// === END_COLLAB_STATO ===
+document.addEventListener('DOMContentLoaded', ()=>{ if(typeof renderCollabLinks==='function') renderCollabLinks(); });
+
 
 // ╔══════════════════════════════════════════════════════════════╗
 // ║  UTILITY                                                     ║
