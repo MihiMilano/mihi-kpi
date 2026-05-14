@@ -1937,7 +1937,8 @@ let anSkedFilter = 'tutti';
 // ── Default data ─────────────────────────────────────────────────
 const ANA_DEF = {
   fissi: { affitto:2500, utenze:300, assicurazione:150, marketing:200, altro:100 },
-  variabili: []  // array di {id, nome, importo}
+  variabili: [],  // array di {id, nome, importo}
+  fissiExtra: []  // voci extra {id, nome, importo}
 };
 const BUD_DEF = { mensile: 13055 };
 
@@ -2021,6 +2022,65 @@ function varSaveImp(id, val){
   if(el) el.textContent=anFmt2(tot);
   renderPLResult();
 }
+
+// ── Costi fissi extra (dinamici) ─────────────────────────────────
+function fissiExtraTotal(ana){
+  if(!ana||!Array.isArray(ana.fissiExtra)) return 0;
+  return ana.fissiExtra.reduce((s,r)=>s+(+r.importo||0),0);
+}
+
+function renderFissiExtraList(){
+  const ana=loadAna();
+  const items=Array.isArray(ana.fissiExtra)?ana.fissiExtra:[];
+  const rows=items.map(item=>`
+    <div class="var-item-row" id="fex-row-${item.id}">
+      <input class="var-inp-nome" type="text" value="${item.nome.replace(/"/g,'&quot;')}" placeholder="Es: IVA da versare" oninput="fexSaveNome('${item.id}',this.value)">
+      <input class="var-inp-imp" type="number" value="${item.importo||''}" placeholder="0" min="0" step="1" oninput="fexSaveImp('${item.id}',+this.value)">
+      <span class="var-inp-unit">€</span>
+      <button class="var-del-btn" onclick="fexDelItem('${item.id}')" title="Elimina">✕</button>
+    </div>`).join('');
+  return rows ? `<div class="var-items-wrap" style="margin-top:8px">${rows}</div>` : '';
+}
+
+function fexAddItem(){
+  const ana=loadAna();
+  if(!Array.isArray(ana.fissiExtra)) ana.fissiExtra=[];
+  const id='f'+Date.now();
+  ana.fissiExtra.push({id,nome:'',importo:0});
+  saveAna(ana);
+  const wrap=document.getElementById('fex-list-wrap');
+  if(wrap) wrap.innerHTML=renderFissiExtraList();
+}
+
+function fexDelItem(id){
+  const ana=loadAna();
+  if(!Array.isArray(ana.fissiExtra)) return;
+  ana.fissiExtra=ana.fissiExtra.filter(r=>r.id!==id);
+  saveAna(ana);
+  const wrap=document.getElementById('fex-list-wrap');
+  if(wrap) wrap.innerHTML=renderFissiExtraList();
+  _updateFissiTot(ana); renderPLResult();
+}
+
+function fexSaveNome(id,val){
+  const ana=loadAna();
+  const item=Array.isArray(ana.fissiExtra)?ana.fissiExtra.find(r=>r.id===id):null;
+  if(item){item.nome=val;saveAna(ana);}
+}
+
+function fexSaveImp(id,val){
+  const ana=loadAna();
+  const item=Array.isArray(ana.fissiExtra)?ana.fissiExtra.find(r=>r.id===id):null;
+  if(item){item.importo=+val||0;saveAna(ana);}
+  _updateFissiTot(ana); renderPLResult();
+}
+
+function _updateFissiTot(ana){
+  const tot=Object.values(ana.fissi||{}).reduce((s,v)=>s+(+v||0),0)+fissiExtraTotal(ana);
+  const el=document.getElementById('an-fi-tot');
+  if(el) el.textContent=anFmt2(tot);
+}
+
 function loadSked(){ try{ return JSON.parse(localStorage.getItem(SKED_KEY)||'[]'); }catch(e){ return []; } }
 function saveSked(d){ localStorage.setItem(SKED_KEY,JSON.stringify(d)); }
 function loadBud(){ try{ return Object.assign({},BUD_DEF,JSON.parse(localStorage.getItem(BUD_KEY)||'{}')); }catch(e){ return Object.assign({},BUD_DEF); } }
@@ -2124,7 +2184,7 @@ function renderCruscotto(){
   const tgMese=m.collaboratori.reduce((s,c)=>s+(c.fat_tm||0),0);
   const ana=loadAna();
   const {totale:personale}=calcPersCost(mk);
-  const fissiTot=Object.values(ana.fissi||{}).reduce((s,v)=>s+(+v||0),0);
+  const fissiTot=Object.values(ana.fissi||{}).reduce((s,v)=>s+(+v||0),0)+fissiExtraTotal(ana);
   const varTot=varTotal(ana);
   const costiTot=fissiTot+personale+varTot;
   const ebitda=fatMese!=null?fatMese-costiTot:null;
@@ -2233,7 +2293,7 @@ function renderPL(){
   const ana=loadAna();
   const {totale:personale}=calcPersCost(mk);
   const varTot=varTotal(ana);
-  const fissiTot=Object.values(ana.fissi||{}).reduce((s,v)=>s+(+v||0),0);
+  const fissiTot=Object.values(ana.fissi||{}).reduce((s,v)=>s+(+v||0),0)+fissiExtraTotal(ana);
   const costiTot=fissiTot+personale+varTot;
   const ebitda=fatMese!=null?fatMese-costiTot:null;
   const margPct=fatMese&&fatMese>0?ebitda/fatMese*100:null;
@@ -2263,6 +2323,8 @@ function renderPL(){
         <span class="an-inp-unit">€</span>
       </div>`).join('')}
     </div>
+    <div id="fex-list-wrap">${renderFissiExtraList()}</div>
+    <button class="var-add-btn" onclick="fexAddItem()" style="margin-top:8px">＋ Aggiungi voce (IVA, tasse, ecc.)</button>
     <div class="an-pe-tot-row" style="margin-top:8px"><span>Totale Costi Fissi</span><span class="an-pe-tot" id="an-fi-tot">${anFmt2(fissiTot)}</span></div>
   </div>
 
@@ -2282,7 +2344,7 @@ function renderPLResult(){
   const {total:fatMese}=anMonthRevenue(mk);
   const ana=loadAna();
   const {totale:personale}=calcPersCost(mk);
-  const fissiTot=Object.values(ana.fissi||{}).reduce((s,v)=>s+(+v||0),0);
+  const fissiTot=Object.values(ana.fissi||{}).reduce((s,v)=>s+(+v||0),0)+fissiExtraTotal(ana);
   const varTot=varTotal(ana);
   const costiTot=fissiTot+personale+varTot;
   const ebitda=fatMese!=null?fatMese-costiTot:null;
@@ -2310,9 +2372,7 @@ function anAutoSave(){
   });
   saveAna(ana);
   // Aggiorna totale fissi e ricalcola EBITDA
-  const fissiTot=Object.values(ana.fissi).reduce((s,v)=>s+(+v||0),0);
-  const fiTotEl=document.getElementById('an-fi-tot');
-  if(fiTotEl) fiTotEl.textContent=anFmt2(fissiTot);
+  _updateFissiTot(ana);
   renderPLResult();
 }
 
@@ -2324,7 +2384,7 @@ function renderCashFlow(){
   const {byWeek}=anMonthRevenue(mk);
   const ana=loadAna();
   const {totale:personale}=calcPersCost(mk);
-  const fissiTot=Object.values(ana.fissi||{}).reduce((s,v)=>s+(+v||0),0);
+  const fissiTot=Object.values(ana.fissi||{}).reduce((s,v)=>s+(+v||0),0)+fissiExtraTotal(ana);
   const varTot=varTotal(ana);
   const costiMensili=fissiTot+personale+varTot;
   const costiSett=costiMensili/4;
@@ -2535,7 +2595,7 @@ function renderRedd(){
   const ana=loadAna();
   const {totale:costoPers, perCollab, hasData:hasPersCost}=calcPersCost(mk);
   const varTot=varTotal(ana);
-  const fissiTot=Object.values(ana.fissi||{}).reduce((s,v)=>s+(+v||0),0);
+  const fissiTot=Object.values(ana.fissi||{}).reduce((s,v)=>s+(+v||0),0)+fissiExtraTotal(ana);
 
   // P&L per collaboratore
   const collabs=m.collaboratori.map(c=>{
@@ -2921,7 +2981,7 @@ function getCollabBE(mk, cid){
   const m=MESI[mk]; if(!m) return null;
   const ana=loadAna();
   const {totale:costoPers, perCollab}=calcPersCost(mk);
-  const fissiTot=Object.values(ana.fissi||{}).reduce((s,v)=>s+(+v||0),0);
+  const fissiTot=Object.values(ana.fissi||{}).reduce((s,v)=>s+(+v||0),0)+fissiExtraTotal(ana);
   const varTot=varTotal(ana);
   const costoP=perCollab[cid]||0;
   if(costoP===0&&fissiTot===0) return null;
