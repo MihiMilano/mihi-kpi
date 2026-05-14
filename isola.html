@@ -482,6 +482,12 @@ select{background:var(--card);color:var(--text);border:1px solid var(--bord2);pa
   <!-- ANALISI ECONOMICA -->
   <div id="view-analisi" style="display:none">
 
+  <!-- Badge ultimo aggiornamento costi -->
+  <div id="an-update-badge" style="display:none;padding:6px 16px;background:var(--bg2);border-bottom:1px solid var(--bord);font-size:11px;color:var(--text2);display:flex;align-items:center;gap:6px">
+    <span style="font-size:13px">🕐</span>
+    <span>Costi aggiornati: <b id="an-update-date" style="color:var(--text)"></b></span>
+  </div>
+
   <!-- Sub-nav Analisi -->
   <div class="an-nav" id="an-nav">
     <div class="an-tab active" onclick="anSwitch('cruscotto')">📊 Cruscotto</div>
@@ -2020,6 +2026,7 @@ function varSaveImp(id, val){
   const tot=varTotal(ana);
   const el=document.getElementById('an-vp-tot');
   if(el) el.textContent=anFmt2(tot);
+  anSaveUpdateTs();
   renderPLResult();
 }
 
@@ -2072,7 +2079,7 @@ function fexSaveImp(id,val){
   const ana=loadAna();
   const item=Array.isArray(ana.fissiExtra)?ana.fissiExtra.find(r=>r.id===id):null;
   if(item){item.importo=+val||0;saveAna(ana);}
-  _updateFissiTot(ana); renderPLResult();
+  _updateFissiTot(ana); anSaveUpdateTs(); renderPLResult();
 }
 
 function _updateFissiTot(ana){
@@ -2166,6 +2173,8 @@ function anSwitch(name){
 }
 
 function renderAnalisi(){
+  // Mostra badge data aggiornamento se esiste
+  try{ const a=loadAna(); if(a.lastUpdate) anShowUpdateBadge(a.lastUpdate); }catch(e){}
   // Render the active pane
   const active=document.querySelector('.an-pane.active');
   if(!active) return;
@@ -2365,6 +2374,24 @@ function renderPLResult(){
   </div>`;
 }
 
+
+function anSaveUpdateTs(){
+  const ana=loadAna();
+  ana.lastUpdate=new Date().toISOString();
+  saveAna(ana);
+  anShowUpdateBadge(ana.lastUpdate);
+}
+
+function anShowUpdateBadge(iso){
+  if(!iso) return;
+  const d=new Date(iso);
+  const opts={day:'2-digit',month:'long',year:'numeric',hour:'2-digit',minute:'2-digit'};
+  const label=d.toLocaleString('it-IT',opts).replace(',','  ore');
+  const el=document.getElementById('an-update-date');
+  const badge=document.getElementById('an-update-badge');
+  if(el) el.textContent=label;
+  if(badge) badge.style.display='flex';
+}
 function anAutoSave(){
   const ana=loadAna();
   ['affitto','utenze','assicurazione','marketing','altro'].forEach(k=>{
@@ -2373,6 +2400,7 @@ function anAutoSave(){
   saveAna(ana);
   // Aggiorna totale fissi e ricalcola EBITDA
   _updateFissiTot(ana);
+  anSaveUpdateTs();
   renderPLResult();
 }
 
@@ -2922,6 +2950,7 @@ function persAutoSave(mk){
   // Aggiorna solo il breakdown senza distruggere gli input
   const bkWrap = document.getElementById('pers-bk-wrap');
   if(bkWrap) bkWrap.outerHTML = renderPersBK(mk);
+  anSaveUpdateTs();
   renderPLResult();
 }
 
