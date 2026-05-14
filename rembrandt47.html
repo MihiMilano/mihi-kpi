@@ -249,7 +249,8 @@ const SALONE_ATTIVO = true;
         <div class="mod-name">Analisi Salone</div>
         <div class="mod-desc">Conto economico, costi fissi/variabili, margini e benchmark di settore</div>
       </div>
-      <span class="mod-status mod-soon">In arrivo</span>
+      <span class="mod-status mod-live">Live</span>
+      <span class="mod-chev">›</span>
     </div>
   </div>
   <!-- LINK COLLABORATORI (dinamico) -->
@@ -2432,6 +2433,7 @@ function showModule(mod){
     document.querySelectorAll('.tab-pane').forEach(p=>p.style.display='none');
     document.getElementById('view-analisi').style.display='block';
     document.getElementById('nav-label').textContent='Analisi Salone';
+    anSwitch('cruscotto');
   }
   const ua=STORICO[getMk()]?.ultimo_aggiornamento;
   document.getElementById('last-upd').textContent=ua||'mai';
