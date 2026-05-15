@@ -844,6 +844,28 @@ const MESI = {
         "fiche_t": 62.66,
         "sat_tw": null,
         "sat_tm": null
+      },
+      {
+        "id": "marta",
+        "nome": "Marta",
+        "ruolo": "Stilista",
+        "costo_m": null,
+        "fat_tw": null,
+        "fat_tm": null,
+        "pre_tw": null,
+        "pre_tm": null,
+        "ret_tw": null,
+        "ret_tm": null,
+        "rit_tw": null,
+        "rit_tm": null,
+        "nuovi_tw": null,
+        "nuovi_tm": null,
+        "rich_tw": null,
+        "rich_tm": null,
+        "serv_t": null,
+        "fiche_t": null,
+        "sat_tw": null,
+        "sat_tm": null
       }
     ]
   }
@@ -857,7 +879,7 @@ const MESI = {
 const STORICO = {
   "2026-05": {
     "chiuso": false,
-    "ultimo_aggiornamento": "12 mag 2026",
+    "ultimo_aggiornamento": "14 mag 2026",
     "S1": {
       "debora": {
         "fat": 1620.03,
@@ -1487,50 +1509,39 @@ const STORICO = {
             "ricavi": 30.0
           }
         ]
+      },
+      "marta": {
+        "fat": null, "pre": null, "fiche": null, "rit": null, "rich": null,
+        "nuovi": null, "ret": null, "serv": null, "sat": null, "servizi": null
       }
     },
     "S2": {
       "debora": {
-        "fat": 159.7,
-        "pre": 4,
-        "fiche": 39.93,
-        "rit": 5,
-        "rich": 0,
-        "nuovi": 1,
+        "fat": 1096.93,
+        "pre": 23,
+        "fiche": 47.69,
+        "rit": 22,
+        "rich": 2,
+        "nuovi": 3,
         "ret": 1,
-        "serv": 2.0,
-        "sat": 67,
+        "serv": 2.30,
+        "sat": 58,
         "servizi": [
-          {
-            "nome": "Color Gloss",
-            "qta": 1,
-            "ricavi": 18.0
-          },
-          {
-            "nome": "Colore radice",
-            "qta": 1,
-            "ricavi": 44.0
-          },
-          {
-            "nome": "Maschera + Shampoo",
-            "qta": 1,
-            "ricavi": 13.5
-          },
-          {
-            "nome": "Piega Capelli Corti",
-            "qta": 3,
-            "ricavi": 34.2
-          },
-          {
-            "nome": "Taglio Donna",
-            "qta": 1,
-            "ricavi": 25.0
-          },
-          {
-            "nome": "Taglio Uomo",
-            "qta": 1,
-            "ricavi": 25.0
-          }
+          {"nome":"Asciugatura","qta":1,"ricavi":10.0},
+          {"nome":"Color Gloss","qta":2,"ricavi":38.0},
+          {"nome":"Colore radice","qta":2,"ricavi":88.0},
+          {"nome":"Colpi di sole","qta":2,"ricavi":185.0},
+          {"nome":"Maschera + Shampoo","qta":1,"ricavi":13.5},
+          {"nome":"Piega Capelli Corti","qta":15,"ricavi":191.7},
+          {"nome":"Piega Capelli Lunghi","qta":4,"ricavi":60.9},
+          {"nome":"Ritocco Colore","qta":1,"ricavi":25.0},
+          {"nome":"Shampoo","qta":3,"ricavi":12.83},
+          {"nome":"Shampoo e Conditioner","qta":3,"ricavi":27.0},
+          {"nome":"Taglio Donna","qta":10,"ricavi":245.0},
+          {"nome":"Taglio Uomo","qta":3,"ricavi":75.0},
+          {"nome":"doppio gloss","qta":1,"ricavi":80.0},
+          {"nome":"mousse/finish","qta":4,"ricavi":15.0},
+          {"nome":"ricostruzione capillare","qta":1,"ricavi":30.0}
         ]
       },
       "romina": {
@@ -1567,162 +1578,139 @@ const STORICO = {
         ]
       },
       "helin": {
-        "fat": 100.75,
-        "pre": 4,
-        "fiche": 25.19,
-        "rit": 0,
-        "rich": 2,
-        "nuovi": 1,
+        "fat": 304.05,
+        "pre": 8,
+        "fiche": 38.01,
+        "rit": 3,
+        "rich": 6,
+        "nuovi": 4,
         "ret": 1,
-        "serv": 2.25,
-        "sat": null,
+        "serv": 2.63,
+        "sat": 24,
         "servizi": [
-          {
-            "nome": "Piega Capelli Lunghi",
-            "qta": 3,
-            "ricavi": 68.4
-          },
-          {
-            "nome": "Shampoo e Conditioner",
-            "qta": 4,
-            "ricavi": 23.1
-          },
-          {
-            "nome": "Styling & Finish",
-            "qta": 2,
-            "ricavi": 9.25
-          }
+          {"nome":"Colore Base","qta":3,"ricavi":94.0},
+          {"nome":"Piega Capelli Lunghi","qta":7,"ricavi":148.8},
+          {"nome":"Shampoo e Conditioner","qta":5,"ricavi":26.1},
+          {"nome":"Styling & Finish","qta":4,"ricavi":18.5},
+          {"nome":"shampoo e maschera","qta":2,"ricavi":16.65}
         ]
       },
       "simona_balzano": {
-        "fat": 189.0,
-        "pre": 5,
-        "fiche": 37.8,
-        "rit": 2,
-        "rich": 0,
-        "nuovi": 2,
+        "fat": 433.5,
+        "pre": 10,
+        "fiche": 43.35,
+        "rit": 5,
+        "rich": 2,
+        "nuovi": 7,
         "ret": 2,
-        "serv": 2.0,
-        "sat": 45,
+        "serv": 2.20,
+        "sat": 40,
         "servizi": [
-          {
-            "nome": "Piega Capelli Corti",
-            "qta": 1,
-            "ricavi": 16.0
-          },
-          {
-            "nome": "Piega Capelli Lunghi",
-            "qta": 1,
-            "ricavi": 24.0
-          },
-          {
-            "nome": "Styling & Finish",
-            "qta": 1,
-            "ricavi": 4.0
-          },
-          {
-            "nome": "Taglio Donna",
-            "qta": 3,
-            "ricavi": 70.0
-          },
-          {
-            "nome": "Piega Capelli Lunghi",
-            "qta": 1,
-            "ricavi": 21.0
-          },
-          {
-            "nome": "Shampoo e Conditioner",
-            "qta": 1,
-            "ricavi": 9.0
-          },
-          {
-            "nome": "Taglio Donna",
-            "qta": 1,
-            "ricavi": 25.0
-          },
-          {
-            "nome": "Taglio bambino",
-            "qta": 1,
-            "ricavi": 20.0
-          }
+          {"nome":"Color Gloss","qta":1,"ricavi":25.0},
+          {"nome":"Colore radice","qta":1,"ricavi":44.0},
+          {"nome":"Maschera + Shampoo","qta":2,"ricavi":30.0},
+          {"nome":"Piega Capelli Corti","qta":3,"ricavi":52.0},
+          {"nome":"Piega Capelli Lunghi","qta":3,"ricavi":66.0},
+          {"nome":"Shampoo","qta":1,"ricavi":4.5},
+          {"nome":"Shampoo e Conditioner","qta":1,"ricavi":9.0},
+          {"nome":"Styling & Finish","qta":1,"ricavi":4.0},
+          {"nome":"Taglio Donna","qta":6,"ricavi":145.0},
+          {"nome":"Taglio bambino","qta":1,"ricavi":20.0},
+          {"nome":"mousse/finish","qta":1,"ricavi":4.0},
+          {"nome":"ricostruzione capillare","qta":1,"ricavi":30.0}
         ]
       },
       "alex": {
-        "fat": 22.95,
-        "pre": 1,
-        "fiche": 22.95,
-        "rit": 1,
-        "rich": 0,
-        "nuovi": 1,
+        "fat": 380.95,
+        "pre": 17,
+        "fiche": 22.41,
+        "rit": 13,
+        "rich": 8,
+        "nuovi": 4,
         "ret": 1,
-        "serv": 1.0,
-        "sat": 6,
+        "serv": 1.12,
+        "sat": 45,
         "servizi": [
-          {
-            "nome": "Taglio Uomo",
-            "qta": 1,
-            "ricavi": 22.95
-          }
+          {"nome":"Rituale Barba","qta":1,"ricavi":0.0},
+          {"nome":"Styling & Finish","qta":1,"ricavi":5.0},
+          {"nome":"Taglio Bambina","qta":1,"ricavi":20.0},
+          {"nome":"Taglio Donna","qta":1,"ricavi":27.0},
+          {"nome":"Taglio Uomo","qta":14,"ricavi":319.95},
+          {"nome":"shampoo e maschera","qta":1,"ricavi":9.0}
         ]
       },
       "simona_cecilia": {
-        "fat": 100.0,
-        "pre": 4,
-        "fiche": 25.0,
-        "rit": 3,
+        "fat": 220.5,
+        "pre": 7,
+        "fiche": 31.5,
+        "rit": 6,
         "rich": 1,
-        "nuovi": 1,
+        "nuovi": 4,
         "ret": 1,
-        "serv": 1.25,
+        "serv": 1.29,
         "sat": 35,
         "servizi": [
-          {
-            "nome": "Epilazione Laser Inguine Comp.",
-            "qta": 1,
-            "ricavi": 0.0
-          },
-          {
-            "nome": "Epilazione a Cera Inguine",
-            "qta": 1,
-            "ricavi": 30.0
-          },
-          {
-            "nome": "Epilazione a Cera Petto Uomo",
-            "qta": 1,
-            "ricavi": 35.0
-          },
-          {
-            "nome": "Epilazione a Cera Schiena Uomo",
-            "qta": 1,
-            "ricavi": 35.0
-          },
-          {
-            "nome": "Massaggio Relax",
-            "qta": 1,
-            "ricavi": 0.0
-          }
+          {"nome":"Epilazione Laser Inguine Comp.","qta":2,"ricavi":24.5},
+          {"nome":"Epilazione a Cera Inguine","qta":1,"ricavi":30.0},
+          {"nome":"Epilazione a Cera Petto Uomo","qta":1,"ricavi":35.0},
+          {"nome":"Epilazione a Cera Schiena Uomo","qta":1,"ricavi":35.0},
+          {"nome":"Epilazione Sopracciglia","qta":1,"ricavi":10.0},
+          {"nome":"Epilazione a Cera Labbro Superiore","qta":1,"ricavi":6.0},
+          {"nome":"Massaggio Relax","qta":1,"ricavi":0.0},
+          {"nome":"Massaggio Linfodrenante","qta":1,"ricavi":80.0}
         ]
       },
       "valentina": {
-        "fat": null,
-        "pre": null,
-        "fiche": null,
-        "rit": null,
-        "rich": null,
-        "nuovi": null,
-        "ret": null,
-        "serv": null,
-        "sat": null,
-        "servizi": null
+        "fat": 184.0,
+        "pre": 4,
+        "fiche": 46.0,
+        "rit": 4,
+        "rich": 0,
+        "nuovi": 2,
+        "ret": 1,
+        "serv": 1.25,
+        "sat": 119,
+        "servizi": [
+          {"nome":"Manicure","qta":1,"ricavi":18.0},
+          {"nome":"Pedicure Estetico","qta":1,"ricavi":35.0},
+          {"nome":"Pedicure con Semipermanente","qta":1,"ricavi":50.0},
+          {"nome":"Pedicure curativo","qta":2,"ricavi":81.0}
+        ]
       },
       "chiara": {
-        "fat": null,
-        "pre": null,
-        "fiche": null,
-        "rit": null,
-        "rich": null,
-        "nuovi": null,
-        "ret": null,
+        "fat": 742.4,
+        "pre": 15,
+        "fiche": 49.49,
+        "rit": 16,
+        "rich": 1,
+        "nuovi": 2,
+        "ret": 1,
+        "serv": 2.13,
+        "sat": 41,
+        "servizi": [
+          {"nome":"Color Gloss","qta":2,"ricavi":40.0},
+          {"nome":"Colore radice","qta":4,"ricavi":172.9},
+          {"nome":"Colpi di sole","qta":1,"ricavi":65.0},
+          {"nome":"Maschera + Shampoo","qta":3,"ricavi":42.75},
+          {"nome":"Maschera Colore","qta":1,"ricavi":15.0},
+          {"nome":"Piega Capelli Corti","qta":3,"ricavi":52.73},
+          {"nome":"Piega Capelli Lunghi","qta":3,"ricavi":38.85},
+          {"nome":"Schiaritura","qta":1,"ricavi":76.5},
+          {"nome":"Shampoo","qta":3,"ricavi":13.5},
+          {"nome":"Shampoo e Conditioner","qta":6,"ricavi":42.57},
+          {"nome":"doppio gloss","qta":2,"ricavi":148.0},
+          {"nome":"mousse/finish","qta":2,"ricavi":8.0},
+          {"nome":"Prodotti","qta":1,"ricavi":26.6}
+        ]
+      },
+      "marta": {
+        "fat": 128.2,
+        "pre": 3,
+        "fiche": 42.73,
+        "rit": 0,
+        "rich": 0,
+        "nuovi": 3,
+        "ret": 1,
         "serv": null,
         "sat": null,
         "servizi": null
@@ -1824,6 +1812,10 @@ const STORICO = {
         "fiche": null,
         "servizi": null,
         "sat": null
+      },
+      "marta": {
+        "fat": null, "pre": null, "fiche": null, "rit": null, "rich": null,
+        "nuovi": null, "ret": null, "serv": null, "sat": null, "servizi": null
       }
     },
     "S4": {
@@ -1922,6 +1914,10 @@ const STORICO = {
         "fiche": null,
         "servizi": null,
         "sat": null
+      },
+      "marta": {
+        "fat": null, "pre": null, "fiche": null, "rit": null, "rich": null,
+        "nuovi": null, "ret": null, "serv": null, "sat": null, "servizi": null
       }
     }
   }
@@ -1952,6 +1948,9 @@ const COLLAB_STATO_DEF = {
     "attivo": true
   },
   "chiara": {
+    "attivo": true
+  },
+  "marta": {
     "attivo": true
   }
 };
