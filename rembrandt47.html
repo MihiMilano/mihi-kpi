@@ -3385,8 +3385,10 @@ function anGetForecast(mk){
   const curWeekForecast=curFat*(5/daysElapsed);
   // remaining weeks
   const remWeeks=m.settimane.length-curWeekIdx-1;
-  const avgWeek=completedWeeks>0?completedFat/completedWeeks:curWeekForecast;
-  return Math.round(completedFat+curWeekForecast+remWeeks*avgWeek);
+  const curWeekFull=curFat*(5/daysElapsed);
+  const totalWeeksData=completedWeeks+1;
+  const avgWeek=(completedFat+curWeekFull)/totalWeeksData;
+  return Math.round(completedFat+curWeekFull+remWeeks*avgWeek);
 }
 
 function anFmt(v){ if(v==null||isNaN(v)) return '—'; return '€'+Math.round(v).toLocaleString('it-IT'); }
