@@ -494,8 +494,14 @@ const SALONE_ATTIVO = true;
   <div class="tab-pane" id="pane-mese"></div>
   <div class="tab-pane" id="pane-storico"></div>
 
-  <!-- ANALISI SALONE (coming soon) -->
+  <!-- ANALISI ECONOMICA -->
   <div id="view-analisi" style="display:none">
+
+  <!-- Badge ultimo aggiornamento costi -->
+  <div id="an-update-badge" style="display:none;padding:6px 16px;background:var(--bg2);border-bottom:1px solid var(--bord);font-size:11px;color:var(--text2);display:flex;align-items:center;gap:6px">
+    <span style="font-size:13px">🕐</span>
+    <span>Costi aggiornati: <b id="an-update-date" style="color:var(--text)"></b></span>
+  </div>
 
   <!-- Sub-nav Analisi -->
   <div class="an-nav" id="an-nav">
@@ -3242,7 +3248,8 @@ let anSkedFilter = 'tutti';
 // ── Default data ─────────────────────────────────────────────────
 const ANA_DEF = {
   fissi: { affitto:2500, utenze:300, assicurazione:150, marketing:200, altro:100 },
-  variabili: []  // array di {id, nome, importo}
+  fissiExtra: [],  // array di {id, nome, importo} — voci fisse aggiuntive personalizzate
+  variabili: []   // array di {id, nome, importo}
 };
 const BUD_DEF = { mensile: 26976 };
 
@@ -3267,6 +3274,64 @@ function saveAna(d){ localStorage.setItem(ANA_KEY,JSON.stringify(d)); }
 function varTotal(ana){
   if(!ana||!Array.isArray(ana.variabili)) return 0;
   return ana.variabili.reduce((s,r)=>s+(+r.importo||0),0);
+}
+
+// ── Costi fissi extra (dinamici) ─────────────────────────────────
+function fissiExtraTotal(ana){
+  if(!ana||!Array.isArray(ana.fissiExtra)) return 0;
+  return ana.fissiExtra.reduce((s,r)=>s+(+r.importo||0),0);
+}
+
+function renderFissiExtraList(){
+  const ana=loadAna();
+  const items=Array.isArray(ana.fissiExtra)?ana.fissiExtra:[];
+  const rows=items.map(item=>`
+    <div class="var-item-row" id="fex-row-${item.id}">
+      <input class="var-inp-nome" type="text" value="${item.nome.replace(/"/g,'&quot;')}" placeholder="Es: IVA da versare" oninput="fexSaveNome('${item.id}',this.value)">
+      <input class="var-inp-imp" type="number" value="${item.importo||''}" placeholder="0" min="0" step="1" oninput="fexSaveImp('${item.id}',+this.value)">
+      <span class="var-inp-unit">€</span>
+      <button class="var-del-btn" onclick="fexDelItem('${item.id}')" title="Elimina">✕</button>
+    </div>`).join('');
+  return rows ? `<div class="var-items-wrap" style="margin-top:8px">${rows}</div>` : '';
+}
+
+function fexAddItem(){
+  const ana=loadAna();
+  if(!Array.isArray(ana.fissiExtra)) ana.fissiExtra=[];
+  const id='f'+Date.now();
+  ana.fissiExtra.push({id,nome:'',importo:0});
+  saveAna(ana);
+  const wrap=document.getElementById('fex-list-wrap');
+  if(wrap) wrap.innerHTML=renderFissiExtraList();
+}
+
+function fexDelItem(id){
+  const ana=loadAna();
+  if(!Array.isArray(ana.fissiExtra)) return;
+  ana.fissiExtra=ana.fissiExtra.filter(r=>r.id!==id);
+  saveAna(ana);
+  const wrap=document.getElementById('fex-list-wrap');
+  if(wrap) wrap.innerHTML=renderFissiExtraList();
+  _updateFissiTot(ana); renderPLResult();
+}
+
+function fexSaveNome(id,val){
+  const ana=loadAna();
+  const item=Array.isArray(ana.fissiExtra)?ana.fissiExtra.find(r=>r.id===id):null;
+  if(item){item.nome=val;saveAna(ana);}
+}
+
+function fexSaveImp(id,val){
+  const ana=loadAna();
+  const item=Array.isArray(ana.fissiExtra)?ana.fissiExtra.find(r=>r.id===id):null;
+  if(item){item.importo=+val||0;saveAna(ana);}
+  _updateFissiTot(ana); anSaveUpdateTs(); renderPLResult();
+}
+
+function _updateFissiTot(ana){
+  const tot=Object.values(ana.fissi||{}).reduce((s,v)=>s+(+v||0),0)+fissiExtraTotal(ana);
+  const el=document.getElementById('an-fi-tot');
+  if(el) el.textContent=anFmt2(tot);
 }
 
 function renderVariabiliList(){
@@ -3304,6 +3369,7 @@ function varDelItem(id){
   saveAna(ana);
   const wrap=document.getElementById('var-list-wrap');
   if(wrap) wrap.innerHTML=renderVariabiliList();
+  renderPLResult();
 }
 
 function varSaveNome(id, val){
@@ -3323,6 +3389,8 @@ function varSaveImp(id, val){
   const tot=varTotal(ana);
   const el=document.getElementById('an-vp-tot');
   if(el) el.textContent=anFmt2(tot);
+  anSaveUpdateTs();
+  renderPLResult();
 }
 function loadSked(){ try{ return JSON.parse(localStorage.getItem(SKED_KEY)||'[]'); }catch(e){ return []; } }
 function saveSked(d){ localStorage.setItem(SKED_KEY,JSON.stringify(d)); }
@@ -3411,6 +3479,8 @@ function anSwitch(name){
 }
 
 function renderAnalisi(){
+  // Mostra badge data aggiornamento se esiste
+  try{ const a=loadAna(); if(a.lastUpdate) anShowUpdateBadge(a.lastUpdate); }catch(e){}
   // Render the active pane
   const active=document.querySelector('.an-pane.active');
   if(!active) return;
@@ -3429,7 +3499,7 @@ function renderCruscotto(){
   const tgMese=m.collaboratori.reduce((s,c)=>s+(c.fat_tm||0),0);
   const ana=loadAna();
   const {totale:personale}=calcPersCost(mk);
-  const fissiTot=Object.values(ana.fissi||{}).reduce((s,v)=>s+(+v||0),0);
+  const fissiTot=Object.values(ana.fissi||{}).reduce((s,v)=>s+(+v||0),0)+fissiExtraTotal(ana);
   const varTot=varTotal(ana);
   const costiTot=fissiTot+personale+varTot;
   const ebitda=fatMese!=null?fatMese-costiTot:null;
@@ -3562,7 +3632,7 @@ function renderPL(){
   const ana=loadAna();
   const {totale:personale}=calcPersCost(mk);
   const varTot=varTotal(ana);
-  const fissiTot=Object.values(ana.fissi||{}).reduce((s,v)=>s+(+v||0),0);
+  const fissiTot=Object.values(ana.fissi||{}).reduce((s,v)=>s+(+v||0),0)+fissiExtraTotal(ana);
   const costiTot=fissiTot+personale+varTot;
   const ebitda=fatMese!=null?fatMese-costiTot:null;
   const margPct=fatMese&&fatMese>0?ebitda/fatMese*100:null;
@@ -3592,6 +3662,8 @@ function renderPL(){
         <span class="an-inp-unit">€</span>
       </div>`).join('')}
     </div>
+    <div id="fex-list-wrap">${renderFissiExtraList()}</div>
+    <button class="var-add-btn" onclick="fexAddItem()" style="margin-top:8px">＋ Aggiungi voce (IVA, tasse, ecc.)</button>
     <div class="an-pe-tot-row" style="margin-top:8px"><span>Totale Costi Fissi</span><span class="an-pe-tot" id="an-fi-tot">${anFmt2(fissiTot)}</span></div>
   </div>
 
@@ -3602,7 +3674,22 @@ function renderPL(){
     <div id="var-list-wrap">${renderVariabiliList()}</div>
   </div>
 
-  <div class="an-card" style="border-color:${ebitda!=null&&ebitda>=0?'rgba(21,128,61,.3)':'rgba(185,28,28,.2)'}">
+  <div id="an-pl-result"></div>`;
+  renderPLResult();
+}
+
+function renderPLResult(){
+  const mk=anGetMk();
+  const {total:fatMese}=anMonthRevenue(mk);
+  const ana=loadAna();
+  const {totale:personale}=calcPersCost(mk);
+  const fissiTot=Object.values(ana.fissi||{}).reduce((s,v)=>s+(+v||0),0)+fissiExtraTotal(ana);
+  const varTot=varTotal(ana);
+  const costiTot=fissiTot+personale+varTot;
+  const ebitda=fatMese!=null?fatMese-costiTot:null;
+  const margPct=fatMese&&fatMese>0?ebitda/fatMese*100:null;
+  const el=document.getElementById('an-pl-result'); if(!el) return;
+  el.innerHTML=`<div class="an-card" style="border-color:${ebitda!=null&&ebitda>=0?'rgba(21,128,61,.3)':'rgba(185,28,28,.2)'}">
     <div class="an-card-title">📊 Risultato Operativo</div>
     <div class="an-pe-row"><span class="an-pe-lbl">RICAVI TOTALI</span><span class="an-pe-val an-pe-pos" style="font-size:14px">${anFmt2(fatMese)}</span></div>
     <div class="an-pe-row"><span class="an-pe-lbl">Costi Fissi</span><span class="an-pe-val" style="color:var(--red)">- ${anFmt2(fissiTot)}</span></div>
@@ -3617,20 +3704,34 @@ function renderPL(){
   </div>`;
 }
 
+
+function anSaveUpdateTs(){
+  const ana=loadAna();
+  ana.lastUpdate=new Date().toISOString();
+  saveAna(ana);
+  anShowUpdateBadge(ana.lastUpdate);
+}
+
+function anShowUpdateBadge(iso){
+  if(!iso) return;
+  const d=new Date(iso);
+  const opts={day:'2-digit',month:'long',year:'numeric',hour:'2-digit',minute:'2-digit'};
+  const label=d.toLocaleString('it-IT',opts).replace(',','  ore');
+  const el=document.getElementById('an-update-date');
+  const badge=document.getElementById('an-update-badge');
+  if(el) el.textContent=label;
+  if(badge) badge.style.display='flex';
+}
 function anAutoSave(){
   const ana=loadAna();
   ['affitto','utenze','assicurazione','marketing','altro'].forEach(k=>{
     const el=document.getElementById('an-fi-'+k); if(el) ana.fissi[k]=+el.value||0;
   });
   saveAna(ana);
-  // Update derived totals
-  const mk=anGetMk();
-  const {total:fatMese}=anMonthRevenue(mk);
-  const fissiTot=Object.values(ana.fissi).reduce((s,v)=>s+(+v||0),0);
-  const varTot=varTotal(ana);
-  const fiTotEl=document.getElementById('an-fi-tot');
-  if(fiTotEl) fiTotEl.textContent=anFmt2(fissiTot);
-
+  // Aggiorna totale fissi e ricalcola EBITDA
+  _updateFissiTot(ana);
+  anSaveUpdateTs();
+  renderPLResult();
 }
 
 // ══════════════════════════════════════════════════════════════════
@@ -3641,7 +3742,7 @@ function renderCashFlow(){
   const {byWeek}=anMonthRevenue(mk);
   const ana=loadAna();
   const {totale:personale}=calcPersCost(mk);
-  const fissiTot=Object.values(ana.fissi||{}).reduce((s,v)=>s+(+v||0),0);
+  const fissiTot=Object.values(ana.fissi||{}).reduce((s,v)=>s+(+v||0),0)+fissiExtraTotal(ana);
   const varTot=varTotal(ana);
   const costiMensili=fissiTot+personale+varTot;
   const costiSett=costiMensili/4;
