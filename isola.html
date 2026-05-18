@@ -702,6 +702,7 @@ const STORICO = {
     "chiuso": false,
     "ultimo_aggiornamento": "15 mag 2026",
     "S1": {
+      "fat_totale_salone": 0,
       "stefano": {
         "fat": 2006.5,
         "pre": 60,
@@ -850,6 +851,7 @@ const STORICO = {
       }
     },
     "S2":       {
+      "fat_totale_salone": 0,
             "stefano": {
                   "fat": 932.8,
                   "pre": 26,
@@ -968,6 +970,7 @@ const STORICO = {
             }
       },
     "S3": {
+      "fat_totale_salone": 0,
       "stefano": {
         "fat": null,
         "pre": null,
@@ -994,6 +997,7 @@ const STORICO = {
       }
     },
     "S4": {
+      "fat_totale_salone": 0,
       "stefano": {
         "fat": null,
         "pre": null,
@@ -1637,11 +1641,14 @@ function renderSumbar(){
     const dm=getTot(mk,c.id);if(dm.fat!==null)fatM=(fatM||0)+dm.fat;
     tgW+=c.fat_tw||0;tgM+=c.fat_tm||0;
   }
+  const fatSaloneW=st.fat_totale_salone||0;
+  const gapW=fatSaloneW>0?(fatSaloneW-fatW):null;
   const items=[
-    {v:eur(fatW),l:'Fatturato Sett.'},{v:eur(tgW),l:'Target Sett.'},{v:pct(fatW,tgW)||'–',l:'% Sett.'},
+    {v:eur(fatW),l:'Fat. Collab.'},{v:eur(tgW),l:'Target Sett.'},{v:pct(fatW,tgW)||'–',l:'% Sett.'},
     {v:eur(fatM),l:'Cumul. Mese'},{v:eur(tgM),l:'Target Mese'},{v:pct(fatM,tgM)||'–',l:'% Mese'}
   ];
-  document.getElementById('sumbar').innerHTML=items.map(i=>`<div class="ss"><div class="sv">${i.v}</div><div class="sl">${i.l}</div></div>`).join('');
+  if(fatSaloneW>0)items.push({v:eur(gapW),l:'Cassiere','extra':true},{v:eur(fatSaloneW),l:'Tot. Salone','extra':true});
+  document.getElementById('sumbar').innerHTML=items.map(i=>`<div class="ss"${i.extra?' style="background:rgba(166,115,24,.06)"':''}><div class="sv">${i.v}</div><div class="sl">${i.l}</div></div>`).join('');
   document.getElementById('hdr-week').textContent=sw?.label||'–';
   document.getElementById('hdr-month').textContent=m.label;
 }
