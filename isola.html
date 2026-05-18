@@ -1729,7 +1729,7 @@ function renderRiepilogoSalone(sw, st, m, pace){
     </div>`;
   });
   const fatTmTot=m.collaboratori.reduce((s,c)=>s+(c.fat_tm||0),0);
-  const fatCum=anMonthRevenue(mk).total||0;
+  const fatCum=anMonthRevenue(getMk()).total||0;
   const manca=Math.max(fatTmTot-fatCum,0);
   const oggi2=new Date();const fine=new Date(oggi2.getFullYear(),oggi2.getMonth()+1,0);
   let giorniRim=0;for(let d=new Date(oggi2);d<=fine;d.setDate(d.getDate()+1)){
@@ -2021,7 +2021,7 @@ function renderMese(){
   }
   if(isAvg){let cnt=0;m.collaboratori.forEach(c=>{const t=getTot(mk,c.id);if(t[meseKpi]!==null){totAll=(totAll||0)+t[meseKpi];cnt++;}});if(cnt)totAll/=cnt;tgTot=70;}
   else{m.collaboratori.forEach(c=>{const t=getTot(mk,c.id);if(t[meseKpi]!==null)totAll=(totAll||0)+t[meseKpi];if(c[kd.tm])tgTot+=c[kd.tm];});
-  if(meseKpi==='fat'){for(const sid of['S1','S2','S3','S4']){const fts=STORICO[mk]?.[sid]?.fat_totale_salone||0;if(fts>0)sums[sid]=fts;}const _rev=anMonthRevenue(mk);if(_rev.total!==null)totAll=_rev.total;}
+  if(meseKpi==='fat'){for(const sid of['S1','S2','S3','S4']){const fts=STORICO[mk]?.[sid]?.fat_totale_salone||0;if(fts>0)sums[sid]=fts;}const _rev=anMonthRevenue(mk);if(_rev.total!==null)totAll=_rev.total;}}
   // Per fiche: ticket medio salone = fat_tot/pre_tot; per serv: media pesata
   if(meseKpi==='fiche'){
     html+=`<tr class="tot-row"><td>MEDIA SALONE</td>`;
@@ -2093,7 +2093,7 @@ function renderStorico(){
   }
   if(isAvgS){let cnt=0;m.collaboratori.forEach(c=>{const t=getTot(stMk,c.id);if(t[stKpi]!==null){totAll=(totAll||0)+t[stKpi];cnt++;}});if(cnt)totAll/=cnt;tgTot=70;}
   else{m.collaboratori.forEach(c=>{const t=getTot(stMk,c.id);if(t[stKpi]!==null)totAll=(totAll||0)+t[stKpi];if(c[kd.tm])tgTot+=c[kd.tm];});
-  if(stKpi==='fat'){for(const sid of['S1','S2','S3','S4']){const fts=STORICO[stMk]?.[sid]?.fat_totale_salone||0;if(fts>0)sums[sid]=fts;}const _rev=anMonthRevenue(stMk);if(_rev.total!==null)totAll=_rev.total;}
+  if(stKpi==='fat'){for(const sid of['S1','S2','S3','S4']){const fts=STORICO[stMk]?.[sid]?.fat_totale_salone||0;if(fts>0)sums[sid]=fts;}const _rev=anMonthRevenue(stMk);if(_rev.total!==null)totAll=_rev.total;}}
   // Per fiche: ticket medio salone = fat_tot/pre_tot; per serv: media pesata
   if(stKpi==='fiche'){
     html+=`<tr class="tot-row"><td>MEDIA SALONE</td>`;
