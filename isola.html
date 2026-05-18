@@ -305,6 +305,41 @@ select{background:var(--card);color:var(--text);border:1px solid var(--bord2);pa
 .an-week-pill-lbl{font-size:9px;text-transform:uppercase;letter-spacing:.5px;color:var(--text2)}
 .an-week-pill-val{font-size:13px;font-weight:800;margin-top:2px}
 .an-week-pill-val.missing{color:var(--bord2)}
+
+/* ── RELAZIONE ─────────────────────────────────────────── */
+.rel-header{background:linear-gradient(135deg,var(--gold)15,var(--gold)05);border:1px solid var(--gold)40;border-radius:14px;padding:16px;margin-bottom:14px}
+.rel-kpi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}
+.rel-kpi{background:var(--card);border:1px solid var(--bord);border-radius:12px;padding:12px;text-align:center}
+.rel-kpi-val{font-size:20px;font-weight:900;color:var(--gold)}
+.rel-kpi-lbl{font-size:10px;color:var(--text2);margin-top:3px;font-weight:700;text-transform:uppercase;letter-spacing:.4px}
+.rel-kpi-sub{font-size:11px;color:var(--text2);margin-top:2px}
+.rel-section{margin-bottom:16px}
+.rel-section-title{font-size:10px;font-weight:800;color:var(--text2);letter-spacing:.7px;text-transform:uppercase;margin-bottom:8px;padding-bottom:5px;border-bottom:1px solid var(--bord)}
+.rel-narrative{background:var(--card);border:1px solid var(--bord);border-radius:12px;padding:14px;font-size:13px;line-height:1.7;color:var(--text)}
+.rel-narrative p{margin-bottom:10px}
+.rel-narrative p:last-child{margin-bottom:0}
+.rel-narrative strong{color:var(--gold)}
+.rel-collab-row{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--bord)}
+.rel-collab-row:last-child{border-bottom:none}
+.rel-badge{display:inline-block;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:800}
+.rel-badge-g{background:#22c55e20;color:#22c55e}
+.rel-badge-a{background:#f59e0b20;color:#f59e0b}
+.rel-badge-r{background:#ef444420;color:#ef4444}
+.rel-azione{background:var(--card);border-left:3px solid var(--gold);border-radius:0 10px 10px 0;padding:9px 12px;margin-bottom:6px;font-size:12px;line-height:1.5}
+.rel-print-btn{background:var(--gold);color:#000;border:none;border-radius:10px;padding:10px 20px;font-size:12px;font-weight:800;cursor:pointer;width:100%;margin-bottom:14px;font-family:inherit}
+.rel-toggle-wrap{display:flex;align-items:center;gap:8px;margin-bottom:12px;background:var(--card);border:1px solid var(--bord);border-radius:10px;padding:10px 14px}
+.rel-toggle-wrap label{font-size:12px;font-weight:700;cursor:pointer;flex:1}
+.rel-mese-section{background:var(--card);border:1px solid var(--gold)40;border-radius:14px;padding:14px;margin-bottom:14px}
+@media print{
+  body *{visibility:hidden}
+  #pane-relazione,#pane-relazione *{visibility:visible}
+  #pane-relazione{position:fixed;top:0;left:0;width:100%;padding:20px;background:#fff;color:#000}
+  .rel-print-btn,.rel-toggle-wrap{display:none!important}
+  .rel-header,.rel-kpi,.rel-narrative,.rel-azione,.rel-mese-section{background:#fff!important;border-color:#ccc!important;color:#000!important}
+  .rel-kpi-val,.rel-narrative strong{color:#b45309!important}
+  .rel-section-title,.rel-kpi-lbl,.rel-kpi-sub{color:#666!important}
+}
+
 /* Budget table */
 .bvc-row{display:grid;grid-template-columns:80px 1fr 1fr 1fr;gap:0;align-items:center;padding:9px 0;border-bottom:1px solid var(--bg2);font-size:12px}
 .bvc-row:last-child{border-bottom:none}
@@ -470,6 +505,7 @@ const SALONE_ATTIVO = true;
     <div class="tab-btn active" onclick="switchTab('live')">📊 Settimana Live</div>
     <div class="tab-btn" onclick="switchTab('mese')">📅 Il Mese</div>
     <div class="tab-btn" onclick="switchTab('storico')">🗂️ Storico</div>
+    <div class="tab-btn" onclick="switchTab('relazione')">📊 Relazione</div>
   </div>
 
   <!-- SUMMARY BAR -->
@@ -1626,6 +1662,331 @@ function switchTab(name){
   document.getElementById(`pane-${name}`).style.display='block';
   if(name==='mese')renderMese();
   if(name==='storico')renderStorico();
+  if(name==='relazione')renderRelazione();
+}
+
+
+// ╔══════════════════════════════════════════════════════════════╗
+// ║  TAB: RELAZIONE SETTIMANALE / FINE MESE                      ║
+// ╚══════════════════════════════════════════════════════════════╝
+function renderRelazione(){
+  const mk=getMk();const m=MESI[mk];
+  if(!m){document.getElementById('pane-relazione').innerHTML='<p class="no-data">Nessun dato.</p>';return;}
+  const sw=getSW(mk);const sid=sw?.id||'S1';
+  const st=STORICO[mk]||{};const stW=st[sid]||{};
+  const pace=getPaceRatio(sw);
+  const isClosed=st.chiuso||false;
+  const showMese=document.getElementById('rel-toggle-mese')?.checked||false;
+  const ua=st.ultimo_aggiornamento||'–';
+
+  // ── Raccolta dati settimana ──────────────────────────────────
+  const collabs=m.collaboratori;
+  const cwData=collabs.map(c=>{
+    const dw=stW[c.id]||{};
+    const hasData=dw.fat!==null&&dw.fat!==undefined;
+    return{c,dw,hasData,
+      fatPct:c.fat_tw>0&&hasData?Math.round(dw.fat/c.fat_tw*pace*100):null,
+      prePct:c.pre_tw>0&&dw.pre!=null?Math.round(dw.pre/c.pre_tw*pace*100):null,
+      satOk:dw.sat!=null&&dw.sat>=70
+    };
+  }).filter(x=>x.hasData);
+
+  const fatSaloneW=stW.fat_totale_salone>0?stW.fat_totale_salone:cwData.reduce((s,x)=>s+(x.dw.fat||0),0);
+  const tgW=collabs.reduce((s,c)=>s+(c.fat_tw||0),0);
+  const pctW=tgW>0?Math.round(fatSaloneW/tgW*100):null;
+  const revM=anMonthRevenue(mk);
+  const fatM=revM.total||0;
+  const tgM=collabs.reduce((s,c)=>s+(c.fat_tm||0),0);
+  const pctM=tgM>0?Math.round(fatM/tgM*100):null;
+
+  // ── Colori semaforo ──────────────────────────────────────────
+  function semCol(pct){return pct===null?'var(--text2)':pct>=85?'var(--green)':pct>=60?'var(--amber)':'var(--red)';}
+  function semBadge(pct){return pct===null?'rel-badge-a':pct>=85?'rel-badge-g':pct>=60?'rel-badge-a':'rel-badge-r';}
+
+  // ── Narrative automatica ─────────────────────────────────────
+  function generaNarrative(){
+    const nome=m.label||mk;
+    const intro=`Settimana <strong>${sw?.label||sid}</strong> — aggiornato al <strong>${ua}</strong>.`;
+    // Fatturato salone
+    let fatText='';
+    if(fatSaloneW>0&&tgW>0){
+      const gap=fatSaloneW-tgW;
+      if(pctW>=90)fatText=`Il salone ha raggiunto <strong>${eur(fatSaloneW)}</strong> di fatturato su un target di <strong>${eur(tgW)}</strong> (${pctW}%) — ottima settimana. `;
+      else if(pctW>=70)fatText=`Il salone ha prodotto <strong>${eur(fatSaloneW)}</strong> su un target di <strong>${eur(tgW)}</strong> (${pctW}%). L'andamento è nella norma; mancano <strong>${eur(Math.abs(gap))}</strong> al target. `;
+      else fatText=`Il salone si trova a <strong>${eur(fatSaloneW)}</strong> su un target di <strong>${eur(tgW)}</strong> (${pctW}%). È necessario accelerare nelle prossime settimane: mancano <strong>${eur(Math.abs(gap))}</strong> al target. `;
+    }
+    // Top performer
+    const sorted=[...cwData].sort((a,b)=>(b.dw.fat||0)-(a.dw.fat||0));
+    let topText='';
+    if(sorted.length>0){
+      const top=sorted[0];
+      topText=`<strong>${top.c.nome}</strong> è il/la collaboratore/trice con il fatturato più alto: <strong>${eur(top.dw.fat)}</strong>${top.c.fat_tw>0?` (${top.fatPct??'–'}% del target)`:''}.`;
+    }
+    // Criticità
+    const critici=cwData.filter(x=>x.fatPct!==null&&x.fatPct<60);
+    let critText='';
+    if(critici.length>0){
+      const nomi=critici.map(x=>`<strong>${x.c.nome}</strong> (${x.fatPct}%)`).join(', ');
+      critText=` Sotto il 60% del previsto: ${nomi}. Necessario un confronto individuale.`;
+    }
+    // Retail
+    const noRet=cwData.filter(x=>x.c.ret_tw>0&&(x.dw.ret===0||x.dw.ret===null));
+    let retText='';
+    if(noRet.length>0){
+      retText=` Nessuna vendita retail per: ${noRet.map(x=>`<strong>${x.c.nome}</strong>`).join(', ')}.`;
+    }
+    // Saturazione
+    const lowSat=cwData.filter(x=>x.dw.sat!==null&&x.dw.sat<60);
+    let satText='';
+    if(lowSat.length>0){
+      satText=` Saturazione bassa (sotto 60%): ${lowSat.map(x=>`<strong>${x.c.nome}</strong> (${x.dw.sat}%)`).join(', ')}.`;
+    }
+    // Mese cumulato
+    let meseText='';
+    if(fatM>0&&tgM>0){
+      meseText=`A livello mensile il salone cumula <strong>${eur(fatM)}</strong> su un target di <strong>${eur(tgM)}</strong> (${pctM}%).`;
+    }
+    return`<p>${intro}</p><p>${fatText}${topText}</p>${critText||retText||satText?`<p>${critText}${retText}${satText}</p>`:''}<p>${meseText}</p>`;
+  }
+
+  // ── Grafico SVG: bar chart collaboratori fat vs target ────────
+  function svgBarChart(){
+    const items=cwData.filter(x=>x.c.fat_tw>0);
+    if(items.length===0)return'';
+    const W=320,bH=22,gap=6,pad=8,lblW=80;
+    const maxV=Math.max(...items.map(x=>Math.max(x.dw.fat||0,x.c.fat_tw||0)),1);
+    const chartW=W-lblW-pad*2;
+    const H=items.length*(bH+gap)+pad*2;
+    let bars='';
+    items.forEach((x,i)=>{
+      const y=pad+i*(bH+gap);
+      const wFat=Math.min(Math.round((x.dw.fat||0)/maxV*chartW),chartW);
+      const wTgt=Math.min(Math.round(x.c.fat_tw/maxV*chartW),chartW);
+      const col=x.fatPct===null?'#6b6055':x.fatPct>=85?'#22c55e':x.fatPct>=60?'#f59e0b':'#ef4444';
+      bars+=`<text x="${lblW-4}" y="${y+bH/2+4}" text-anchor="end" font-size="10" fill="#8a7a60" font-family="system-ui">${x.c.nome.split(' ')[0]}</text>`;
+      bars+=`<rect x="${lblW}" y="${y+2}" width="${wTgt}" height="${bH-4}" rx="3" fill="#2a2218"/>`;
+      bars+=`<rect x="${lblW}" y="${y+2}" width="${wFat}" height="${bH-4}" rx="3" fill="${col}"/>`;
+      bars+=`<text x="${lblW+wFat+3}" y="${y+bH/2+4}" font-size="9" fill="${col}" font-family="system-ui" font-weight="700">${eur(x.dw.fat)}</text>`;
+    });
+    return`<div class="rel-section"><div class="rel-section-title">💰 Fatturato vs Target — ${sw?.label||sid}</div>
+    <svg width="100%" viewBox="0 0 ${W} ${H}" style="overflow:visible">${bars}</svg></div>`;
+  }
+
+  // ── Grafico SVG: andamento settimane ─────────────────────────
+  function svgAndamento(){
+    const settimane=m.settimane||[];
+    if(settimane.length===0)return'';
+    const W=320,bW=50,gap=12,pad=20,H=100;
+    const vals=settimane.map(s=>{
+      const sw2=st[s.id];
+      if(!sw2)return null;
+      if(sw2.fat_totale_salone>0)return sw2.fat_totale_salone;
+      return collabs.reduce((sum,c)=>{const d=sw2[c.id];return sum+(d?.fat||0);},0)||null;
+    });
+    const tgWeek=tgW;
+    const maxV=Math.max(...vals.filter(v=>v!==null),tgWeek,1);
+    const totalW=(bW+gap)*settimane.length-gap+pad*2;
+    let rects='',labels='';
+    settimane.forEach((s,i)=>{
+      const v=vals[i];
+      const x=pad+i*(bW+gap);
+      const barH=v!==null?Math.round(v/maxV*(H-30)):0;
+      const col=v===null?'#2a2218':v>=tgWeek?'#22c55e':v>=tgWeek*0.7?'#f59e0b':'#ef4444';
+      rects+=`<rect x="${x}" y="${H-barH-20}" width="${bW}" height="${barH}" rx="3" fill="${col}"/>`;
+      if(v!==null)rects+=`<text x="${x+bW/2}" y="${H-barH-24}" text-anchor="middle" font-size="9" fill="${col}" font-family="system-ui" font-weight="700">${Math.round(v/1000)}k</text>`;
+      labels+=`<text x="${x+bW/2}" y="${H}" text-anchor="middle" font-size="9" fill="#6b6055" font-family="system-ui">${s.id}</text>`;
+    });
+    // linea target
+    const tgtY=H-20-Math.round(tgWeek/maxV*(H-30));
+    const lineX2=pad+(bW+gap)*settimane.length-gap;
+    rects+=`<line x1="${pad}" y1="${tgtY}" x2="${lineX2}" y2="${tgtY}" stroke="#a67318" stroke-width="1.5" stroke-dasharray="4,3"/>`;
+    rects+=`<text x="${lineX2+3}" y="${tgtY+4}" font-size="9" fill="#a67318" font-family="system-ui">tgt</text>`;
+    return`<div class="rel-section"><div class="rel-section-title">📈 Andamento Settimanale</div>
+    <svg width="100%" viewBox="0 0 ${totalW} ${H+4}" style="overflow:visible">${rects}${labels}</svg></div>`;
+  }
+
+  // ── Tabella collaboratori ────────────────────────────────────
+  function tabellaCollabs(){
+    if(cwData.length===0)return'';
+    const sorted=[...cwData].sort((a,b)=>(b.dw.fat||0)-(a.dw.fat||0));
+    const medals=['🥇','🥈','🥉'];
+    let rows='';
+    sorted.forEach((x,i)=>{
+      const col=rc(x.c.ruolo);
+      const badge=x.fatPct!==null?`<span class="rel-badge ${semBadge(x.fatPct)}">${x.fatPct}%</span>`:'';
+      rows+=`<div class="rel-collab-row">
+        <span style="font-size:16px;width:22px">${medals[i]||`<span style="font-size:11px;color:var(--text2);font-weight:700">${i+1}</span>`}</span>
+        <span style="flex:1;font-size:13px;font-weight:700;color:${col}">${x.c.nome}</span>
+        <span style="font-size:13px;font-weight:800">${eur(x.dw.fat)}</span>
+        <span style="margin-left:4px">${badge}</span>
+        <span style="font-size:11px;color:var(--text2);margin-left:6px">${x.dw.sat!=null?x.dw.sat+'% sat':''}</span>
+      </div>`;
+    });
+    return`<div class="rel-section"><div class="rel-section-title">🏆 Ranking Collaboratori</div>
+    <div style="background:var(--card);border:1px solid var(--bord);border-radius:12px;padding:10px 14px">${rows}</div></div>`;
+  }
+
+  // ── Azioni consigliate ───────────────────────────────────────
+  function azioniConsigliate(){
+    const azioni=[];
+    if(pctW!==null&&pctW<70)azioni.push(`📊 Il fatturato salone è al ${pctW}% del target. Pianifica un briefing team per allineare gli obiettivi della prossima settimana.`);
+    const noRet2=cwData.filter(x=>x.c.ret_tw>0&&(x.dw.ret===0||x.dw.ret===null));
+    if(noRet2.length>0)azioni.push(`🛍️ ${noRet2.map(x=>x.c.nome).join(', ')} non ha venduto retail. Ricordare l'importanza della vendita prodotti ad ogni uscita cliente.`);
+    const lowRif=cwData.filter(x=>x.dw.pre>0&&x.dw.rit!=null&&Math.round(x.dw.rit/x.dw.pre*100)<40);
+    if(lowRif.length>0)azioni.push(`🔁 Rifissazione bassa per ${lowRif.map(x=>x.c.nome).join(', ')}. Proporre il prossimo appuntamento prima che il cliente esca.`);
+    const lowSat2=cwData.filter(x=>x.dw.sat!=null&&x.dw.sat<60);
+    if(lowSat2.length>0)azioni.push(`📅 Agenda poco piena per ${lowSat2.map(x=>x.c.nome).join(', ')} (sotto 60%). Attivare promozioni o recall clienti dormienti.`);
+    const topFiche=cwData.filter(x=>x.dw.fiche!=null&&x.c.fiche_t>0&&x.dw.fiche>=x.c.fiche_t*1.1);
+    if(topFiche.length>0)azioni.push(`🧾 ${topFiche.map(x=>x.c.nome).join(', ')} ha una fiche media sopra il target — condividere le tecniche con il team.`);
+    if(azioni.length===0)azioni.push(`✅ Ottima settimana! Mantenere il ritmo e condividere i risultati con il team.`);
+    return`<div class="rel-section"><div class="rel-section-title">🎯 Azioni per la prossima settimana</div>${azioni.map(a=>`<div class="rel-azione">${a}</div>`).join('')}</div>`;
+  }
+
+  // ── Relazione Fine Mese ──────────────────────────────────────
+  function sezioneFineMese(){
+    if(!showMese)return'';
+    const rev=anMonthRevenue(mk);
+    const settimane=m.settimane||[];
+
+    // Valutazione collaboratori mese
+    let collabMese='';
+    const mCollabs=collabs.map(c=>{
+      const tm=getTot(mk,c.id);
+      const fatTot=tm.fat;
+      const tgtM=c.fat_tm||0;
+      const pct=tgtM>0&&fatTot!==null?Math.round(fatTot/tgtM*100):null;
+      return{c,fatTot,tgtM,pct};
+    }).filter(x=>x.fatTot!==null);
+    mCollabs.sort((a,b)=>(b.fatTot||0)-(a.fatTot||0));
+    collabMese=mCollabs.map(x=>{
+      const col=x.pct===null?'var(--text2)':x.pct>=85?'#22c55e':x.pct>=60?'#f59e0b':'#ef4444';
+      const icon=x.pct===null?'⚪':x.pct>=85?'🟢':x.pct>=60?'🟡':'🔴';
+      return`<div class="rel-collab-row">
+        <span style="font-size:14px">${icon}</span>
+        <span style="flex:1;font-size:13px;font-weight:700">${x.c.nome}</span>
+        <span style="font-size:13px;font-weight:800;color:${col}">${eur(x.fatTot)}</span>
+        <span style="font-size:11px;color:var(--text2);margin-left:6px">su ${eur(x.tgtM)}${x.pct!==null?' — '+x.pct+'%':''}</span>
+      </div>`;
+    }).join('');
+
+    // Conto economico semplificato
+    const ana=loadAna();
+    const fissi=Object.values(ana.fissi||{}).reduce((s,v)=>s+(+v||0),0);
+    const extra=Array.isArray(ana.fissiExtra)?ana.fissiExtra.reduce((s,r)=>s+(+r.importo||0),0):0;
+    const variabili=varTotal(ana);
+    const persData=computePersBK(mk);
+    const costoP=persData.totale||0;
+    const totCosti=fissi+extra+variabili+costoP;
+    const margine=(rev.total||0)-totCosti;
+
+    // Confronto mesi precedenti
+    const mksSorted=Object.keys(STORICO).filter(k=>/^\d{4}-\d{2}$/.test(k)).sort();
+    const mkIdx=mksSorted.indexOf(mk);
+    let confronto='';
+    if(mkIdx>0){
+      const mkPrec=mksSorted[mkIdx-1];
+      const revPrec=anMonthRevenue(mkPrec);
+      if(revPrec.total!==null&&rev.total!==null){
+        const delta=rev.total-revPrec.total;
+        const deltaPct=revPrec.total>0?Math.round(delta/revPrec.total*100):null;
+        const col=delta>=0?'#22c55e':'#ef4444';
+        confronto=`<div style="background:var(--card);border:1px solid var(--bord);border-radius:10px;padding:10px 14px;margin-bottom:10px">
+          <div style="font-size:10px;font-weight:800;color:var(--text2);margin-bottom:6px;text-transform:uppercase">↔️ vs Mese Precedente (${MESI[mkPrec]?.label||mkPrec})</div>
+          <div style="display:flex;gap:12px;align-items:center">
+            <div><div style="font-size:12px;color:var(--text2)">Mese prec.</div><div style="font-size:16px;font-weight:800">${eur(revPrec.total)}</div></div>
+            <div style="font-size:20px;color:${col}">${delta>=0?'▲':'▼'}</div>
+            <div><div style="font-size:12px;color:var(--text2)">Variazione</div><div style="font-size:16px;font-weight:800;color:${col}">${delta>=0?'+':''}${eur(delta)}${deltaPct!==null?' ('+Math.abs(deltaPct)+'%)':''}</div></div>
+          </div></div>`;
+      }
+    }
+
+    // Obiettivi mese prossimo
+    const mkPross=mksSorted[mkIdx+1]||null;
+    let obiettivi='';
+    if(mkPross&&MESI[mkPross]){
+      const mP=MESI[mkPross];
+      const tgMP=mP.collaboratori.reduce((s,c)=>s+(c.fat_tm||0),0);
+      obiettivi=`<div style="background:var(--gold)10;border:1px solid var(--gold)30;border-radius:10px;padding:10px 14px;margin-top:10px">
+        <div style="font-size:10px;font-weight:800;color:var(--gold);margin-bottom:6px;text-transform:uppercase">🎯 Target Mese Prossimo — ${mP.label}</div>
+        <div style="font-size:13px">Target fatturato: <strong>${eur(tgMP)}</strong>${rev.total>0&&tgMP>0?' — '+Math.round(tgMP/rev.total*100)+'% del mese corrente':''}</div>
+      </div>`;
+    }
+
+    return`<div class="rel-mese-section">
+      <div style="font-size:11px;font-weight:800;color:var(--gold);letter-spacing:.5px;text-transform:uppercase;margin-bottom:12px">📋 Relazione Fine Mese — ${m.label}</div>
+      ${confronto}
+      <div style="font-size:10px;font-weight:800;color:var(--text2);text-transform:uppercase;margin-bottom:8px">Conto Economico Semplificato</div>
+      <div style="background:var(--card);border:1px solid var(--bord);border-radius:10px;overflow:hidden;margin-bottom:12px">
+        ${[
+          ['💰 Fatturato Salone',(rev.total||0),true],
+          ['👥 Costo Personale',-costoP,false],
+          ['🏠 Costi Fissi',-(fissi+extra),false],
+          ['📦 Costi Variabili',-variabili,false],
+        ].map(([lbl,val,isRev])=>`<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;border-bottom:1px solid var(--bord)">
+          <span style="font-size:12px">${lbl}</span>
+          <span style="font-size:13px;font-weight:800;color:${isRev?'var(--green)':val<0?'var(--red)':'var(--text)'}">${val>=0?'+':''}${eur(Math.abs(val))}</span>
+        </div>`).join('')}
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 12px;background:${margine>=0?'#22c55e15':'#ef444415'}">
+          <span style="font-size:13px;font-weight:800">Margine Netto</span>
+          <span style="font-size:16px;font-weight:900;color:${margine>=0?'var(--green)':'var(--red)'}">${margine>=0?'+':''}${eur(margine)}</span>
+        </div>
+      </div>
+      <div style="font-size:10px;font-weight:800;color:var(--text2);text-transform:uppercase;margin-bottom:8px">Valutazione Collaboratori — Mese</div>
+      <div style="background:var(--card);border:1px solid var(--bord);border-radius:10px;padding:8px 14px;margin-bottom:12px">${collabMese}</div>
+      ${obiettivi}
+    </div>`;
+  }
+
+  // ── Composizione HTML finale ─────────────────────────────────
+  const semColW=semCol(pctW);
+  const semColM=semCol(pctM);
+
+  let html=`
+  <button class="rel-print-btn" onclick="window.print()">🖨️ Stampa / Esporta PDF</button>
+
+  <div class="rel-toggle-wrap">
+    <label for="rel-toggle-mese">📋 Mostra relazione fine mese</label>
+    <input type="checkbox" id="rel-toggle-mese" ${showMese?'checked':''} onchange="renderRelazione()">
+  </div>
+
+  <div class="rel-header">
+    <div style="font-size:11px;font-weight:800;color:var(--gold);letter-spacing:.8px;text-transform:uppercase;margin-bottom:4px">📊 Relazione Settimanale</div>
+    <div style="font-size:15px;font-weight:900;margin-bottom:2px">${sw?.label||sid} · ${m.label}</div>
+    <div style="font-size:11px;color:var(--text2)">Aggiornato: ${ua}</div>
+  </div>
+
+  <div class="rel-kpi-grid">
+    <div class="rel-kpi">
+      <div class="rel-kpi-val" style="color:${semColW}">${eur(fatSaloneW)}</div>
+      <div class="rel-kpi-lbl">Fat. Salone</div>
+      <div class="rel-kpi-sub" style="color:${semColW}">${pctW!==null?pctW+'% target':'–'}</div>
+    </div>
+    <div class="rel-kpi">
+      <div class="rel-kpi-val">${eur(tgW)}</div>
+      <div class="rel-kpi-lbl">Target Sett.</div>
+      <div class="rel-kpi-sub">${sw?.label||sid}</div>
+    </div>
+    <div class="rel-kpi">
+      <div class="rel-kpi-val" style="color:${semColM}">${eur(fatM)}</div>
+      <div class="rel-kpi-lbl">Cumul. Mese</div>
+      <div class="rel-kpi-sub" style="color:${semColM}">${pctM!==null?pctM+'% target':'–'}</div>
+    </div>
+  </div>
+
+  ${svgAndamento()}
+  ${svgBarChart()}
+
+  <div class="rel-section">
+    <div class="rel-section-title">📝 Analisi</div>
+    <div class="rel-narrative">${generaNarrative()}</div>
+  </div>
+
+  ${tabellaCollabs()}
+  ${azioniConsigliate()}
+  ${sezioneFineMese()}
+  `;
+
+  document.getElementById('pane-relazione').innerHTML=html;
 }
 
 // ╔══════════════════════════════════════════════════════════════╗
