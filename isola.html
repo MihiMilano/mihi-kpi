@@ -401,7 +401,8 @@ const SALONE_ATTIVO = true;
 
 <!-- COVER -->
 <div id="view-cover" class="cover">
-  <div class="cover-hero">
+  <div class="cover-hero" style="position:relative">
+    <button id="salone-toggle-btn" onclick="toggleSaloneGH(this)" style="position:absolute;top:14px;right:14px;background:none;border:1px solid #22c55e40;color:#22c55e;padding:5px 11px;border-radius:7px;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap;font-family:inherit">🟢 Salone</button>
     <div class="cover-logo">MIHI</div>
     <div class="cover-salon">Mihi Isola · Via Alserio 3</div>
     <div class="cover-title">Management System</div>
@@ -453,7 +454,6 @@ const SALONE_ATTIVO = true;
     </div>
     <div class="hmeta"><span id="hdr-week">–</span><br><b id="hdr-month">–</b></div>
     <div class="hdr-btns">
-      <button class="btn-hdr" id="btn-salone-toggle" onclick="toggleSaloneGH(this)" style="color:#22c55e;border-color:#22c55e40">🟢 Salone</button>
       <button class="btn-hdr" onclick="showComparePicker()">⇄ Confronta</button>
     </div>
   </div>
@@ -1164,18 +1164,22 @@ async function toggleSaloneGH(btn){
   }
   btn.disabled=false;
 }
-function initSaloneBtn(){
-  const btn=document.getElementById('btn-salone-toggle');
+async function initSaloneBtn(){
+  const btn=document.getElementById('salone-toggle-btn');
   if(!btn)return;
-  // lo stato locale è sempre attivo; lo stato reale è sul GitHub
-  btn.textContent='🟢 Salone';
-  btn.style.color='#22c55e';
-  btn.style.borderColor='#22c55e40';
+  try{
+    const r=await fetch(GH_PAGES_BASE+GH_FILENAME+'?_='+Date.now());
+    const html=await r.text();
+    const attivo=html.includes('const SALONE_ATTIVO = true;');
+    btn.textContent=attivo?'🟢 Salone':'🔴 Salone';
+    btn.style.color=attivo?'#22c55e':'#ef4444';
+    btn.style.borderColor=attivo?'#22c55e40':'#ef444440';
+  }catch(e){/* offline, keep default */}
 }
 
 document.addEventListener('DOMContentLoaded', ()=>{
   if(typeof renderCollabLinks==='function') renderCollabLinks();
-  initSaloneBtn();
+  if(typeof initSaloneBtn==='function') initSaloneBtn();
 });
 
 
