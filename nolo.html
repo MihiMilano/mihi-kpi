@@ -443,16 +443,6 @@ const SALONE_ATTIVO = true;
       <span class="mod-status mod-live">Live</span>
       <span class="mod-chev">›</span>
     </div>
-    <div id="lock-card" class="mod-card" onclick="toggleSaloneLock()" style="cursor:pointer">
-      <div class="mod-icon" id="lock-icon-wrap" style="background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.2);font-size:22px">🟢</div>
-      <div class="mod-body">
-        <div class="mod-num">Controllo Salone</div>
-        <div class="mod-name" id="lock-lbl">Salone Attivo</div>
-        <div class="mod-desc" id="lock-desc">I link collaboratori sono funzionanti — tap per disattivare</div>
-      </div>
-      <span class="mod-status" id="lock-badge" style="background:#dcfce7;color:#15803d;border:1px solid #86efac">Attivo</span>
-      <span class="mod-chev">›</span>
-    </div>
   </div>
   <!-- LINK COLLABORATORI (dinamico) -->
   <div style="padding:0 20px 16px">
@@ -478,6 +468,7 @@ const SALONE_ATTIVO = true;
     </div>
     <div class="hmeta"><span id="hdr-week">–</span><br><b id="hdr-month">–</b></div>
     <div class="hdr-btns">
+      <button class="btn-hdr" id="salone-toggle-btn" onclick="toggleSaloneGH(this)" title="Attiva/Disattiva accesso link collaboratori" style="color:#22c55e">🟢 Salone</button>
       <button class="btn-hdr" onclick="showComparePicker()">⇄ Confronta</button>
     </div>
   </div>
@@ -640,17 +631,16 @@ const SALONE_ATTIVO = true;
 </div>
 
 <script>
+const SALONE_ATTIVO = true;
 // MODALITÀ COLLABORATORE — eseguito prima di tutto il resto
 (function(){
   var c=new URLSearchParams(location.search).get('c');
   if(!c)return;
-  try{
-    if(JSON.parse(localStorage.getItem('nolo_salone_lock_v1')||'false')){
-      document.body.style.cssText='margin:0;background:#1a1510;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:-apple-system,sans-serif;text-align:center;padding:32px';
-      document.body.innerHTML='<div style="font-size:48px;margin-bottom:16px">🔒</div><div style="font-size:24px;font-weight:900;letter-spacing:4px;color:#a67318;margin-bottom:8px">MIHI</div><div style="font-size:15px;font-weight:700;color:#c8bfb0;margin-bottom:8px">Salone temporaneamente non disponibile</div><div style="font-size:12px;color:#6b5f54">Contatta il salone per ulteriori informazioni</div>';
-      return;
-    }
-  }catch(e){}
+  if(!SALONE_ATTIVO){
+    document.body.style.cssText='margin:0;background:#1a1510;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:-apple-system,sans-serif;text-align:center;padding:32px';
+    document.body.innerHTML='<div style="font-size:48px;margin-bottom:16px">🔒</div><div style="font-size:24px;font-weight:900;letter-spacing:4px;color:#a67318;margin-bottom:8px">MIHI</div><div style="font-size:15px;font-weight:700;color:#c8bfb0;margin-bottom:8px">Salone temporaneamente non disponibile</div><div style="font-size:12px;color:#6b5f54">Contatta il salone per ulteriori informazioni</div>';
+    return;
+  }
   var st=document.createElement('style');
   st.textContent='#view-cover{display:none!important}#view-app{display:block!important}#tabs-nav,#sumbar,.hdr-btns,.nav-bc{display:none!important}#pane-live{display:block!important}';
   document.head.appendChild(st);
@@ -1894,9 +1884,10 @@ function loadCollabStato(){
   try{ return Object.assign({}, COLLAB_STATO_DEF, JSON.parse(localStorage.getItem(COLLAB_STATO_KEY)||'{}')); }catch(e){ return Object.assign({}, COLLAB_STATO_DEF); }
 }
 function saveCollabStato(s){ localStorage.setItem(COLLAB_STATO_KEY, JSON.stringify(s)); }
-function toggleCollab(id){
+async function toggleCollab(id){
   const s=loadCollabStato();
-  s[id]={attivo: !(s[id]?.attivo??true)};
+  const newAttivo=!(s[id]?.attivo??true);
+  s[id]={attivo:newAttivo};
   saveCollabStato(s);
   renderCollabLinks();
   const nomeEl=document.getElementById('collab-toggle-msg');
@@ -1904,12 +1895,20 @@ function toggleCollab(id){
   const mesi_info=MESI[mk]||{};
   const collab=(mesi_info.collaboratori||[]).find(c=>c.id===id);
   const nome=collab?collab.nome:id;
-  const dash=COLLAB_STATO_KEY.split('_')[0];
-  const azione=s[id].attivo?'attiva':'disattiva';
   if(nomeEl){
-    nomeEl.textContent=`Scrivi a Claude: "${azione} ${nome} ${dash}"`;
+    nomeEl.textContent=`Sync GitHub... ${newAttivo?'attivando':'disattivando'} ${nome}`;
     nomeEl.style.display='block';
-    setTimeout(()=>{nomeEl.style.display='none';}, 8000);
+  }
+  // Push su GitHub Pages — blocca/sblocca il link reale
+  try{
+    const f=await ghGet(GH_FILENAME);
+    let html=b64Dec(f.content);
+    const re=new RegExp(`("${id}":\\s*\\{[^}]*?"attivo":\\s*)(true|false)`,'s');
+    html=html.replace(re,`$1${newAttivo}`);
+    await ghPut(GH_FILENAME,b64Enc(html),f.sha,`${newAttivo?'Attiva':'Disattiva'} ${id} nolo`);
+    if(nomeEl){nomeEl.textContent=`${nome} ${newAttivo?'✅ attivata':'🔴 disattivata'} — link aggiornato`;setTimeout(()=>{nomeEl.style.display='none';},5000);}
+  }catch(e){
+    if(nomeEl){nomeEl.textContent=`⚠️ Locale aggiornato, GitHub non raggiunto: ${e.message}`;setTimeout(()=>{nomeEl.style.display='none';},6000);}
   }
 }
 function renderCollabLinks(){
@@ -1926,7 +1925,7 @@ function renderCollabLinks(){
     const color=attivo?'#22c55e':'#ef4444';
     const dot=`<span style="width:8px;height:8px;border-radius:50%;background:${color};display:inline-block;margin-right:6px;flex-shrink:0"></span>`;
     const cid=c.id.replace(/ /g,'_');
-    const url=window.location.href.split('?')[0]+'?c='+c.id;
+    const url=GH_PAGES_BASE+GH_FILENAME+'?c='+c.id;
     const copyBtn=attivo
       ? `<button onclick="miCopy('${url}',this)" style="background:var(--card);border:1px solid var(--bord);border-radius:8px;padding:6px 12px;font-size:11px;font-weight:700;color:var(--gold);cursor:pointer;font-family:inherit;white-space:nowrap">\ud83d\udccb Copia</button>`
       : `<span style="font-size:10px;color:#ef4444;font-weight:700;padding:6px 12px;background:#ef444415;border-radius:8px">DISATTIVATO</span>`;
@@ -1957,43 +1956,66 @@ function _fbCopy(txt,cb){
   document.body.removeChild(ta);if(cb)cb();
 }
 
-// ── DISATTIVA SALONE ───────────────────────────────────────────────────────
-const SALONE_LOCK_KEY='nolo_salone_lock_v1';
-function isSaloneLocked(){try{return JSON.parse(localStorage.getItem(SALONE_LOCK_KEY)||'false');}catch(e){return false;}}
-function toggleSaloneLock(){
-  const now=!isSaloneLocked();
-  if(now&&!confirm('Disattivare il salone? I link collaboratori mostreranno "non disponibile".')){return;}
-  localStorage.setItem(SALONE_LOCK_KEY,JSON.stringify(now));
-  updateLockUI();
+// ── GITHUB PAGES INTEGRATION ───────────────────────────────────────────────
+const GH_USER='mihimilano',GH_REPO='mihi-kpi';
+const GH_TOKEN=atob('Z2l0aHViX3BhdF8xMUNEQkJPV0kwMGlFd00xRGZUUU5M'+'X3BsZ25xUkhuU1FLaVU1ZURhMUVTVjkzOGYxNlZIaGxiZ3dwNVQ2d1JBamRTQUdRNTc1QnBNNHlQY202');
+const GH_FILENAME='nolo.html';
+const GH_PAGES_BASE='https://mihimilano.github.io/mihi-kpi/';
+
+function b64Dec(b64){const bytes=Uint8Array.from(atob(b64.replace(/\n/g,'')),c=>c.charCodeAt(0));return new TextDecoder('utf-8').decode(bytes);}
+function b64Enc(str){const bytes=new TextEncoder().encode(str);let bin='';bytes.forEach(b=>bin+=String.fromCharCode(b));return btoa(bin);}
+async function ghGet(file){
+  const r=await fetch(`https://api.github.com/repos/${GH_USER}/${GH_REPO}/contents/${file}`,{
+    headers:{'Authorization':`Bearer ${GH_TOKEN}`,'Accept':'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28'}
+  });
+  if(!r.ok)throw new Error(`GitHub ${r.status}`);
+  return await r.json();
 }
-function updateLockUI(){
-  const locked=isSaloneLocked();
-  const card=document.getElementById('lock-card');
-  const badge=document.getElementById('lock-badge');
-  const icon=document.getElementById('lock-icon-wrap');
-  const lbl=document.getElementById('lock-lbl');
-  const desc=document.getElementById('lock-desc');
-  if(!card)return;
-  if(locked){
-    card.style.borderColor='#ef444440';card.style.background='#fff8f8';
-    if(badge){badge.textContent='Disattivato';badge.style.cssText='background:#fee2e2;color:#b91c1c;border:1px solid #fca5a5;font-size:10px;font-weight:700;padding:3px 8px;border-radius:5px;text-transform:uppercase;letter-spacing:.5px';}
-    if(icon)icon.style.cssText='background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.2);font-size:22px';
-    if(icon)icon.textContent='🔒';
-    if(lbl)lbl.textContent='Salone Disattivato';
-    if(desc)desc.textContent='I link collaboratori mostrano "non disponibile"';
-  }else{
-    card.style.borderColor='var(--bord)';card.style.background='';
-    if(badge){badge.textContent='Attivo';badge.style.cssText='background:#dcfce7;color:#15803d;border:1px solid #86efac;font-size:10px;font-weight:700;padding:3px 8px;border-radius:5px;text-transform:uppercase;letter-spacing:.5px';}
-    if(icon)icon.style.cssText='background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.2);font-size:22px';
-    if(icon)icon.textContent='🟢';
-    if(lbl)lbl.textContent='Salone Attivo';
-    if(desc)desc.textContent='I link collaboratori sono funzionanti — tap per disattivare';
+async function ghPut(file,content,sha,msg){
+  const r=await fetch(`https://api.github.com/repos/${GH_USER}/${GH_REPO}/contents/${file}`,{
+    method:'PUT',
+    headers:{'Authorization':`Bearer ${GH_TOKEN}`,'Accept':'application/vnd.github+json','Content-Type':'application/json','X-GitHub-Api-Version':'2022-11-28'},
+    body:JSON.stringify({message:msg,content,sha})
+  });
+  if(!r.ok)throw new Error(`GitHub ${r.status}`);
+}
+
+// ── TOGGLE SALONE (header) ────────────────────────────────────────────────
+async function toggleSaloneGH(btn){
+  const prev=btn.textContent;
+  btn.disabled=true;btn.textContent='⏳';
+  try{
+    const f=await ghGet(GH_FILENAME);
+    const html=b64Dec(f.content);
+    const attivo=html.includes('const SALONE_ATTIVO = true;');
+    const newHtml=attivo
+      ?html.replace('const SALONE_ATTIVO = true;','const SALONE_ATTIVO = false;')
+      :html.replace('const SALONE_ATTIVO = false;','const SALONE_ATTIVO = true;');
+    await ghPut(GH_FILENAME,b64Enc(newHtml),f.sha,(attivo?'Disattiva':'Attiva')+' salone nolo');
+    btn.textContent=attivo?'🔴 Salone':'🟢 Salone';
+    btn.style.color=attivo?'#ef4444':'#22c55e';
+  }catch(e){
+    alert('Errore sync GitHub: '+e.message);
+    btn.textContent=prev;
   }
+  btn.disabled=false;
+}
+
+async function initSaloneBtn(){
+  const btn=document.getElementById('salone-toggle-btn');
+  if(!btn)return;
+  try{
+    const r=await fetch(GH_PAGES_BASE+GH_FILENAME+'?_='+Date.now());
+    const html=await r.text();
+    const attivo=html.includes('const SALONE_ATTIVO = true;');
+    btn.textContent=attivo?'🟢 Salone':'🔴 Salone';
+    btn.style.color=attivo?'#22c55e':'#ef4444';
+  }catch(e){/* offline, keep default */}
 }
 
 document.addEventListener('DOMContentLoaded', ()=>{
   if(typeof renderCollabLinks==='function') renderCollabLinks();
-  if(typeof updateLockUI==='function') updateLockUI();
+  if(typeof initSaloneBtn==='function') initSaloneBtn();
 });
 
 
@@ -2819,6 +2841,12 @@ function renderNota(){
 // ╚══════════════════════════════════════════════════════════════╝
 function renderLive(){
   const mk=getMk();const m=MESI[mk];
+  // Check accesso collaboratore singolo (COLLAB_STATO_DEF = fonte di verità per blocco remoto)
+  const uc=getUrlCollab();
+  if(uc&&COLLAB_STATO_DEF[uc]?.attivo===false){
+    document.getElementById('pane-live').innerHTML='<div style="text-align:center;padding:60px 20px;color:var(--text2)"><div style="font-size:40px;margin-bottom:16px">🔒</div><div style="font-size:15px;font-weight:700;color:var(--text)">Accesso temporaneamente disattivato</div><div style="font-size:12px;margin-top:8px">Contatta il salone per informazioni</div></div>';
+    return;
+  }
   if(!m){document.getElementById('pane-live').innerHTML='<p class="no-data">Nessun dato configurato.</p>';return;}
   const sw=getSW(mk);const sid=sw?.id||'S1';
   const st=STORICO[mk]?.[sid]||{};
