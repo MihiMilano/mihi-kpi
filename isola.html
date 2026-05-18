@@ -2061,7 +2061,7 @@ function renderStorico(){
   if(!keys.length){document.getElementById('pane-storico').innerHTML='<p class="no-data">Nessuno storico disponibile.</p>';return;}
   const kd=KD.find(k=>k.k===stKpi)||KD[0];
   const icons={fat:'💰',pre:'👥',ret:'🛍️',rit:'🔄',nuovi:'✨',rich:'📞',sat:'📅',fiche:'🧾',serv:'✂️'};
-  let html=`<div class="msel-wrap"<select onchange="stMk=this.value;renderStorico()">`;
+  let html=`<div class="msel-wrap"><select onchange="stMk=this.value;renderStorico()">`;
   keys.forEach(mk=>{
     const lbl=MESI[mk]?.label||mk;const cl=STORICO[mk]?.chiuso?' ✅':'';
     html+=`<option value="${mk}"${mk===stMk?' selected':''}>${lbl}${cl}</option>`;
