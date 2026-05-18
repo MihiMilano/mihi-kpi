@@ -4327,10 +4327,10 @@ function renderPersBK(mk){
   const pers = loadPers(mk);
   const costoTot = pers.costo_totale || 0;
   const nette = pers.nette || {};
-  const totNette = Object.values(nette).reduce((s,v)=>s+(+v||0),0);
+  const collabs = m.collaboratori;
+  const totNette = collabs.reduce((s,c)=>s+(+nette[c.id]||0),0);
   const quota = costoTot > 0 ? costoTot - totNette : 0;
   const hasData = costoTot > 0 && totNette > 0;
-  const collabs = m.collaboratori;
 
   const rows = collabs.map(c => {
     const n = nette[c.id] || 0;
