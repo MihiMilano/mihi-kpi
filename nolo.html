@@ -2644,19 +2644,18 @@ function renderSumbar(){
   const mk=getMk();const m=MESI[mk];if(!m)return;
   const sw=getSW(mk);const sid=sw?.id||'S1';
   const st=STORICO[mk]?.[sid]||{};
-  let fatW=null,fatM=null,tgW=0,tgM=0;
+  let fatWCollab=null,tgW=0,tgM=0;
   for(const c of m.collaboratori){
-    const dw=st[c.id];if(dw?.fat!==null&&dw?.fat!==undefined)fatW=(fatW||0)+dw.fat;
-    const dm=getTot(mk,c.id);if(dm.fat!==null)fatM=(fatM||0)+dm.fat;
+    const dw=st[c.id];if(dw?.fat!==null&&dw?.fat!==undefined)fatWCollab=(fatWCollab||0)+dw.fat;
     tgW+=c.fat_tw||0;tgM+=c.fat_tm||0;
   }
   const fatSaloneW=st.fat_totale_salone||0;
-  const gapW=fatSaloneW>0?(fatSaloneW-fatW):null;
+  const fatW=fatSaloneW>0?fatSaloneW:fatWCollab;
+  const fatM=anMonthRevenue(mk).total;
   const items=[
-    {v:eur(fatW),l:'Fat. Collab.'},{v:eur(tgW),l:'Target Sett.'},{v:pct(fatW,tgW)||'–',l:'% Sett.'},
+    {v:eur(fatW),l:'Fat. Salone'},{v:eur(tgW),l:'Target Sett.'},{v:pct(fatW,tgW)||'–',l:'% Sett.'},
     {v:eur(fatM),l:'Cumul. Mese'},{v:eur(tgM),l:'Target Mese'},{v:pct(fatM,tgM)||'–',l:'% Mese'}
   ];
-  if(fatSaloneW>0)items.push({v:eur(gapW),l:'Cassiere','extra':true},{v:eur(fatSaloneW),l:'Tot. Salone','extra':true});
   document.getElementById('sumbar').innerHTML=items.map(i=>`<div class="ss"${i.extra?' style="background:rgba(166,115,24,.06)"':''}><div class="sv">${i.v}</div><div class="sl">${i.l}</div></div>`).join('');
   document.getElementById('hdr-week').textContent=sw?.label||'–';
   document.getElementById('hdr-month').textContent=m.label;
@@ -2720,6 +2719,8 @@ function renderRiepilogoSalone(sw, st, m, pace){
   }
   if(active===0)return '';
   const satM=satCount>0?Math.round(satSum/satCount):null;
+  const _fatSaloneW=st.fat_totale_salone||0;
+  if(_fatSaloneW>0)fatTot=_fatSaloneW;
   const pct2=fatTgt>0?Math.round(fatTot/fatTgt*pace*100):null;
   const sf=semPace('fat',fatTot,fatTgt,pace);
   const col=sf==='gre'?'var(--green)':sf==='amb'?'var(--amber)':'var(--red)';
@@ -2737,10 +2738,7 @@ function renderRiepilogoSalone(sw, st, m, pace){
     </div>`;
   });
   const fatTmTot=m.collaboratori.reduce((s,c)=>s+(c.fat_tm||0),0);
-  const fatCum=['S1','S2','S3','S4'].reduce((s,sid2)=>{
-    const st2=STORICO[getMk()]?.[sid2]||{};
-    return s+m.collaboratori.reduce((ss,c)=>ss+(st2[c.id]?.fat||0),0);
-  },0);
+  const fatCum=anMonthRevenue(mk).total||0;
   const manca=Math.max(fatTmTot-fatCum,0);
   const oggi2=new Date();const fine=new Date(oggi2.getFullYear(),oggi2.getMonth()+1,0);
   let giorniRim=0;for(let d=new Date(oggi2);d<=fine;d.setDate(d.getDate()+1)){
@@ -3036,7 +3034,8 @@ function renderMese(){
     sums[sid]=isAvg?(cnt>0?sv/cnt:null):sv;
   }
   if(isAvg){let cnt=0;m.collaboratori.forEach(c=>{const t=getTot(mk,c.id);if(t[meseKpi]!==null){totAll=(totAll||0)+t[meseKpi];cnt++;}});if(cnt)totAll/=cnt;tgTot=70;}
-  else{m.collaboratori.forEach(c=>{const t=getTot(mk,c.id);if(t[meseKpi]!==null)totAll=(totAll||0)+t[meseKpi];if(c[kd.tm])tgTot+=c[kd.tm];});}
+  else{m.collaboratori.forEach(c=>{const t=getTot(mk,c.id);if(t[meseKpi]!==null)totAll=(totAll||0)+t[meseKpi];if(c[kd.tm])tgTot+=c[kd.tm];});
+  if(meseKpi==='fat'){for(const sid of['S1','S2','S3','S4']){const fts=STORICO[mk]?.[sid]?.fat_totale_salone||0;if(fts>0)sums[sid]=fts;}const _rev=anMonthRevenue(mk);if(_rev.total!==null)totAll=_rev.total;}
   // Per fiche: ticket medio salone = fat_tot/pre_tot; per serv: media pesata
   if(meseKpi==='fiche'){
     html+=`<tr class="tot-row"><td>MEDIA SALONE</td>`;
@@ -3107,7 +3106,8 @@ function renderStorico(){
     sums[sid]=isAvgS?(cnt>0?sv/cnt:null):sv;
   }
   if(isAvgS){let cnt=0;m.collaboratori.forEach(c=>{const t=getTot(stMk,c.id);if(t[stKpi]!==null){totAll=(totAll||0)+t[stKpi];cnt++;}});if(cnt)totAll/=cnt;tgTot=70;}
-  else{m.collaboratori.forEach(c=>{const t=getTot(stMk,c.id);if(t[stKpi]!==null)totAll=(totAll||0)+t[stKpi];if(c[kd.tm])tgTot+=c[kd.tm];});}
+  else{m.collaboratori.forEach(c=>{const t=getTot(stMk,c.id);if(t[stKpi]!==null)totAll=(totAll||0)+t[stKpi];if(c[kd.tm])tgTot+=c[kd.tm];});
+  if(stKpi==='fat'){for(const sid of['S1','S2','S3','S4']){const fts=STORICO[stMk]?.[sid]?.fat_totale_salone||0;if(fts>0)sums[sid]=fts;}const _rev=anMonthRevenue(stMk);if(_rev.total!==null)totAll=_rev.total;}
   // Per fiche: ticket medio salone = fat_tot/pre_tot; per serv: media pesata
   if(stKpi==='fiche'){
     html+=`<tr class="tot-row"><td>MEDIA SALONE</td>`;
