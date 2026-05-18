@@ -4313,7 +4313,7 @@ function anBudSave(){
 // ══════════════════════════════════════════════════════════════════
 // COSTO PERSONALE — Calcolatore
 // ══════════════════════════════════════════════════════════════════
-const PERS_KEY = 'isola_pers_v2';
+const PERS_KEY = 'rembrandt_pers_v1';
 
 function persStorageKey(mk){ return PERS_KEY + '_' + mk; }
 function loadPers(mk){ try{ return JSON.parse(localStorage.getItem(persStorageKey(mk))) || {}; } catch(e){ return {}; } }
