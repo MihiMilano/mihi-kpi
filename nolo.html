@@ -416,7 +416,8 @@ const SALONE_ATTIVO = true;
 
 <!-- COVER -->
 <div id="view-cover" class="cover">
-  <div class="cover-hero">
+  <div class="cover-hero" style="position:relative">
+    <button id="salone-toggle-btn" onclick="toggleSaloneGH(this)" style="position:absolute;top:14px;right:14px;background:none;border:1px solid #22c55e40;color:#22c55e;padding:5px 11px;border-radius:7px;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap;font-family:inherit">🟢 Salone</button>
     <div class="cover-logo">MIHI</div>
     <div class="cover-salon">Mihi Nolo · Viale Monza 16</div>
     <div class="cover-title">Management System</div>
@@ -468,7 +469,6 @@ const SALONE_ATTIVO = true;
     </div>
     <div class="hmeta"><span id="hdr-week">–</span><br><b id="hdr-month">–</b></div>
     <div class="hdr-btns">
-      <button class="btn-hdr" id="salone-toggle-btn" onclick="toggleSaloneGH(this)" title="Attiva/Disattiva accesso link collaboratori" style="color:#22c55e">🟢 Salone</button>
       <button class="btn-hdr" onclick="showComparePicker()">⇄ Confronta</button>
     </div>
   </div>
