@@ -443,6 +443,16 @@ const SALONE_ATTIVO = true;
       <span class="mod-status mod-live">Live</span>
       <span class="mod-chev">›</span>
     </div>
+    <div id="lock-card" class="mod-card" onclick="toggleSaloneLock()" style="cursor:pointer">
+      <div class="mod-icon" id="lock-icon-wrap" style="background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.2);font-size:22px">🟢</div>
+      <div class="mod-body">
+        <div class="mod-num">Controllo Salone</div>
+        <div class="mod-name" id="lock-lbl">Salone Attivo</div>
+        <div class="mod-desc" id="lock-desc">I link collaboratori sono funzionanti — tap per disattivare</div>
+      </div>
+      <span class="mod-status" id="lock-badge" style="background:#dcfce7;color:#15803d;border:1px solid #86efac">Attivo</span>
+      <span class="mod-chev">›</span>
+    </div>
   </div>
   <!-- LINK COLLABORATORI (dinamico) -->
   <div style="padding:0 20px 16px">
@@ -634,6 +644,13 @@ const SALONE_ATTIVO = true;
 (function(){
   var c=new URLSearchParams(location.search).get('c');
   if(!c)return;
+  try{
+    if(JSON.parse(localStorage.getItem('nolo_salone_lock_v1')||'false')){
+      document.body.style.cssText='margin:0;background:#1a1510;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:-apple-system,sans-serif;text-align:center;padding:32px';
+      document.body.innerHTML='<div style="font-size:48px;margin-bottom:16px">🔒</div><div style="font-size:24px;font-weight:900;letter-spacing:4px;color:#a67318;margin-bottom:8px">MIHI</div><div style="font-size:15px;font-weight:700;color:#c8bfb0;margin-bottom:8px">Salone temporaneamente non disponibile</div><div style="font-size:12px;color:#6b5f54">Contatta il salone per ulteriori informazioni</div>';
+      return;
+    }
+  }catch(e){}
   var st=document.createElement('style');
   st.textContent='#view-cover{display:none!important}#view-app{display:block!important}#tabs-nav,#sumbar,.hdr-btns,.nav-bc{display:none!important}#pane-live{display:block!important}';
   document.head.appendChild(st);
@@ -887,6 +904,7 @@ const STORICO = {
     "chiuso": false,
     "ultimo_aggiornamento": "17 mag 2026",
     "S1": {
+      "fat_totale_salone": 0,
       "gloria": {
         "fat": 2264.75,
         "pre": 57,
@@ -1331,6 +1349,7 @@ const STORICO = {
       }
     },
     "S2": {
+      "fat_totale_salone": 0,
       "gloria": {
         "fat": 2058.71,
         "pre": 42,
@@ -1592,6 +1611,7 @@ const STORICO = {
       }
     },
     "S3": {
+      "fat_totale_salone": 0,
       "gloria": {
         "fat": null,
         "pre": null,
@@ -1714,6 +1734,7 @@ const STORICO = {
       }
     },
     "S4": {
+      "fat_totale_salone": 0,
       "gloria": {
         "fat": null,
         "pre": null,
@@ -1905,9 +1926,9 @@ function renderCollabLinks(){
     const color=attivo?'#22c55e':'#ef4444';
     const dot=`<span style="width:8px;height:8px;border-radius:50%;background:${color};display:inline-block;margin-right:6px;flex-shrink:0"></span>`;
     const cid=c.id.replace(/ /g,'_');
-    const url=`https://mihimilano.github.io/mihi-kpi/${prefix}_${cid}.html`;
+    const url=window.location.href.split('?')[0]+'?c='+c.id;
     const copyBtn=attivo
-      ? `<button onclick="navigator.clipboard.writeText('${url}');this.textContent='\u2705';setTimeout(()=>this.textContent='\ud83d\udccb Copia',2000)" style="background:var(--card);border:1px solid var(--bord);border-radius:8px;padding:6px 12px;font-size:11px;font-weight:700;color:var(--gold);cursor:pointer;font-family:inherit;white-space:nowrap">\ud83d\udccb Copia</button>`
+      ? `<button onclick="miCopy('${url}',this)" style="background:var(--card);border:1px solid var(--bord);border-radius:8px;padding:6px 12px;font-size:11px;font-weight:700;color:var(--gold);cursor:pointer;font-family:inherit;white-space:nowrap">\ud83d\udccb Copia</button>`
       : `<span style="font-size:10px;color:#ef4444;font-weight:700;padding:6px 12px;background:#ef444415;border-radius:8px">DISATTIVATO</span>`;
     const bc=attivo?'#ef444415':'#22c55e15';
     const bcc=attivo?'#ef444440':'#22c55e40';
@@ -1919,7 +1940,61 @@ function renderCollabLinks(){
   wrap.innerHTML=rows;
 }
 // === END_COLLAB_STATO ===
-document.addEventListener('DOMContentLoaded', ()=>{ if(typeof renderCollabLinks==='function') renderCollabLinks(); });
+
+// ── CLIPBOARD FALLBACK (funziona anche su file://) ─────────────────────────
+function miCopy(txt,btn){
+  const lbl=btn.textContent;
+  const ok=()=>{btn.textContent='✅';setTimeout(()=>btn.textContent=lbl,2000);};
+  if(navigator.clipboard&&window.isSecureContext){
+    navigator.clipboard.writeText(txt).then(ok).catch(()=>_fbCopy(txt,ok));
+  }else{_fbCopy(txt,ok);}
+}
+function _fbCopy(txt,cb){
+  const ta=document.createElement('textarea');
+  ta.value=txt;ta.style.cssText='position:fixed;top:0;left:0;width:1px;height:1px;opacity:0';
+  document.body.appendChild(ta);ta.focus();ta.select();
+  try{document.execCommand('copy');}catch(e){}
+  document.body.removeChild(ta);if(cb)cb();
+}
+
+// ── DISATTIVA SALONE ───────────────────────────────────────────────────────
+const SALONE_LOCK_KEY='nolo_salone_lock_v1';
+function isSaloneLocked(){try{return JSON.parse(localStorage.getItem(SALONE_LOCK_KEY)||'false');}catch(e){return false;}}
+function toggleSaloneLock(){
+  const now=!isSaloneLocked();
+  if(now&&!confirm('Disattivare il salone? I link collaboratori mostreranno "non disponibile".')){return;}
+  localStorage.setItem(SALONE_LOCK_KEY,JSON.stringify(now));
+  updateLockUI();
+}
+function updateLockUI(){
+  const locked=isSaloneLocked();
+  const card=document.getElementById('lock-card');
+  const badge=document.getElementById('lock-badge');
+  const icon=document.getElementById('lock-icon-wrap');
+  const lbl=document.getElementById('lock-lbl');
+  const desc=document.getElementById('lock-desc');
+  if(!card)return;
+  if(locked){
+    card.style.borderColor='#ef444440';card.style.background='#fff8f8';
+    if(badge){badge.textContent='Disattivato';badge.style.cssText='background:#fee2e2;color:#b91c1c;border:1px solid #fca5a5;font-size:10px;font-weight:700;padding:3px 8px;border-radius:5px;text-transform:uppercase;letter-spacing:.5px';}
+    if(icon)icon.style.cssText='background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.2);font-size:22px';
+    if(icon)icon.textContent='🔒';
+    if(lbl)lbl.textContent='Salone Disattivato';
+    if(desc)desc.textContent='I link collaboratori mostrano "non disponibile"';
+  }else{
+    card.style.borderColor='var(--bord)';card.style.background='';
+    if(badge){badge.textContent='Attivo';badge.style.cssText='background:#dcfce7;color:#15803d;border:1px solid #86efac;font-size:10px;font-weight:700;padding:3px 8px;border-radius:5px;text-transform:uppercase;letter-spacing:.5px';}
+    if(icon)icon.style.cssText='background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.2);font-size:22px';
+    if(icon)icon.textContent='🟢';
+    if(lbl)lbl.textContent='Salone Attivo';
+    if(desc)desc.textContent='I link collaboratori sono funzionanti — tap per disattivare';
+  }
+}
+
+document.addEventListener('DOMContentLoaded', ()=>{
+  if(typeof renderCollabLinks==='function') renderCollabLinks();
+  if(typeof updateLockUI==='function') updateLockUI();
+});
 
 
 // ╔══════════════════════════════════════════════════════════════╗
@@ -2566,11 +2641,14 @@ function renderSumbar(){
     const dm=getTot(mk,c.id);if(dm.fat!==null)fatM=(fatM||0)+dm.fat;
     tgW+=c.fat_tw||0;tgM+=c.fat_tm||0;
   }
+  const fatSaloneW=st.fat_totale_salone||0;
+  const gapW=fatSaloneW>0?(fatSaloneW-fatW):null;
   const items=[
-    {v:eur(fatW),l:'Fatturato Sett.'},{v:eur(tgW),l:'Target Sett.'},{v:pct(fatW,tgW)||'–',l:'% Sett.'},
+    {v:eur(fatW),l:'Fat. Collab.'},{v:eur(tgW),l:'Target Sett.'},{v:pct(fatW,tgW)||'–',l:'% Sett.'},
     {v:eur(fatM),l:'Cumul. Mese'},{v:eur(tgM),l:'Target Mese'},{v:pct(fatM,tgM)||'–',l:'% Mese'}
   ];
-  document.getElementById('sumbar').innerHTML=items.map(i=>`<div class="ss"><div class="sv">${i.v}</div><div class="sl">${i.l}</div></div>`).join('');
+  if(fatSaloneW>0)items.push({v:eur(gapW),l:'Cassiere','extra':true},{v:eur(fatSaloneW),l:'Tot. Salone','extra':true});
+  document.getElementById('sumbar').innerHTML=items.map(i=>`<div class="ss"${i.extra?' style="background:rgba(166,115,24,.06)"':''}><div class="sv">${i.v}</div><div class="sl">${i.l}</div></div>`).join('');
   document.getElementById('hdr-week').textContent=sw?.label||'–';
   document.getElementById('hdr-month').textContent=m.label;
 }
@@ -2871,7 +2949,7 @@ function openLinkModal(){
     const link=baseUrl+'?c='+c.id;
     rows+=`<div style="display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--bord)">
       <span style="flex:1;font-size:14px;font-weight:700">${c.nome}</span>
-      <button onclick="navigator.clipboard.writeText('${link}');this.textContent='✅';setTimeout(()=>this.textContent='📋',1800)" style="width:36px;height:36px;background:var(--bg2);border:1px solid var(--bord);border-radius:10px;font-size:16px;cursor:pointer;font-family:inherit">📋</button>
+      <button onclick="miCopy('${link}',this)" style="width:36px;height:36px;background:var(--bg2);border:1px solid var(--bord);border-radius:10px;font-size:16px;cursor:pointer;font-family:inherit">📋</button>
     </div>`;
   }
   document.getElementById('modal-links-body').innerHTML='<div style="font-size:11px;color:var(--text2);margin-bottom:12px">Ogni collaboratore vede solo i suoi dati, sempre aggiornati.</div>'+rows;
