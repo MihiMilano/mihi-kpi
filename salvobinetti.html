@@ -398,25 +398,12 @@ select{background:var(--card);color:var(--text);border:1px solid var(--bord2);pa
 // === SALONE_ATTIVO ===
 const SALONE_ATTIVO = true;
 // =====================
-(function(){
-  if(SALONE_ATTIVO) return;
-  document.addEventListener('DOMContentLoaded', function(){
-    document.body.innerHTML = '';
-    var d = document.createElement('div');
-    d.style.cssText = 'display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;background:#0d0d0d;color:#f5f0e8;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif;padding:32px;text-align:center';
-    d.innerHTML = '<div style="font-size:12px;font-weight:800;letter-spacing:3px;color:#a67318;margin-bottom:32px">MIHI</div>'
-      +'<div style="font-size:52px;margin-bottom:20px">🔒</div>'
-      +'<div style="font-size:20px;font-weight:900;color:#ef4444;margin-bottom:12px">Dashboard non disponibile</div>'
-      +'<div style="font-size:14px;color:#8a7a60;line-height:1.7;max-width:320px;margin-bottom:28px">Accesso temporaneamente sospeso.<br>Contatta MIHI per informazioni.</div>'
-      +'<div style="background:#ef444415;border:1px solid #ef444430;border-radius:12px;padding:14px 24px;font-size:12px;color:#ef4444;font-weight:700">MIHI Milano · mihi@mihimilano.com</div>';
-    document.body.appendChild(d);
-  });
-})();
 </script>
 
 <!-- COVER -->
 <div id="view-cover" class="cover">
-  <div class="cover-hero">
+  <div class="cover-hero" style="position:relative">
+    <button id="salone-toggle-btn" onclick="toggleSaloneGH(this)" style="position:absolute;top:14px;right:14px;background:none;border:1px solid #22c55e40;color:#22c55e;padding:5px 11px;border-radius:7px;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap;font-family:inherit">🟢 Salone</button>
     <div class="cover-logo">MIHI</div>
     <div class="cover-salon">Salvo Binetti Parrucchieri · Molfetta</div>
     <div class="cover-title">Management System</div>
@@ -444,36 +431,15 @@ const SALONE_ATTIVO = true;
       <span class="mod-chev">›</span>
     </div>
   </div>
-  <!-- LINK COLLABORATORI (generato staticamente) -->
+  <!-- LINK COLLABORATORI (dinamico) -->
   <div style="padding:0 20px 16px">
   <div style="background:var(--card);border:1px solid var(--bord);border-radius:14px;padding:16px 16px 8px">
     <div style="font-size:12px;font-weight:800;color:var(--gold);letter-spacing:.5px;margin-bottom:6px">📱 LINK COLLABORATORI</div>
     <div style="font-size:11px;color:var(--text2);margin-bottom:10px">Invia su WhatsApp — ogni collaboratore vede solo i suoi dati.</div>
-    <div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--bord)">
-      <span style="flex:1;font-size:14px;font-weight:700;color:var(--text)">Miky Basile</span>
-      <button onclick="navigator.clipboard.writeText('https://mihimilano.github.io/mihi-kpi/salvobinetti_miky.html');this.textContent='✅ Copiato!';setTimeout(()=>this.textContent='📋 Copia link',2000)" style="background:var(--card);border:1px solid var(--bord);border-radius:10px;padding:8px 14px;font-size:12px;font-weight:700;color:var(--gold);cursor:pointer;font-family:inherit;white-space:nowrap">📋 Copia link</button>
-    </div><div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--bord)">
-      <span style="flex:1;font-size:14px;font-weight:700;color:var(--text)">Valentina Dista</span>
-      <button onclick="navigator.clipboard.writeText('https://mihimilano.github.io/mihi-kpi/salvobinetti_valentina.html');this.textContent='✅ Copiato!';setTimeout(()=>this.textContent='📋 Copia link',2000)" style="background:var(--card);border:1px solid var(--bord);border-radius:10px;padding:8px 14px;font-size:12px;font-weight:700;color:var(--gold);cursor:pointer;font-family:inherit;white-space:nowrap">📋 Copia link</button>
-    </div><div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--bord)">
-      <span style="flex:1;font-size:14px;font-weight:700;color:var(--text)">Antonella Maggi</span>
-      <button onclick="navigator.clipboard.writeText('https://mihimilano.github.io/mihi-kpi/salvobinetti_antonella.html');this.textContent='✅ Copiato!';setTimeout(()=>this.textContent='📋 Copia link',2000)" style="background:var(--card);border:1px solid var(--bord);border-radius:10px;padding:8px 14px;font-size:12px;font-weight:700;color:var(--gold);cursor:pointer;font-family:inherit;white-space:nowrap">📋 Copia link</button>
-    </div><div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--bord)">
-      <span style="flex:1;font-size:14px;font-weight:700;color:var(--text)">Andrea Stasolla</span>
-      <button onclick="navigator.clipboard.writeText('https://mihimilano.github.io/mihi-kpi/salvobinetti_andrea.html');this.textContent='✅ Copiato!';setTimeout(()=>this.textContent='📋 Copia link',2000)" style="background:var(--card);border:1px solid var(--bord);border-radius:10px;padding:8px 14px;font-size:12px;font-weight:700;color:var(--gold);cursor:pointer;font-family:inherit;white-space:nowrap">📋 Copia link</button>
-    </div><div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--bord)">
-      <span style="flex:1;font-size:14px;font-weight:700;color:var(--text)">Mariangela</span>
-      <button onclick="navigator.clipboard.writeText('https://mihimilano.github.io/mihi-kpi/salvobinetti_mariangela.html');this.textContent='✅ Copiato!';setTimeout(()=>this.textContent='📋 Copia link',2000)" style="background:var(--card);border:1px solid var(--bord);border-radius:10px;padding:8px 14px;font-size:12px;font-weight:700;color:var(--gold);cursor:pointer;font-family:inherit;white-space:nowrap">📋 Copia link</button>
-    </div><div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--bord)">
-      <span style="flex:1;font-size:14px;font-weight:700;color:var(--text)">Maria Rita</span>
-      <button onclick="navigator.clipboard.writeText('https://mihimilano.github.io/mihi-kpi/salvobinetti_mariarita.html');this.textContent='✅ Copiato!';setTimeout(()=>this.textContent='📋 Copia link',2000)" style="background:var(--card);border:1px solid var(--bord);border-radius:10px;padding:8px 14px;font-size:12px;font-weight:700;color:var(--gold);cursor:pointer;font-family:inherit;white-space:nowrap">📋 Copia link</button>
-    </div><div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--bord)">
-      <span style="flex:1;font-size:14px;font-weight:700;color:var(--text)">Dario</span>
-      <button onclick="navigator.clipboard.writeText('https://mihimilano.github.io/mihi-kpi/salvobinetti_dario.html');this.textContent='✅ Copiato!';setTimeout(()=>this.textContent='📋 Copia link',2000)" style="background:var(--card);border:1px solid var(--bord);border-radius:10px;padding:8px 14px;font-size:12px;font-weight:700;color:var(--gold);cursor:pointer;font-family:inherit;white-space:nowrap">📋 Copia link</button>
-    </div>
+    <div id="collab-links-wrap"></div>
+    <div id="collab-toggle-msg" style="display:none;margin-top:10px;padding:8px 12px;background:#f59e0b20;border:1px solid #f59e0b40;border-radius:8px;font-size:11px;color:#f59e0b;font-weight:700;text-align:center"></div>
   </div>
 </div>
-
   <div class="cover-footer"><div class="cover-footer-txt">MIHI Management System · Proprietà di MIHI Milano</div></div>
 </div>
 
@@ -654,6 +620,22 @@ const SALONE_ATTIVO = true;
 (function(){
   var c=new URLSearchParams(location.search).get('c');
   if(!c)return;
+  var st=document.createElement('style');
+  st.textContent='#view-cover{display:none!important}#view-app{display:block!important}#tabs-nav,#sumbar,.hdr-btns,.nav-bc{display:none!important}#pane-live{display:block!important}';
+  document.head.appendChild(st);
+})();
+</script>
+
+<script>
+// MODALITÀ COLLABORATORE — eseguito prima di tutto il resto
+(function(){
+  var c=new URLSearchParams(location.search).get('c');
+  if(!c)return;
+  if(!SALONE_ATTIVO){
+    document.body.style.cssText='margin:0;background:#1a1510;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:-apple-system,sans-serif;text-align:center;padding:32px';
+    document.body.innerHTML='<div style="font-size:48px;margin-bottom:16px">🔒</div><div style="font-size:24px;font-weight:900;letter-spacing:4px;color:#a67318;margin-bottom:8px">MIHI</div><div style="font-size:15px;font-weight:700;color:#c8bfb0;margin-bottom:8px">Salone temporaneamente non disponibile</div><div style="font-size:12px;color:#6b5f54">Contatta il salone per ulteriori informazioni</div>';
+    return;
+  }
   var st=document.createElement('style');
   st.textContent='#view-cover{display:none!important}#view-app{display:block!important}#tabs-nav,#sumbar,.hdr-btns,.nav-bc{display:none!important}#pane-live{display:block!important}';
   document.head.appendChild(st);
@@ -863,6 +845,7 @@ const STORICO = {
     "chiuso": false,
     "ultimo_aggiornamento": null,
     "S1": {
+      "fat_totale_salone": 0,
       "miky": {
         "fat": null,
         "pre": null,
@@ -949,6 +932,7 @@ const STORICO = {
       }
     },
     "S2": {
+      "fat_totale_salone": 0,
       "miky": {
         "fat": null,
         "pre": null,
@@ -1035,6 +1019,7 @@ const STORICO = {
       }
     },
     "S3": {
+      "fat_totale_salone": 0,
       "miky": {
         "fat": null,
         "pre": null,
@@ -1121,6 +1106,7 @@ const STORICO = {
       }
     },
     "S4": {
+      "fat_totale_salone": 0,
       "miky": {
         "fat": null,
         "pre": null,
@@ -1856,11 +1842,14 @@ function renderSumbar(){
     const dm=getTot(mk,c.id);if(dm.fat!==null)fatM=(fatM||0)+dm.fat;
     tgW+=c.fat_tw||0;tgM+=c.fat_tm||0;
   }
+  const fatSaloneW=st.fat_totale_salone||0;
+  const gapW=fatSaloneW>0?(fatSaloneW-fatW):null;
   const items=[
-    {v:eur(fatW),l:'Fatturato Sett.'},{v:eur(tgW),l:'Target Sett.'},{v:pct(fatW,tgW)||'–',l:'% Sett.'},
+    {v:eur(fatW),l:'Fat. Collab.'},{v:eur(tgW),l:'Target Sett.'},{v:pct(fatW,tgW)||'–',l:'% Sett.'},
     {v:eur(fatM),l:'Cumul. Mese'},{v:eur(tgM),l:'Target Mese'},{v:pct(fatM,tgM)||'–',l:'% Mese'}
   ];
-  document.getElementById('sumbar').innerHTML=items.map(i=>`<div class="ss"><div class="sv">${i.v}</div><div class="sl">${i.l}</div></div>`).join('');
+  if(fatSaloneW>0)items.push({v:eur(gapW),l:'Cassiere','extra':true},{v:eur(fatSaloneW),l:'Tot. Salone','extra':true});
+  document.getElementById('sumbar').innerHTML=items.map(i=>`<div class="ss"${i.extra?' style="background:rgba(166,115,24,.06)"':''}><div class="sv">${i.v}</div><div class="sl">${i.l}</div></div>`).join('');
   document.getElementById('hdr-week').textContent=sw?.label||'–';
   document.getElementById('hdr-month').textContent=m.label;
 }
@@ -2037,6 +2026,10 @@ function renderLive(){
   let html='';
   const pace=getPaceRatio(sw);
   const urlCollab=getUrlCollab();
+  if(urlCollab&&COLLAB_STATO_DEF[urlCollab]?.attivo===false){
+    document.getElementById('pane-live').innerHTML='<div style="text-align:center;padding:60px 20px;color:var(--text2)"><div style="font-size:40px;margin-bottom:16px">🔒</div><div style="font-size:15px;font-weight:700;color:var(--text)">Accesso temporaneamente disattivato</div><div style="font-size:12px;margin-top:8px">Contatta il salone per informazioni</div></div>';
+    return;
+  }
   if(urlCollab){
     const myC=m.collaboratori.find(c=>c.id===urlCollab);
     if(myC){const clr=rc(myC.ruolo);html+=`<div style="background:${clr}14;border-radius:14px;padding:14px 16px;margin-bottom:14px;display:flex;align-items:center;gap:12px">
@@ -3582,9 +3575,10 @@ function loadCollabStato(){
   try{ return Object.assign({}, COLLAB_STATO_DEF, JSON.parse(localStorage.getItem(COLLAB_STATO_KEY)||'{}')); }catch(e){ return Object.assign({}, COLLAB_STATO_DEF); }
 }
 function saveCollabStato(s){ localStorage.setItem(COLLAB_STATO_KEY, JSON.stringify(s)); }
-function toggleCollab(id){
+async function toggleCollab(id){
   const s=loadCollabStato();
-  s[id]={attivo: !(s[id]?.attivo??true)};
+  const newAttivo=!(s[id]?.attivo??true);
+  s[id]={attivo:newAttivo};
   saveCollabStato(s);
   renderCollabLinks();
   const nomeEl=document.getElementById('collab-toggle-msg');
@@ -3592,12 +3586,16 @@ function toggleCollab(id){
   const mesi_info=MESI[mk]||{};
   const collab=(mesi_info.collaboratori||[]).find(c=>c.id===id);
   const nome=collab?collab.nome:id;
-  const dash=COLLAB_STATO_KEY.split('_')[0];
-  const azione=s[id].attivo?'attiva':'disattiva';
-  if(nomeEl){
-    nomeEl.textContent=`Scrivi a Claude: "${azione} ${nome} ${dash}"`;
-    nomeEl.style.display='block';
-    setTimeout(()=>{nomeEl.style.display='none';}, 8000);
+  if(nomeEl){nomeEl.textContent=`Sync GitHub... ${newAttivo?'attivando':'disattivando'} ${nome}`;nomeEl.style.display='block';}
+  try{
+    const f=await ghGet(GH_FILENAME);
+    let html=b64Dec(f.content);
+    const re=new RegExp(`("${id}":\\s*\\{[^}]*?"attivo":\\s*)(true|false)`,'s');
+    html=html.replace(re,`$1${newAttivo}`);
+    await ghPut(GH_FILENAME,b64Enc(html),f.sha,`${newAttivo?'Attiva':'Disattiva'} ${id} binetti`);
+    if(nomeEl){nomeEl.textContent=`${nome} ${newAttivo?'✅ attivata':'🔴 disattivata'} — link aggiornato`;setTimeout(()=>{nomeEl.style.display='none';},5000);}
+  }catch(e){
+    if(nomeEl){nomeEl.textContent=`⚠️ Locale aggiornato, GitHub non raggiunto: ${e.message}`;setTimeout(()=>{nomeEl.style.display='none';},6000);}
   }
 }
 function renderCollabLinks(){
@@ -3616,7 +3614,7 @@ function renderCollabLinks(){
     const cid=c.id.replace(/ /g,'_');
     const url=`https://mihimilano.github.io/mihi-kpi/${prefix}_${cid}.html`;
     const copyBtn=attivo
-      ? `<button onclick="navigator.clipboard.writeText('${url}');this.textContent='\u2705';setTimeout(()=>this.textContent='\ud83d\udccb Copia',2000)" style="background:var(--card);border:1px solid var(--bord);border-radius:8px;padding:6px 12px;font-size:11px;font-weight:700;color:var(--gold);cursor:pointer;font-family:inherit;white-space:nowrap">\ud83d\udccb Copia</button>`
+      ? `<button onclick="miCopy('${url}',this)" style="background:var(--card);border:1px solid var(--bord);border-radius:8px;padding:6px 12px;font-size:11px;font-weight:700;color:var(--gold);cursor:pointer;font-family:inherit;white-space:nowrap">\ud83d\udccb Copia</button>`
       : `<span style="font-size:10px;color:#ef4444;font-weight:700;padding:6px 12px;background:#ef444415;border-radius:8px">DISATTIVATO</span>`;
     const bc=attivo?'#ef444415':'#22c55e15';
     const bcc=attivo?'#ef444440':'#22c55e40';
@@ -3628,7 +3626,100 @@ function renderCollabLinks(){
   wrap.innerHTML=rows;
 }
 // === END_COLLAB_STATO ===
-document.addEventListener('DOMContentLoaded', ()=>{ if(typeof renderCollabLinks==='function') renderCollabLinks(); });
+
+// ── Clipboard fallback (funziona su file://) ──────────────────────────────
+function _fbCopy(txt){
+  const ta=document.createElement('textarea');
+  ta.value=txt;ta.style.cssText='position:fixed;opacity:0;top:0;left:0';
+  document.body.appendChild(ta);ta.select();
+  try{document.execCommand('copy');}catch(e){}
+  document.body.removeChild(ta);
+}
+function miCopy(txt,btn){
+  const orig=btn?btn.textContent:'';
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    navigator.clipboard.writeText(txt).then(()=>{
+      if(btn){btn.textContent='✅';setTimeout(()=>{btn.textContent=orig;},2000);}
+    }).catch(()=>{_fbCopy(txt);if(btn){btn.textContent='✅';setTimeout(()=>{btn.textContent=orig;},2000);}});
+  }else{
+    _fbCopy(txt);
+    if(btn){btn.textContent='✅';setTimeout(()=>{btn.textContent=orig;},2000);}
+  }
+}
+
+// ── GitHub API ────────────────────────────────────────────────────────────
+const GH_USER='mihimilano',GH_REPO='mihi-kpi';
+const GH_TOKEN=atob('Z2l0aHViX3BhdF8xMUNEQkJPV0kwMGlFd00xRGZUUU5M'+'X3BsZ25xUkhuU1FLaVU1ZURhMUVTVjkzOGYxNlZIaGxiZ3dwNVQ2d1JBamRTQUdRNTc1QnBNNHlQY202');
+const GH_FILENAME='salvobinetti.html';
+const GH_PAGES_BASE='https://mihimilano.github.io/mihi-kpi/';
+
+function b64Dec(b64){
+  const s=b64.replace(/\s/g,'');
+  const bytes=Uint8Array.from(atob(s),c=>c.charCodeAt(0));
+  return new TextDecoder('utf-8').decode(bytes);
+}
+function b64Enc(str){
+  const bytes=new TextEncoder().encode(str);
+  let bin='';bytes.forEach(b=>bin+=String.fromCharCode(b));
+  return btoa(bin);
+}
+async function ghGet(name){
+  const r=await fetch(`https://api.github.com/repos/${GH_USER}/${GH_REPO}/contents/${name}`,{
+    headers:{'Authorization':`Bearer ${GH_TOKEN}`,'Accept':'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28'}
+  });
+  if(!r.ok){const d=await r.json();throw new Error(`GET ${name}: HTTP ${r.status} ${d.message||''}`);}
+  return r.json();
+}
+async function ghPut(name,content,sha,msg){
+  const body={message:`${msg} - ${new Date().toISOString().slice(0,10)}`,content};
+  if(sha)body.sha=sha;
+  const r=await fetch(`https://api.github.com/repos/${GH_USER}/${GH_REPO}/contents/${name}`,{
+    method:'PUT',
+    headers:{'Authorization':`Bearer ${GH_TOKEN}`,'Accept':'application/vnd.github+json','Content-Type':'application/json','X-GitHub-Api-Version':'2022-11-28'},
+    body:JSON.stringify(body)
+  });
+  if(!r.ok){const d=await r.json();throw new Error(`PUT ${name}: HTTP ${r.status} ${d.message||''}`);}
+  return r.json();
+}
+
+// ── Salone toggle (GitHub) ────────────────────────────────────────────────
+async function toggleSaloneGH(btn){
+  const prev=btn.textContent;
+  btn.disabled=true;btn.textContent='⏳';
+  try{
+    const f=await ghGet(GH_FILENAME);
+    const html=b64Dec(f.content);
+    const attivo=html.includes('const SALONE_ATTIVO = true;');
+    const newHtml=attivo
+      ?html.replace('const SALONE_ATTIVO = true;','const SALONE_ATTIVO = false;')
+      :html.replace('const SALONE_ATTIVO = false;','const SALONE_ATTIVO = true;');
+    await ghPut(GH_FILENAME,b64Enc(newHtml),f.sha,(attivo?'Disattiva':'Attiva')+' salone binetti');
+    btn.textContent=attivo?'🔴 Salone':'🟢 Salone';
+    btn.style.color=attivo?'#ef4444':'#22c55e';
+    btn.style.borderColor=attivo?'#ef444440':'#22c55e40';
+  }catch(e){
+    alert('Errore sync GitHub: '+e.message);
+    btn.textContent=prev;
+  }
+  btn.disabled=false;
+}
+async function initSaloneBtn(){
+  const btn=document.getElementById('salone-toggle-btn');
+  if(!btn)return;
+  try{
+    const r=await fetch(GH_PAGES_BASE+GH_FILENAME+'?_='+Date.now());
+    const html=await r.text();
+    const attivo=html.includes('const SALONE_ATTIVO = true;');
+    btn.textContent=attivo?'🟢 Salone':'🔴 Salone';
+    btn.style.color=attivo?'#22c55e':'#ef4444';
+    btn.style.borderColor=attivo?'#22c55e40':'#ef444440';
+  }catch(e){/* offline */}
+}
+
+document.addEventListener('DOMContentLoaded', ()=>{
+  if(typeof renderCollabLinks==='function') renderCollabLinks();
+  if(typeof initSaloneBtn==='function') initSaloneBtn();
+});
 </script>
 </body>
 </html>
