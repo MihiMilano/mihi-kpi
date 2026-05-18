@@ -2063,7 +2063,9 @@ const KD=[
   {k:'rit',  lbl:'Clienti di ritorno',   tw:'rit_tw',   tm:'rit_tm',   fmt:num,    sum:true},
   {k:'nuovi',lbl:'Nuovi',     tw:'nuovi_tw', tm:'nuovi_tm', fmt:num,    sum:true},
   {k:'rich', lbl:'Preferenze',tw:'rich_tw',  tm:'rich_tm',  fmt:num,    sum:true},
-  {k:'sat',  lbl:'Saturaz.',  tw:'sat_tw',   tm:'sat_tm',   fmt:pctVal, sum:false}
+  {k:'sat',  lbl:'Saturaz.',  tw:'sat_tw',   tm:'sat_tm',   fmt:pctVal, sum:false},
+  {k:'fiche',lbl:'Ticket medio',tw:'fiche_t',  tm:'fiche_t',  fmt:v=>v!=null?'€'+v.toFixed(1):'–', sum:false},
+  {k:'serv', lbl:'Serv./cliente',tw:'serv_t', tm:'serv_t',  fmt:v=>v!=null?v.toFixed(2):'–',  sum:false}
 ];
 function getTot(mk,cid){
   const st=STORICO[mk];if(!st)return{};
