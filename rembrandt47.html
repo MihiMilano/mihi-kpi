@@ -631,27 +631,6 @@ const SALONE_ATTIVO = true;
   </div>
 </div>
 
-  <!-- COMPARE VIEW -->
-  <div id="view-cmp" style="display:none">
-    <div class="cmp-topbar">
-      <button class="btn-hdr" onclick="closeCompare()" style="border-color:var(--bord2);color:var(--text2)">← Indietro</button>
-      <span style="font-size:12px;font-weight:700;color:var(--text2)">Confronto Collaboratori</span>
-      <span></span>
-    </div>
-    <div id="cmp-wrap"></div>
-  </div>
-
-  <div class="foot">MIHI Milano · Uso interno riservato · Aggiornato: <span id="last-upd">mai</span></div>
-</div>
-
-<!-- COMPARE PICKER OVERLAY -->
-<div id="cpicker" class="cpicker" style="display:none" onclick="if(event.target===this)closeComparePicker()">
-  <div class="cpicker-box">
-    <div class="cpicker-title">Seleziona collaboratore da confrontare</div>
-    <div id="cpicker-list"></div>
-    <button class="cpicker-cancel" onclick="closeComparePicker()">Annulla</button>
-  </div>
-</div>
 
 <script>
 // MODALITÀ COLLABORATORE — eseguito prima di tutto il resto
@@ -2795,11 +2774,19 @@ function switchTab(name){
 function renderRelazione(){
   const mk=getMk();const m=MESI[mk];
   if(!m){document.getElementById('pane-relazione').innerHTML='<p style="padding:20px;color:var(--text2)">Nessun dato disponibile.</p>';return;}
-  const sw=getSW(mk);const sid=sw?.id||'S1';
-  const st=STORICO[mk]||{};const stW=st[sid]||{};
+  const st=STORICO[mk]||{};
   const ua=st.ultimo_aggiornamento||'—';
   const collabs=m.collaboratori;
   const settimane=m.settimane||[];
+
+  // ── Ultima settimana con dati reali (non la settimana di calendario corrente) ──
+  let sw=null,sid=null;
+  for(const s of [...settimane].reverse()){
+    const swD=st[s.id];
+    if(swD&&collabs.some(c=>typeof swD[c.id]==='object'&&swD[c.id]?.fat!=null)){sw=s;sid=s.id;break;}
+  }
+  if(!sw){sw=getSW(mk);sid=sw?.id||'S1';}
+  const stW=st[sid]||{};
   const swIdx=settimane.findIndex(s=>s.id===sid);
 
   // ── Target ────────────────────────────────────────────────────
@@ -2985,7 +2972,6 @@ function renderRelazione(){
 .ra-item{font-size:12px;line-height:1.7;padding:7px 0;border-bottom:1px solid var(--bord)}
 .ra-item:last-child{border-bottom:none}
 .ra-item strong{font-weight:800}
-.rfoot{font-size:10px;color:var(--text2);text-align:center;margin-top:14px;padding-top:8px;border-top:1px solid var(--bord)}
 </style>
 <div class="rw">
 <div style="border-bottom:1px solid var(--bord);padding-bottom:10px;margin-bottom:4px">
@@ -3018,7 +3004,6 @@ ${svgChart()}
   <div class="ralbl">Cosa tenere sotto controllo</div>
   ${azioni()}
 </div>
-<div class="rfoot">MIHI Milano · Uso interno riservato · ${m.label||mk}</div>
 </div>`;
 
   document.getElementById('pane-relazione').innerHTML=html;
