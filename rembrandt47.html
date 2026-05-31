@@ -86,11 +86,18 @@ body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Segoe UI',sa
 /* KPI GRID */
 .kpi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:5px}
 @media(min-width:480px){.kpi-grid{grid-template-columns:repeat(6,1fr)}}
-.kc{background:var(--bg2);border-radius:9px;padding:8px 5px;text-align:center}
-.kl{font-size:9px;text-transform:uppercase;letter-spacing:.5px;color:var(--text2);margin-bottom:3px}
-.kv{font-size:14px;font-weight:800}
-.kt{font-size:11px;color:var(--text);margin-top:3px;font-weight:700;opacity:.65}
-.kp{font-size:9px;opacity:.6;margin-left:1px}
+.kc{background:var(--bg2);border-radius:9px;padding:10px 8px}
+.kl{font-size:9px;text-transform:uppercase;letter-spacing:.5px;color:var(--text2);font-weight:700}
+.kv{font-size:18px;font-weight:900;margin:4px 0 0}
+.kt{font-size:10px;color:var(--text2);font-weight:600}
+.kbadge{font-size:11px;font-weight:800;padding:1px 7px;border-radius:20px;white-space:nowrap}
+.kbadge-g{background:rgba(21,128,61,.12);color:var(--green)}
+.kbadge-a{background:rgba(180,83,9,.12);color:var(--amber)}
+.kbadge-r{background:rgba(185,28,28,.12);color:var(--red)}
+.kbadge-n{background:var(--bord);color:var(--text2)}
+.kbar{height:7px;background:var(--bord);border-radius:3.5px;margin:7px 0 5px;overflow:hidden}
+.kbarf{height:100%;border-radius:3.5px;transition:width .4s}
+.kdelta{font-size:10px;font-weight:700}
 .dot{width:6px;height:6px;border-radius:50%;display:inline-block;margin-right:2px;vertical-align:middle}
 
 /* semaforo */
@@ -3106,9 +3113,6 @@ const KD=[
   {k:'fat',  lbl:'Fatturato', tw:'fat_tw',   tm:'fat_tm',   fmt:eur,    sum:true},
   {k:'pre',  lbl:'Clienti fatti',  tw:'pre_tw',   tm:'pre_tm',   fmt:num,    sum:true},
   {k:'ret',  lbl:'Retail',    tw:'ret_tw',   tm:'ret_tm',   fmt:num,    sum:true},
-  {k:'rit',  lbl:'Clienti di ritorno',   tw:'rit_tw',   tm:'rit_tm',   fmt:num,    sum:true},
-  {k:'nuovi',lbl:'Nuovi',     tw:'nuovi_tw', tm:'nuovi_tm', fmt:num,    sum:true},
-  {k:'rich', lbl:'Preferenze',tw:'rich_tw',  tm:'rich_tm',  fmt:num,    sum:true},
   {k:'sat',  lbl:'Saturaz.',  tw:'sat_tw',   tm:'sat_tm',   fmt:pctVal, sum:false},
   {k:'fiche',lbl:'Ticket medio',tw:'fiche_t',  tm:'fiche_t',  fmt:v=>v!=null?'€'+v.toFixed(1):'–', sum:false},
   {k:'serv', lbl:'Serv./cliente',tw:'serv_t', tm:'serv_t',  fmt:v=>v!=null?v.toFixed(2):'–',  sum:false}
@@ -3734,6 +3738,7 @@ function renderRelazione(){
   const active=cwData.filter(x=>x.hasData&&!x.isPartial&&!x.isNew);
   const totalPre=cwData.filter(x=>x.hasData).reduce((s,x)=>s+(x.dw.pre||0),0);
   const totalRet=cwData.filter(x=>x.hasData).reduce((s,x)=>s+(x.dw.ret||0),0);
+  const totalNuovi=cwData.filter(x=>x.hasData).reduce((s,x)=>s+(x.dw.nuovi||0),0);
   const retTgt=collabs.reduce((s,c)=>s+(c.ret_tw||0),0);
   const ticketMedio=totalPre>0?fatSaloneW/totalPre:null;
   const satArr=active.filter(x=>x.dw.sat!=null).map(x=>x.dw.sat);
@@ -3943,7 +3948,8 @@ function renderSumbar(){
   const fatM=anMonthRevenue(mk).total;
   const items=[
     {v:eur(fatW),l:'Fat. Salone'},{v:eur(tgW),l:'Target Sett.'},{v:pct(fatW,tgW)||'–',l:'% Sett.'},
-    {v:eur(fatM),l:'Cumul. Mese'},{v:eur(tgM),l:'Target Mese'},{v:pct(fatM,tgM)||'–',l:'% Mese'}
+    {v:eur(fatM),l:'Cumul. Mese'},{v:eur(tgM),l:'Target Mese'},{v:pct(fatM,tgM)||'–',l:'% Mese'},
+    {v:totalNuovi||'—',l:'Nuovi Clienti',extra:true}
   ];
   document.getElementById('sumbar').innerHTML=items.map(i=>`<div class="ss"${i.extra?' style="background:rgba(166,115,24,.06)"':''}><div class="sv">${i.v}</div><div class="sl">${i.l}</div></div>`).join('');
   document.getElementById('hdr-week').textContent=sw?.label||'–';
@@ -4155,41 +4161,57 @@ function renderLive(){
       </div>
       <div class="kpi-grid">`;
     for(const kpi of KD){
-      const av=d[kpi.k],tv=c[kpi.tw],s=semPace(kpi.k,av,tv,pace),p=kpi.k==='sat'?'':pctPace(av,tv,pace);
+      const av=d[kpi.k],tv=c[kpi.tw];
       if(tv===null||tv===undefined)continue;
-      html+=`<div class="kc"><div class="kl">${kpi.lbl}</div>
-        <div class="kv ${s}"><span class="dot d${s}"></span>${kpi.fmt(av)}${p?`<span class="kp">${p}</span>`:''}</div>
-        <div class="kt">▸ ${kpi.fmt(tv)}</div></div>`;
+      const pct=av!=null&&tv>0?Math.min(Math.round(av/tv*100),999):null;
+      const badgeCls=pct===null?'kbadge-n':pct>=100?'kbadge-g':pct>=75?'kbadge-a':'kbadge-r';
+      const barCol=pct===null?'var(--bord2)':pct>=100?'var(--green)':pct>=75?'var(--amber)':'var(--red)';
+      const barW=pct===null?0:Math.min(pct,100);
+      const pctLbl=pct!==null?pct+'%':'—';
+      let deltaHtml='';
+      if(av!=null&&tv!=null){
+        const diff=kpi.k==='fat'|kpi.k==='fiche'?av-tv:av-tv;
+        const diffFmt=kpi.k==='fat'|kpi.k==='fiche'?eur(Math.abs(diff)):Math.abs(Math.round(diff));
+        const sign=diff>=0?'+':'−';
+        const dcol=diff>=0?'var(--green)':'var(--red)';
+        deltaHtml=`<span class="kdelta" style="color:${dcol}">${sign}${diffFmt}</span>`;
+      }
+      html+=`<div class="kc">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px">
+          <div class="kl">${kpi.lbl}</div>
+          <div class="kbadge ${badgeCls}">${pctLbl}</div>
+        </div>
+        <div class="kv">${av!=null?kpi.fmt(av):'—'}</div>
+        <div class="kbar"><div class="kbarf" style="width:${barW}%;background:${barCol}"></div></div>
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div class="kt">target ${kpi.fmt(tv)}</div>
+          ${deltaHtml}
+        </div></div>`;
     }
     html+=`</div>`;
-    {const sf=sem(d.fiche,c.fiche_t),ss=sem(d.serv,c.serv_t);
-    html+=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-top:5px">
-        <div class="kc" style="background:transparent;border:1px solid var(--bord)">
-          <div class="kl">Ticket Medio</div>
-          <div class="kv ${sf}"><span class="dot d${sf}"></span>${num(d.fiche,2)}</div>
-          <div class="kt">▸ ${num(c.fiche_t,2)}</div>
-        </div>
-        <div class="kc" style="background:transparent;border:1px solid var(--bord)">
-          <div class="kl">Serv/Cliente</div>
-          <div class="kv ${ss}"><span class="dot d${ss}"></span>${num(d.serv,1)}</div>
-          <div class="kt">▸ ${num(c.serv_t,1)}</div>
-        </div>
-      </div>`;}
     {
-      const rifPct=(d.pre&&d.rit!==null&&d.rit!==undefined)?Math.round(d.rit/d.pre*100):null;
-      if(rifPct!==null){
-        const rifCol=rifPct>=70?'var(--green)':rifPct>=50?'var(--amber)':'var(--red)';
-        html+=`<div style="margin-top:8px;background:var(--bg2);border-radius:10px;padding:9px 12px;display:flex;align-items:center;gap:10px">
-          <div style="flex:1">
-            <div style="font-size:9px;text-transform:uppercase;letter-spacing:.6px;color:var(--text2);margin-bottom:4px;font-weight:800">🔁 Rifissazione clienti</div>
-            <div style="background:var(--bord);border-radius:3px;height:6px;overflow:hidden">
-              <div style="height:6px;border-radius:3px;width:${Math.min(rifPct,100)}%;background:${rifCol};transition:width .4s"></div>
-            </div>
-          </div>
-          <div style="font-size:18px;font-weight:900;color:${rifCol};min-width:42px;text-align:right">${rifPct}%</div>
-        </div>`;
-      }
+    const _ficheKpis=[{k:'fiche',lbl:'Ticket medio',tv:c.fiche_t,av:d.fiche,fmt:v=>v!=null?'€'+v.toFixed(1):'—',isFmt:'euro'},{k:'serv',lbl:'Serv/cliente',tv:c.serv_t,av:d.serv,fmt:v=>v!=null?v.toFixed(1):'—',isFmt:'num'}];
+    html+=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-top:5px">`;
+    for(const fk of _ficheKpis){
+      const pf=fk.av!=null&&fk.tv>0?Math.min(Math.round(fk.av/fk.tv*100),999):null;
+      const bCls=pf===null?'kbadge-n':pf>=100?'kbadge-g':pf>=75?'kbadge-a':'kbadge-r';
+      const bCol=pf===null?'var(--bord2)':pf>=100?'var(--green)':pf>=75?'var(--amber)':'var(--red)';
+      const bW=pf===null?0:Math.min(pf,100);
+      let dH='';
+      if(fk.av!=null&&fk.tv!=null){const df=fk.av-fk.tv;const dc=df>=0?'var(--green)':'var(--red)';const ds=df>=0?'+':'−';const dv=fk.isFmt==='euro'?eur(Math.abs(df)):Math.abs(df).toFixed(1);dH=`<span class="kdelta" style="color:${dc}">${ds}${dv}</span>`;}
+      html+=`<div class="kc" style="border:1px solid var(--bord)">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px">
+          <div class="kl">${fk.lbl}</div>
+          <div class="kbadge ${bCls}">${pf!==null?pf+'%':'—'}</div>
+        </div>
+        <div class="kv">${fk.fmt(fk.av)}</div>
+        <div class="kbar"><div class="kbarf" style="width:${bW}%;background:${bCol}"></div></div>
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div class="kt">target ${fk.fmt(fk.tv)}</div>${dH}
+        </div></div>`;
     }
+    html+=`</div>`;}
+
     if(urlCollab){
       html+=`<div class="profilo-wrap">
         <div class="psec-lbl">💡 Suggerimenti personalizzati</div>`;
