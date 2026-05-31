@@ -913,7 +913,8 @@ const MESI = {
         "sat_tw": null,
         "sat_tm": null
       }
-    ]
+    ],
+    "nuovi_target_mese": 52
   }
 };
 
@@ -3945,13 +3946,19 @@ function renderSumbar(){
   const fatSaloneW=st.fat_totale_salone||0;
   const fatW=fatSaloneW>0?fatSaloneW:fatWCollab;
   const fatM=anMonthRevenue(mk).total;
-  const totalNuovi=m.collaboratori.reduce((s,c)=>{const dw=st[c.id];return s+(dw?.nuovi||0);},0);
+  const nuoviTgtMese=m.nuovi_target_mese||0;
+  const nuoviTgtSett=nuoviTgtMese>0?Math.round(nuoviTgtMese/m.settimane.length):0;
+  const nuoviSett=Object.values(st).reduce((s,v)=>typeof v==='object'&&v?.nuovi?s+(v.nuovi||0):s,0);
+  const nuoviMese=m.settimane.reduce((s,sw)=>{const wst=STORICO[mk]?.[sw.id]||{};return s+Object.values(wst).reduce((a,v)=>typeof v==='object'&&v?.nuovi?a+(v.nuovi||0):a,0);},0);
+  const nuoviPct=nuoviTgtSett>0?Math.round(nuoviSett/nuoviTgtSett*100):null;
+  const nuoviCol=nuoviPct===null?'inherit':nuoviPct>=100?'var(--green)':nuoviPct>=75?'var(--amber)':'var(--red)';
+  const nuoviLabel=nuoviTgtSett>0?`${nuoviSett} / ${nuoviTgtSett}${nuoviPct!==null?' ('+nuoviPct+'%)':''}`:nuoviSett||'—';
   const items=[
     {v:eur(fatW),l:'Fat. Salone'},{v:eur(tgW),l:'Target Sett.'},{v:pct(fatW,tgW)||'–',l:'% Sett.'},
     {v:eur(fatM),l:'Cumul. Mese'},{v:eur(tgM),l:'Target Mese'},{v:pct(fatM,tgM)||'–',l:'% Mese'},
-    {v:totalNuovi>0?totalNuovi:'—',l:'Nuovi Clienti',extra:true}
+    {v:nuoviLabel,l:'Nuovi Clienti',extra:true,col:nuoviCol}
   ];
-  document.getElementById('sumbar').innerHTML=items.map(i=>`<div class="ss"${i.extra?' style="background:rgba(166,115,24,.06)"':''}><div class="sv">${i.v}</div><div class="sl">${i.l}</div></div>`).join('');
+  document.getElementById('sumbar').innerHTML=items.map(i=>`<div class="ss"${i.extra?' style="background:rgba(166,115,24,.06)"':''}><div class="sv" style="${i.col?'color:'+i.col:''}">${i.v}</div><div class="sl">${i.l}</div></div>`).join('');
   document.getElementById('hdr-week').textContent=sw?.label||'–';
   document.getElementById('hdr-month').textContent=m.label;
 }
