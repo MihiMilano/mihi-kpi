@@ -3738,7 +3738,6 @@ function renderRelazione(){
   const active=cwData.filter(x=>x.hasData&&!x.isPartial&&!x.isNew);
   const totalPre=cwData.filter(x=>x.hasData).reduce((s,x)=>s+(x.dw.pre||0),0);
   const totalRet=cwData.filter(x=>x.hasData).reduce((s,x)=>s+(x.dw.ret||0),0);
-  const totalNuovi=cwData.filter(x=>x.hasData).reduce((s,x)=>s+(x.dw.nuovi||0),0);
   const retTgt=collabs.reduce((s,c)=>s+(c.ret_tw||0),0);
   const ticketMedio=totalPre>0?fatSaloneW/totalPre:null;
   const satArr=active.filter(x=>x.dw.sat!=null).map(x=>x.dw.sat);
@@ -3946,10 +3945,11 @@ function renderSumbar(){
   const fatSaloneW=st.fat_totale_salone||0;
   const fatW=fatSaloneW>0?fatSaloneW:fatWCollab;
   const fatM=anMonthRevenue(mk).total;
+  const totalNuovi=m.collaboratori.reduce((s,c)=>{const dw=st[c.id];return s+(dw?.nuovi||0);},0);
   const items=[
     {v:eur(fatW),l:'Fat. Salone'},{v:eur(tgW),l:'Target Sett.'},{v:pct(fatW,tgW)||'–',l:'% Sett.'},
     {v:eur(fatM),l:'Cumul. Mese'},{v:eur(tgM),l:'Target Mese'},{v:pct(fatM,tgM)||'–',l:'% Mese'},
-    {v:totalNuovi||'—',l:'Nuovi Clienti',extra:true}
+    {v:totalNuovi>0?totalNuovi:'—',l:'Nuovi Clienti',extra:true}
   ];
   document.getElementById('sumbar').innerHTML=items.map(i=>`<div class="ss"${i.extra?' style="background:rgba(166,115,24,.06)"':''}><div class="sv">${i.v}</div><div class="sl">${i.l}</div></div>`).join('');
   document.getElementById('hdr-week').textContent=sw?.label||'–';
@@ -4170,8 +4170,8 @@ function renderLive(){
       const pctLbl=pct!==null?pct+'%':'—';
       let deltaHtml='';
       if(av!=null&&tv!=null){
-        const diff=kpi.k==='fat'|kpi.k==='fiche'?av-tv:av-tv;
-        const diffFmt=kpi.k==='fat'|kpi.k==='fiche'?eur(Math.abs(diff)):Math.abs(Math.round(diff));
+        const diff=av-tv;
+        const diffFmt=(kpi.k==='fat'||kpi.k==='fiche')?eur(Math.abs(diff)):Math.abs(Math.round(diff));
         const sign=diff>=0?'+':'−';
         const dcol=diff>=0?'var(--green)':'var(--red)';
         deltaHtml=`<span class="kdelta" style="color:${dcol}">${sign}${diffFmt}</span>`;
