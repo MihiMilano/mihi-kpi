@@ -1,7 +1,5 @@
 /* === MIHI · Rembrandt47 · FILE DATI ===
-   Questo file contiene SOLO i dati (target + risultati).
-   Lo aggiorna la pagina di inserimento. Il cruscotto lo legge.
-   Non modificare a mano. */
+   Aggiornato dalla pagina di inserimento. Non modificare a mano. */
 var MESI = {
   "2026-05": {
     "label": "Maggio 2026",
@@ -3060,9 +3058,75 @@ var STORICO = {
   },
   "2026-06": {
     "chiuso": false,
-    "ultimo_aggiornamento": "—",
+    "ultimo_aggiornamento": "4 giu 2026",
     "S1": {
-      "fat_totale_salone": 0
+      "fat_totale_salone": 916.2,
+      "helin": {
+        "fat": 162,
+        "pre": 4,
+        "ret": 0,
+        "serv": 2.5,
+        "fiche": 40.5,
+        "sat": 29,
+        "rit": null,
+        "rich": null,
+        "nuovi": null
+      },
+      "simona_balzano": {
+        "fat": 386,
+        "pre": 3,
+        "ret": 0,
+        "serv": 2.67,
+        "fiche": 128.67,
+        "sat": 34,
+        "rit": null,
+        "rich": null,
+        "nuovi": null
+      },
+      "alex": {
+        "fat": 83.5,
+        "pre": 4,
+        "ret": 0,
+        "serv": 1.25,
+        "fiche": 20.88,
+        "sat": 31,
+        "rit": null,
+        "rich": null,
+        "nuovi": null
+      },
+      "simona_cecilia": {
+        "fat": 0,
+        "pre": 0,
+        "ret": 0,
+        "serv": null,
+        "fiche": null,
+        "sat": 0,
+        "rit": null,
+        "rich": null,
+        "nuovi": null
+      },
+      "valentina": {
+        "fat": 0,
+        "pre": 0,
+        "ret": 0,
+        "serv": null,
+        "fiche": null,
+        "sat": 0,
+        "rit": null,
+        "rich": null,
+        "nuovi": null
+      },
+      "roberta": {
+        "fat": 284.7,
+        "pre": 6,
+        "ret": 0,
+        "serv": 2.33,
+        "fiche": 47.45,
+        "sat": 38,
+        "rit": null,
+        "rich": null,
+        "nuovi": null
+      }
     },
     "S2": {
       "fat_totale_salone": 0
@@ -3075,5 +3139,49 @@ var STORICO = {
     }
   }
 };
-
-var DAILY = {};
+var DAILY = {
+  "2026-06-03": {
+    "helin": {
+      "fat": 162,
+      "cli": 4,
+      "ven": 0,
+      "ser": 10,
+      "sat": 29
+    },
+    "simona_balzano": {
+      "fat": 386,
+      "cli": 3,
+      "ven": 0,
+      "ser": 8,
+      "sat": 34
+    },
+    "alex": {
+      "fat": 83.5,
+      "cli": 4,
+      "ven": 0,
+      "ser": 5,
+      "sat": 31
+    },
+    "simona_cecilia": {
+      "fat": 0,
+      "cli": 0,
+      "ven": 0,
+      "ser": 0,
+      "sat": 0
+    },
+    "valentina": {
+      "fat": 0,
+      "cli": 0,
+      "ven": 0,
+      "ser": 0,
+      "sat": 0
+    },
+    "roberta": {
+      "fat": 284.7,
+      "cli": 6,
+      "ven": 0,
+      "ser": 14,
+      "sat": 38
+    }
+  }
+};
