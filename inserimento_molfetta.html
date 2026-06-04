@@ -176,6 +176,7 @@ async function salva(){
   const btn=document.getElementById('savebtn'); btn.disabled=true; btn.textContent='⏳ Salvo…';
   document.getElementById('log').innerHTML='';
   const d=document.getElementById('data').value; const mkey=mk(d);
+  if(d<'2026-06-01'){log('\u274c '+d+' \u00e8 di un mese chiuso: non modificabile da qui.','err');btn.disabled=false;btn.textContent='\ud83d\udcbe Salva giornata';return;}
   const day={};
   curOper().forEach(c=>{const r={fat:gv('in-'+c.id+'-fat'),cli:gv('in-'+c.id+'-cli'),ven:gv('in-'+c.id+'-ven'),ser:gv('in-'+c.id+'-ser'),sat:gv('in-'+c.id+'-sat')};
     if(r.fat!=null||r.cli!=null||r.ven!=null||r.ser!=null||r.sat!=null) day[c.id]=r;});
