@@ -1,4 +1,4 @@
-/* === MIHI · Rembrandt47 · FILE DATI ===
+/* === MIHI · Molfetta · FILE DATI ===
    Aggiornato dalla pagina di inserimento. Non modificare a mano. */
 var MESI = {
   "2026-06": {
@@ -191,7 +191,7 @@ var MESI = {
 var STORICO = {
   "2026-06": {
     "chiuso": false,
-    "ultimo_aggiornamento": "4 giu 2026",
+    "ultimo_aggiornamento": "—",
     "S1": {
       "fat_totale_salone": 0
     },
@@ -206,6 +206,4 @@ var STORICO = {
     }
   }
 };
-var DAILY = {
-  "2026-06-03": {}
-};
+var DAILY = {};
