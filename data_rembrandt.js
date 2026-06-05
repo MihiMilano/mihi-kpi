@@ -3082,7 +3082,7 @@ var STORICO = {
     "chiuso": false,
     "ultimo_aggiornamento": "5 giu 2026",
     "S1": {
-      "fat_totale_salone": 2619.56,
+      "fat_totale_salone": 2877.56,
       "debora": {
         "fat": 345.18,
         "pre": 9,
@@ -3167,6 +3167,17 @@ var STORICO = {
         "serv": 2,
         "fiche": 136.7,
         "sat": null,
+        "rit": null,
+        "rich": null,
+        "nuovi": null
+      },
+      "marta": {
+        "fat": 258,
+        "pre": 6,
+        "ret": 0,
+        "serv": 2.17,
+        "fiche": 43,
+        "sat": 32,
         "rit": null,
         "rich": null,
         "nuovi": null
@@ -3283,6 +3294,13 @@ var DAILY = {
       "ven": null,
       "ser": 2,
       "sat": null
+    },
+    "marta": {
+      "fat": 258,
+      "cli": 6,
+      "ven": null,
+      "ser": 13,
+      "sat": 32
     },
     "_salone": {
       "nuovi": 6
