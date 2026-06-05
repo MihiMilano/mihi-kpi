@@ -457,6 +457,28 @@ var MESI = {
         "fiche_t": null,
         "sat_tw": null,
         "sat_tm": null
+      },
+      {
+        "id": "marta",
+        "nome": "Marta",
+        "ruolo": "Stilista",
+        "costo_m": null,
+        "fat_tw": null,
+        "fat_tm": null,
+        "pre_tw": null,
+        "pre_tm": null,
+        "ret_tw": null,
+        "ret_tm": null,
+        "rit_tw": null,
+        "rit_tm": null,
+        "nuovi_tw": null,
+        "nuovi_tm": null,
+        "rich_tw": null,
+        "rich_tm": null,
+        "serv_t": null,
+        "fiche_t": null,
+        "sat_tw": null,
+        "sat_tm": null
       }
     ],
     "nuovi_target_mese": 72
