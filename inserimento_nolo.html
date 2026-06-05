@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Inserimento · Mihi Nolo</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#F4F2EC;color:#17150F;line-height:1.5}
+.wrap{max-width:960px;margin:0 auto;padding:22px 16px 70px}
+.hdr{background:#141310;border-radius:16px;padding:20px 24px;color:#fff;margin-bottom:14px}
+.hdr .mark{font-size:12px;letter-spacing:6px;color:#C9A24A;font-weight:600}
+.hdr h1{font-size:20px;font-weight:600;margin-top:6px}
+.hdr .sub{font-size:12.5px;color:#A8A496;margin-top:3px}
+.card{background:#fff;border:1px solid #E7E3DA;border-radius:14px;padding:14px 16px;margin-bottom:14px}
+.daterow{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.daterow label{font-size:14px;font-weight:600}
+.daterow input{font-family:inherit;font-size:14px;padding:7px 10px;border:1px solid #E7E3DA;border-radius:8px;background:#FCFBF8}
+.note{font-size:12px;color:#8C8676}
+.tblwrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:740px}
+th,td{padding:9px 8px;text-align:center;font-size:13px}
+thead th{font-size:11px;text-transform:uppercase;letter-spacing:.4px;color:#8C8676;font-weight:700;border-bottom:1px solid #E7E3DA}
+tbody td{border-bottom:1px solid #F0EDE5}
+.nm{text-align:left;font-weight:700;white-space:nowrap}
+.ruolo{font-size:10px;color:#8C8676;font-weight:600;display:block}
+input.num{width:74px;font-family:inherit;font-size:14px;text-align:center;padding:7px 6px;border:1px solid #E7E3DA;border-radius:8px;background:#FCFBF8}
+input.num:focus{outline:none;border-color:#A9823A;background:#fff}
+.auto{background:#F7F0DF;border-radius:8px;padding:5px 8px;font-weight:700;color:#8a6a22;font-size:13px;display:inline-block;min-width:58px}
+.btn{background:#141310;color:#fff;border:none;border-radius:10px;padding:12px 24px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit}
+.btn:disabled{opacity:.5;cursor:default}
+.btn:hover:not(:disabled){background:#2a2620}
+.savebar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:14px;flex-wrap:wrap}
+#log{margin-top:12px;font-size:13px}
+#log div{padding:3px 0}
+.ok{color:#5C7A4E;font-weight:700}.err{color:#b91c1c;font-weight:700}.inf{color:#8C8676}
+.banner{border-radius:10px;padding:10px 14px;font-size:13px;margin-bottom:12px}
+.bwarn{background:#FBF3E2;border:1px solid #ecd9a8;color:#8a6a22}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="hdr">
+    <div class="mark">MIHI · NOLO</div>
+    <h1>Inserimento dati giornaliero</h1>
+    <div class="sub">Scrivi i numeri della giornata e premi Salva. Cruscotto e link collaboratori si aggiornano da soli.</div>
+  </div>
+
+  <div class="banner bwarn" id="loadbanner">⏳ Carico i dati attuali dal salone…</div>
+
+  <div class="card">
+    <div class="daterow">
+      <label for="data">📅 Giornata di:</label>
+      <input type="date" id="data" onchange="prefill()">
+      <span class="note">la inserisci la mattina dopo, per il giorno prima · se un giorno è già stato inserito lo vedi precompilato</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="tblwrap">
+      <table>
+        <thead><tr>
+          <th class="nm" style="text-align:left">Collaboratore</th>
+          <th>Fatturato €</th><th>Clienti</th><th>Vendite</th><th>Servizi</th><th>Saturaz. %</th>
+          <th style="color:#A9823A">Fiche<br><span style="font-weight:400">(auto)</span></th>
+          <th style="color:#A9823A">Serv/cli<br><span style="font-weight:400">(auto)</span></th>
+        </tr></thead>
+        <tbody id="rows"><tr><td colspan="8" class="note" style="padding:18px">Caricamento…</td></tr></tbody>
+      </table>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px;margin-top:12px;padding:10px 12px;background:#FCFBF8;border:1px solid #E7E3DA;border-radius:10px;flex-wrap:wrap">
+      <span style="font-size:14px;font-weight:700">🏠 Salone — Nuovi clienti del giorno:</span>
+      <input class="num" id="salone-nuovi" type="number" placeholder="0">
+      <span class="note">dato generale del salone, non per collaboratore</span>
+    </div>
+    <div class="savebar">
+      <span class="note">I campi vuoti restano non inseriti per quel giorno. Fiche e Serv/cliente li calcola il sistema.</span>
+      <button class="btn" id="savebtn" onclick="salva()" disabled>💾 Salva giornata</button>
+    </div>
+    <div id="log"></div>
+  </div>
+</div>
+
+<script>
+// ===== CONFIG =====
+const USER='mihimilano', REPO='mihi-kpi', FILE='data_nolo.js';
+const TOKEN=atob('Z2l0aHViX3BhdF8xMUNEQkJPV0kwMGlFd00xRGZUUU5M'+'X3BsZ25xUkhuU1FLaVU1ZURhMUVTVjkzOGYxNlZIaGxiZ3dwNVQ2d1JBamRTQUdRNTc1QnBNNHlQY202');
+const H={'Authorization':'Bearer '+TOKEN,'Accept':'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28'};
+
+let MESI={}, STORICO={}, DAILY={}, SHA=null, OPER=[];
+function log(m,c){const d=document.createElement('div');d.className=c||'inf';d.textContent=m;document.getElementById('log').appendChild(d);}
+function mk(date){return date.slice(0,7);} // 'YYYY-MM'
+
+// ===== LOAD =====
+async function boot(){
+  // data di default = ieri
+  const y=new Date();y.setDate(y.getDate()-1);
+  document.getElementById('data').value=y.toISOString().slice(0,10);
+  try{
+    const r=await fetch(`https://api.github.com/repos/${USER}/${REPO}/contents/${FILE}?t=`+Date.now(),{headers:H});
+    if(!r.ok) throw new Error('HTTP '+r.status+' — il file dati non è ancora online? Va pubblicato una volta.');
+    const j=await r.json(); SHA=j.sha;
+    const txt=decodeURIComponent(escape(atob(j.content.replace(/\n/g,''))));
+    const ext=new Function(txt+'; return {MESI:(typeof MESI!=="undefined"?MESI:{}),STORICO:(typeof STORICO!=="undefined"?STORICO:{}),DAILY:(typeof DAILY!=="undefined"?DAILY:{})};')();
+    MESI=ext.MESI; STORICO=ext.STORICO; DAILY=ext.DAILY||{};
+    document.getElementById('loadbanner').style.display='none';
+    buildGrid();
+    document.getElementById('savebtn').disabled=false;
+  }catch(e){
+    document.getElementById('loadbanner').className='banner bwarn';
+    document.getElementById('loadbanner').textContent='⚠️ '+e.message;
+    log('Errore nel caricamento: '+e.message,'err');
+  }
+}
+function curOper(){ // tutti i collaboratori del mese (inclusa Chiara: dati sì, link no)
+  const m=MESI[mk(document.getElementById('data').value)];
+  return m? m.collaboratori : [];
+}
+function buildGrid(){
+  OPER=curOper();
+  const tb=document.getElementById('rows'); tb.innerHTML='';
+  if(!OPER.length){tb.innerHTML='<tr><td colspan="8" class="note" style="padding:18px">Nessun mese configurato per questa data.</td></tr>';return;}
+  OPER.forEach(c=>{
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td class="nm">${c.nome}<span class="ruolo">${c.ruolo}</span></td>
+      <td><input class="num" id="in-${c.id}-fat" type="number" oninput="rc('${c.id}')" placeholder="€"></td>
+      <td><input class="num" id="in-${c.id}-cli" type="number" oninput="rc('${c.id}')" placeholder="0"></td>
+      <td><input class="num" id="in-${c.id}-ven" type="number" placeholder="0"></td>
+      <td><input class="num" id="in-${c.id}-ser" type="number" oninput="rc('${c.id}')" placeholder="0"></td>
+      <td><input class="num" id="in-${c.id}-sat" type="number" placeholder="%"></td>
+      <td><span class="auto" id="fiche-${c.id}">–</span></td>
+      <td><span class="auto" id="serv-${c.id}">–</span></td>`;
+    tb.appendChild(tr);
+  });
+  prefill();
+}
+function gv(id){const el=document.getElementById(id);if(!el)return null;const v=parseFloat(el.value);return isNaN(v)?null:v;}
+function sv(id,v){const el=document.getElementById(id);if(el)el.value=(v==null?'':v);}
+function rc(id){const fat=gv('in-'+id+'-fat'),cli=gv('in-'+id+'-cli'),ser=gv('in-'+id+'-ser');
+  document.getElementById('fiche-'+id).textContent=(fat!=null&&cli)?'€'+(fat/cli).toFixed(1):'–';
+  document.getElementById('serv-'+id).textContent =(ser!=null&&cli)?(ser/cli).toFixed(2):'–';}
+function prefill(){
+  if(!OPER.length||curOper().length!==OPER.length){buildGrid();return;}
+  const d=document.getElementById('data').value; const day=DAILY[d]||{};
+  OPER.forEach(c=>{const r=day[c.id]||{};
+    sv('in-'+c.id+'-fat',r.fat);sv('in-'+c.id+'-cli',r.cli);sv('in-'+c.id+'-ven',r.ven);sv('in-'+c.id+'-ser',r.ser);sv('in-'+c.id+'-sat',r.sat);rc(c.id);});
+  sv('salone-nuovi',(day._salone||{}).nuovi);
+}
+
+// ===== AGGREGAZIONE giorno -> settimana (STORICO) =====
+function rebuildMonth(mkey){
+  const m=MESI[mkey]; if(!m) return;
+  if(!STORICO[mkey]) STORICO[mkey]={chiuso:false};
+  STORICO[mkey].ultimo_aggiornamento=new Date().toLocaleDateString('it-IT',{day:'numeric',month:'short',year:'numeric'});
+  m.settimane.forEach(sw=>{
+    const bucket={fat_totale_salone:0};
+    m.collaboratori.forEach(c=>{
+      let fat=0,cli=0,ven=0,ser=0,satS=0,satN=0,has=false;
+      for(const d in DAILY){ if(d<sw.da||d>sw.a) continue; const r=DAILY[d][c.id]; if(!r) continue;
+        has=true; fat+=r.fat||0; cli+=r.cli||0; ven+=r.ven||0; ser+=r.ser||0; if(r.sat!=null){satS+=r.sat;satN++;} }
+      if(has){
+        bucket[c.id]={fat:fat,pre:cli,ret:ven,serv:cli?+(ser/cli).toFixed(2):null,fiche:cli?+(fat/cli).toFixed(2):null,
+                      sat:satN?Math.round(satS/satN):null,rit:null,rich:null,nuovi:null};
+        bucket.fat_totale_salone+=fat;
+      }
+    });
+    let _nv=0,_nh=false;
+    for(const d in DAILY){ if(d<sw.da||d>sw.a) continue; const r=DAILY[d]._salone; if(r&&r.nuovi!=null){_nv+=r.nuovi;_nh=true;} }
+    if(_nh) bucket._salone={nuovi:_nv};
+    STORICO[mkey][sw.id]=bucket;
+  });
+}
+
+// ===== SAVE =====
+async function salva(){
+  const btn=document.getElementById('savebtn'); btn.disabled=true; btn.textContent='⏳ Salvo…';
+  document.getElementById('log').innerHTML='';
+  const d=document.getElementById('data').value; const mkey=mk(d);
+  if(d<'2026-06-01'){log('\u274c '+d+' \u00e8 di un mese chiuso: non modificabile da qui.','err');btn.disabled=false;btn.textContent='\ud83d\udcbe Salva giornata';return;}
+  const day={};
+  curOper().forEach(c=>{const r={fat:gv('in-'+c.id+'-fat'),cli:gv('in-'+c.id+'-cli'),ven:gv('in-'+c.id+'-ven'),ser:gv('in-'+c.id+'-ser'),sat:gv('in-'+c.id+'-sat')};
+    if(r.fat!=null||r.cli!=null||r.ven!=null||r.ser!=null||r.sat!=null) day[c.id]=r;});
+  const _nv=gv('salone-nuovi'); if(_nv!=null) day._salone={nuovi:_nv};
+  DAILY[d]=day;
+  rebuildMonth(mkey);
+  // serializza il file dati
+  const body=`/* === MIHI · Rembrandt47 · FILE DATI ===\n   Aggiornato dalla pagina di inserimento. Non modificare a mano. */\n`+
+    `var MESI = ${JSON.stringify(MESI,null,2)};\n`+
+    `var STORICO = ${JSON.stringify(STORICO,null,2)};\n`+
+    `var DAILY = ${JSON.stringify(DAILY,null,2)};\n`;
+  try{
+    log('Invio giornata del '+d+'…','inf');
+    const content=btoa(unescape(encodeURIComponent(body)));
+    const r=await fetch(`https://api.github.com/repos/${USER}/${REPO}/contents/${FILE}`,{
+      method:'PUT',headers:H,body:JSON.stringify({message:'Dati '+d,content:content,sha:SHA})});
+    const j=await r.json();
+    if(!r.ok) throw new Error(j.message||('HTTP '+r.status));
+    SHA=j.content.sha;
+    log('✅ Salvato. Cruscotto e link collaboratori aggiornati (entro un paio di minuti).','ok');
+    log('Puoi inserire un altro giorno o chiudere.','inf');
+  }catch(e){
+    log('❌ Non salvato: '+e.message,'err');
+    log('I tuoi numeri sono ancora nella pagina: correggi e ripremi Salva (non hai perso niente).','inf');
+  }
+  btn.disabled=false; btn.textContent='💾 Salva giornata';
+}
+boot();
+</script>
+</body>
+</html>
