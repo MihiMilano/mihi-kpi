@@ -3058,16 +3058,27 @@ var STORICO = {
   },
   "2026-06": {
     "chiuso": false,
-    "ultimo_aggiornamento": "4 giu 2026",
+    "ultimo_aggiornamento": "5 giu 2026",
     "S1": {
-      "fat_totale_salone": 1008.2,
+      "fat_totale_salone": 2619.56,
+      "debora": {
+        "fat": 345.18,
+        "pre": 9,
+        "ret": 1,
+        "serv": 2,
+        "fiche": 38.35,
+        "sat": 46,
+        "rit": null,
+        "rich": null,
+        "nuovi": null
+      },
       "helin": {
-        "fat": 162,
-        "pre": 4,
+        "fat": 514.88,
+        "pre": 9,
         "ret": 0,
-        "serv": 2.5,
-        "fiche": 40.5,
-        "sat": 29,
+        "serv": 2.67,
+        "fiche": 57.21,
+        "sat": 34,
         "rit": null,
         "rich": null,
         "nuovi": null
@@ -3084,23 +3095,23 @@ var STORICO = {
         "nuovi": null
       },
       "alex": {
-        "fat": 83.5,
-        "pre": 4,
-        "ret": 0,
-        "serv": 1.25,
-        "fiche": 20.88,
-        "sat": 31,
+        "fat": 265.4,
+        "pre": 11,
+        "ret": 1,
+        "serv": 1.18,
+        "fiche": 24.13,
+        "sat": 30,
         "rit": null,
         "rich": null,
         "nuovi": null
       },
       "simona_cecilia": {
-        "fat": 0,
-        "pre": 0,
+        "fat": 166.5,
+        "pre": 3,
         "ret": 0,
-        "serv": null,
-        "fiche": null,
-        "sat": 0,
+        "serv": 1.33,
+        "fiche": 55.5,
+        "sat": 16,
         "rit": null,
         "rich": null,
         "nuovi": null
@@ -3117,29 +3128,29 @@ var STORICO = {
         "nuovi": null
       },
       "roberta": {
-        "fat": 284.7,
-        "pre": 6,
+        "fat": 668.2,
+        "pre": 11,
         "ret": 0,
-        "serv": 2.33,
-        "fiche": 47.45,
-        "sat": 38,
+        "serv": 2.45,
+        "fiche": 60.75,
+        "sat": 41,
         "rit": null,
         "rich": null,
         "nuovi": null
       },
       "chiara": {
-        "fat": 92,
-        "pre": 1,
+        "fat": 273.4,
+        "pre": 2,
         "ret": 0,
         "serv": 2,
-        "fiche": 92,
+        "fiche": 136.7,
         "sat": null,
         "rit": null,
         "rich": null,
         "nuovi": null
       },
       "_salone": {
-        "nuovi": 1
+        "nuovi": 7
       }
     },
     "S2": {
@@ -3206,6 +3217,53 @@ var DAILY = {
     },
     "_salone": {
       "nuovi": 1
+    }
+  },
+  "2026-06-04": {
+    "debora": {
+      "fat": 345.18,
+      "cli": 9,
+      "ven": 1,
+      "ser": 18,
+      "sat": 46
+    },
+    "helin": {
+      "fat": 352.88,
+      "cli": 5,
+      "ven": null,
+      "ser": 14,
+      "sat": 39
+    },
+    "alex": {
+      "fat": 181.9,
+      "cli": 7,
+      "ven": 1,
+      "ser": 8,
+      "sat": 28
+    },
+    "simona_cecilia": {
+      "fat": 166.5,
+      "cli": 3,
+      "ven": null,
+      "ser": 4,
+      "sat": 32
+    },
+    "roberta": {
+      "fat": 383.5,
+      "cli": 5,
+      "ven": null,
+      "ser": 13,
+      "sat": 44
+    },
+    "chiara": {
+      "fat": 181.4,
+      "cli": 1,
+      "ven": null,
+      "ser": 2,
+      "sat": null
+    },
+    "_salone": {
+      "nuovi": 6
     }
   }
 };
