@@ -156,7 +156,7 @@ var MESI = {
 var STORICO = {
   "2026-05": {
     "chiuso": false,
-    "ultimo_aggiornamento": "24 mag 2026",
+    "ultimo_aggiornamento": "Maggio chiuso",
     "S1": {
       "fat_totale_salone": 3292.5,
       "stefano": {
@@ -555,30 +555,28 @@ var STORICO = {
       }
     },
     "S4": {
-      "fat_totale_salone": 0,
+      "fat_totale_salone": 2936.2,
       "stefano": {
-        "fat": null,
-        "pre": null,
-        "ret": null,
+        "fat": 1690.9,
+        "pre": 41,
+        "ret": 1,
+        "serv": 1.54,
+        "fiche": 41.24,
+        "sat": 60,
         "rit": null,
-        "nuovi": null,
         "rich": null,
-        "serv": null,
-        "fiche": null,
-        "servizi": null,
-        "sat": null
+        "nuovi": null
       },
       "simona": {
-        "fat": null,
-        "pre": null,
-        "ret": null,
+        "fat": 1245.3,
+        "pre": 26,
+        "ret": 1,
+        "serv": 1.69,
+        "fiche": 47.9,
+        "sat": 37,
         "rit": null,
-        "nuovi": null,
         "rich": null,
-        "serv": null,
-        "fiche": null,
-        "servizi": null,
-        "sat": null
+        "nuovi": null
       }
     }
   },
