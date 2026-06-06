@@ -162,7 +162,7 @@ var STORICO = {
       "stefano": {
         "fat": 2006.5,
         "pre": 60,
-        "nuovi": 14,
+        "nuovi": null,
         "rit": 44,
         "ret": 1,
         "rich": 23,
@@ -240,7 +240,7 @@ var STORICO = {
       "simona": {
         "fat": 1286,
         "pre": 27,
-        "nuovi": 14,
+        "nuovi": null,
         "rit": 17,
         "ret": 0,
         "rich": 1,
@@ -314,7 +314,7 @@ var STORICO = {
         "fiche": 35.88,
         "rit": 23,
         "rich": 14,
-        "nuovi": 5,
+        "nuovi": null,
         "ret": 2,
         "serv": 1.42,
         "sat": 48,
@@ -382,7 +382,7 @@ var STORICO = {
         "fiche": 42.44,
         "rit": 13,
         "rich": 3,
-        "nuovi": 5,
+        "nuovi": null,
         "ret": 2,
         "serv": 1.5,
         "sat": 32,
@@ -432,7 +432,7 @@ var STORICO = {
         "pre": 43,
         "fiche": 47.9,
         "rit": 37,
-        "nuovi": 11,
+        "nuovi": null,
         "ret": 2,
         "rich": 20,
         "serv": 1.72,
@@ -505,7 +505,7 @@ var STORICO = {
         "pre": 32,
         "fiche": 36.22,
         "rit": 18,
-        "nuovi": 11,
+        "nuovi": null,
         "ret": 1,
         "rich": 4,
         "serv": 1.53,
@@ -577,6 +577,9 @@ var STORICO = {
         "rit": null,
         "rich": null,
         "nuovi": null
+      },
+      "_salone": {
+        "nuovi": 44
       }
     }
   },
