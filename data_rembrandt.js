@@ -3187,14 +3187,36 @@ var STORICO = {
       }
     },
     "S2": {
-      "fat_totale_salone": 3181.7,
-      "helin": {
-        "fat": 38,
-        "pre": 1,
+      "fat_totale_salone": 6913,
+      "debora": {
+        "fat": 1523.05,
+        "pre": 30,
         "ret": 0,
-        "serv": 3,
-        "fiche": 38,
-        "sat": 1,
+        "serv": 2.1,
+        "fiche": 50.77,
+        "sat": 42,
+        "rit": null,
+        "rich": null,
+        "nuovi": null
+      },
+      "helin": {
+        "fat": 400.25,
+        "pre": 13,
+        "ret": 0,
+        "serv": 1.92,
+        "fiche": 30.79,
+        "sat": 9,
+        "rit": null,
+        "rich": null,
+        "nuovi": null
+      },
+      "simona_balzano": {
+        "fat": 676.6,
+        "pre": 18,
+        "ret": 0,
+        "serv": 2.06,
+        "fiche": 37.59,
+        "sat": 27,
         "rit": null,
         "rich": null,
         "nuovi": null
@@ -3233,29 +3255,29 @@ var STORICO = {
         "nuovi": null
       },
       "chiara": {
-        "fat": 103.7,
-        "pre": 2,
+        "fat": 1138.1000000000001,
+        "pre": 11,
         "ret": 0,
-        "serv": 3,
-        "fiche": 51.85,
+        "serv": 2.18,
+        "fiche": 103.46,
         "sat": null,
         "rit": null,
         "rich": null,
         "nuovi": null
       },
       "marta": {
-        "fat": 167,
-        "pre": 4,
+        "fat": 302,
+        "pre": 7,
         "ret": 1,
-        "serv": 2,
-        "fiche": 41.75,
+        "serv": 1.71,
+        "fiche": 43.14,
         "sat": 32,
         "rit": null,
         "rich": null,
         "nuovi": null
       },
       "_salone": {
-        "nuovi": 10
+        "nuovi": 18
       }
     },
     "S3": {
@@ -3549,6 +3571,46 @@ var DAILY = {
     },
     "_salone": {
       "nuovi": 10
+    }
+  },
+  "2026-06-13": {
+    "debora": {
+      "fat": 1523.05,
+      "cli": 30,
+      "ven": null,
+      "ser": 63,
+      "sat": 42
+    },
+    "helin": {
+      "fat": 362.25,
+      "cli": 12,
+      "ven": null,
+      "ser": 22,
+      "sat": 16
+    },
+    "simona_balzano": {
+      "fat": 676.6,
+      "cli": 18,
+      "ven": null,
+      "ser": 37,
+      "sat": 27
+    },
+    "chiara": {
+      "fat": 1034.4,
+      "cli": 9,
+      "ven": null,
+      "ser": 18,
+      "sat": null
+    },
+    "marta": {
+      "fat": 135,
+      "cli": 3,
+      "ven": null,
+      "ser": 4,
+      "sat": null
+    },
+    "_salone": {
+      "nuovi": 8
     }
   }
 };
