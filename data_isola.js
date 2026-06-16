@@ -1,4 +1,4 @@
-/* === MIHI · ISOLA · FILE DATI ===
+/* === MIHI · Rembrandt47 · FILE DATI ===
    Aggiornato dalla pagina di inserimento. Non modificare a mano. */
 var MESI = {
   "2026-05": {
@@ -585,12 +585,37 @@ var STORICO = {
   },
   "2026-06": {
     "chiuso": false,
-    "ultimo_aggiornamento": "—",
+    "ultimo_aggiornamento": "16 giu 2026",
     "S1": {
       "fat_totale_salone": 0
     },
     "S2": {
-      "fat_totale_salone": 0
+      "fat_totale_salone": 5021,
+      "stefano": {
+        "fat": 2621,
+        "pre": 63,
+        "ret": 7,
+        "serv": 1.27,
+        "fiche": 41.6,
+        "sat": 39,
+        "rit": null,
+        "rich": null,
+        "nuovi": null
+      },
+      "simona": {
+        "fat": 2400,
+        "pre": 52,
+        "ret": 2,
+        "serv": 1.56,
+        "fiche": 46.15,
+        "sat": 40,
+        "rit": null,
+        "rich": null,
+        "nuovi": null
+      },
+      "_salone": {
+        "nuovi": 19
+      }
     },
     "S3": {
       "fat_totale_salone": 0
@@ -600,4 +625,24 @@ var STORICO = {
     }
   }
 };
-var DAILY = {};
+var DAILY = {
+  "2026-06-13": {
+    "stefano": {
+      "fat": 2621,
+      "cli": 63,
+      "ven": 7,
+      "ser": 80,
+      "sat": 39
+    },
+    "simona": {
+      "fat": 2400,
+      "cli": 52,
+      "ven": 2,
+      "ser": 81,
+      "sat": 40
+    },
+    "_salone": {
+      "nuovi": 19
+    }
+  }
+};
