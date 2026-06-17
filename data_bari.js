@@ -193,25 +193,25 @@ var STORICO = {
     "chiuso": false,
     "ultimo_aggiornamento": "17 giu 2026",
     "S1": {
-      "fat_totale_salone": 13554,
+      "fat_totale_salone": 10994,
       "michele": {
-        "fat": 2160,
-        "pre": 36,
+        "fat": 1925,
+        "pre": 32,
         "ret": 1,
-        "serv": 1.69,
-        "fiche": 60,
-        "sat": 35,
+        "serv": 1.66,
+        "fiche": 60.16,
+        "sat": 0,
         "rit": null,
         "rich": null,
         "nuovi": null
       },
       "carmen": {
-        "fat": 2925,
-        "pre": 39,
+        "fat": 2365,
+        "pre": 31,
         "ret": 0,
-        "serv": 2.41,
-        "fiche": 75,
-        "sat": 50,
+        "serv": 2.45,
+        "fiche": 76.29,
+        "sat": 0,
         "rit": null,
         "rich": null,
         "nuovi": null
@@ -228,51 +228,51 @@ var STORICO = {
         "nuovi": null
       },
       "isa": {
-        "fat": 2191,
-        "pre": 43,
+        "fat": 1631,
+        "pre": 34,
         "ret": 3,
-        "serv": 1.6,
-        "fiche": 50.95,
-        "sat": 50,
+        "serv": 1.53,
+        "fiche": 47.97,
+        "sat": 0,
         "rit": null,
         "rich": null,
         "nuovi": null
       },
       "rebecca": {
-        "fat": 2308,
-        "pre": 37,
+        "fat": 1728,
+        "pre": 28,
         "ret": 2,
-        "serv": 1.81,
-        "fiche": 62.38,
-        "sat": 50,
+        "serv": 1.75,
+        "fiche": 61.71,
+        "sat": 0,
         "rit": null,
         "rich": null,
         "nuovi": null
       },
       "isabel": {
-        "fat": 2084,
-        "pre": 44,
+        "fat": 1629,
+        "pre": 36,
         "ret": 1,
-        "serv": 1.8,
-        "fiche": 47.36,
-        "sat": 50,
+        "serv": 1.72,
+        "fiche": 45.25,
+        "sat": 0,
         "rit": null,
         "rich": null,
         "nuovi": null
       },
       "paola": {
-        "fat": 1145,
-        "pre": 36,
+        "fat": 975,
+        "pre": 29,
         "ret": 2,
-        "serv": 1.25,
-        "fiche": 31.81,
-        "sat": 28,
+        "serv": 1.31,
+        "fiche": 33.62,
+        "sat": 0,
         "rit": null,
         "rich": null,
         "nuovi": null
       },
       "_salone": {
-        "nuovi": 6
+        "nuovi": 5
       }
     },
     "S2": {
@@ -423,18 +423,18 @@ var DAILY = {
   },
   "2026-06-04": {
     "michele": {
-      "fat": 235,
-      "cli": 4,
+      "fat": 0,
+      "cli": 0,
       "ven": null,
-      "ser": 8,
-      "sat": 70
+      "ser": 0,
+      "sat": 0
     },
     "carmen": {
-      "fat": 560,
-      "cli": 8,
+      "fat": 0,
+      "cli": 0,
       "ven": null,
-      "ser": 18,
-      "sat": 100
+      "ser": 0,
+      "sat": 0
     },
     "emilia": {
       "fat": 0,
@@ -444,35 +444,35 @@ var DAILY = {
       "sat": null
     },
     "isa": {
-      "fat": 560,
-      "cli": 9,
+      "fat": 0,
+      "cli": 0,
       "ven": null,
-      "ser": 17,
-      "sat": 100
+      "ser": 0,
+      "sat": 0
     },
     "rebecca": {
-      "fat": 580,
-      "cli": 9,
+      "fat": 0,
+      "cli": 0,
       "ven": null,
-      "ser": 18,
-      "sat": 100
+      "ser": 0,
+      "sat": 0
     },
     "isabel": {
-      "fat": 455,
-      "cli": 8,
+      "fat": 0,
+      "cli": 0,
       "ven": null,
-      "ser": 17,
-      "sat": 100
+      "ser": 0,
+      "sat": 0
     },
     "paola": {
-      "fat": 170,
-      "cli": 7,
+      "fat": 0,
+      "cli": 0,
       "ven": null,
-      "ser": 7,
-      "sat": 56
+      "ser": 0,
+      "sat": 0
     },
     "_salone": {
-      "nuovi": 1
+      "nuovi": 0
     }
   },
   "2026-06-06": {
