@@ -193,7 +193,7 @@ var STORICO = {
     "chiuso": false,
     "ultimo_aggiornamento": "17 giu 2026",
     "S1": {
-      "fat_totale_salone": 15075,
+      "fat_totale_salone": 15074,
       "michele": {
         "fat": 2410,
         "pre": 43,
@@ -217,11 +217,11 @@ var STORICO = {
         "nuovi": null
       },
       "emilia": {
-        "fat": 742,
+        "fat": 741,
         "pre": 15,
         "ret": 3,
         "serv": 1.67,
-        "fiche": 49.47,
+        "fiche": 49.4,
         "sat": null,
         "rit": null,
         "rich": null,
@@ -491,7 +491,7 @@ var DAILY = {
       "sat": null
     },
     "emilia": {
-      "fat": 742,
+      "fat": 741,
       "cli": 15,
       "ven": 3,
       "ser": 25,
