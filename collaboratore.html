@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MIHI · La tua giornata</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display',sans-serif;background:#1a1510;color:#eee;min-height:100vh;padding-bottom:40px}
+.hdr{padding:18px 18px 14px;border-bottom:1px solid #2c2419;position:sticky;top:0;background:#1a1510;z-index:5}
+.logo{font-size:16px;font-weight:900;letter-spacing:4px;color:#a67318}
+.who{display:flex;align-items:center;gap:9px;margin-top:8px}
+.dot{width:11px;height:11px;border-radius:50%}
+.who-name{font-size:22px;font-weight:800;color:#fff}
+.who-sub{font-size:12px;color:#8a7d68;margin-top:2px}
+.wrap{max-width:640px;margin:0 auto;padding:16px}
+.lead{font-size:12.5px;color:#8a7d68;margin:2px 2px 14px}
+.card{background:#fff;border-radius:16px;padding:15px 16px;margin-bottom:12px}
+.top{display:flex;align-items:center;gap:10px;margin-bottom:9px}
+.time{font-size:20px;font-weight:800;color:#a67318}
+.lab{font-size:12px;color:#9a8f7c;font-weight:700;text-transform:uppercase;letter-spacing:.5px}
+.newbadge{font-size:10px;font-weight:800;background:#f3e3c2;color:#8a5a14;padding:2px 8px;border-radius:8px;margin-left:auto}
+.line{font-size:13.5px;color:#3f3a31;padding:6px 0;border-top:1px solid #efece4;line-height:1.5}
+.line:first-of-type{border-top:none}
+.k{display:inline-block;min-width:84px;color:#a8895a;font-weight:800;font-size:11px;text-transform:uppercase;letter-spacing:.5px;vertical-align:top}
+.v{display:inline}.muted{color:#9a9486}
+.empty{text-align:center;color:#8a7d68;font-size:14px;padding:40px 16px}
+.idx a{display:block;background:#211a12;border:1px solid #2f2618;border-radius:12px;padding:13px 15px;margin-bottom:9px;color:#eee;text-decoration:none;font-weight:700}
+.idx a span{font-size:12px;color:#8a7d68;font-weight:400}
+.foot{text-align:center;color:#5a4f3d;font-size:11px;margin-top:22px}
+</style>
+</head>
+<body>
+<div id="app"></div>
+
+<script id="collabdata" type="application/json">
+{
+  "data": "Mercoledì 17 giugno 2026",
+  "collaboratrici": {
+    "helin": {"nome":"Helin","salone":"San Siro","colore":"#378ADD","appuntamenti":[
+      {"orario":"10:00","nuova":false,"dafare":"Colore Radice + Piega capelli corti","storico":"—","daproporre":"maschera / trattamento abbinato al colore"}
+    ]},
+    "simona": {"nome":"Simona","salone":"San Siro","colore":"#378ADD","appuntamenti":[
+      {"orario":"10:30","nuova":true,"dafare":"Taglio Donna + Piega","storico":"prima volta da noi","daproporre":"far firmare la privacy, un trattamento e fissare il prossimo appuntamento"},
+      {"orario":"14:00","nuova":false,"dafare":"Colore Radice + Piega","storico":"—","daproporre":"maschera / trattamento col colore"}
+    ]},
+    "debora": {"nome":"Debora","salone":"San Siro","colore":"#378ADD","appuntamenti":[
+      {"orario":"11:00","nuova":false,"dafare":"Taglio Donna","storico":"—","daproporre":"styling / finish"},
+      {"orario":"13:00","nuova":false,"dafare":"Piega capelli corti","storico":"—","daproporre":"una maschera; fissare la prossima piega"}
+    ]},
+    "roberta": {"nome":"Roberta","salone":"Tortona","colore":"#1D9E75","appuntamenti":[
+      {"orario":"11:30","nuova":true,"dafare":"Taglio Donna + Piega","storico":"prima volta da noi","daproporre":"far firmare la privacy, un trattamento e fissare il prossimo appuntamento"},
+      {"orario":"12:30","nuova":false,"dafare":"Taglio Donna + Piega","storico":"—","daproporre":"maschera / trattamento in abbinata"},
+      {"orario":"14:30","nuova":false,"dafare":"Piega","storico":"—","daproporre":"una maschera; fissare la prossima piega"},
+      {"orario":"15:15","nuova":false,"dafare":"Colore Base + Piega","storico":"—","daproporre":"maschera / trattamento col colore"}
+    ]},
+    "alex": {"nome":"Alex","salone":"Tortona","colore":"#1D9E75","appuntamenti":[
+      {"orario":"13:00","nuova":false,"dafare":"Taglio Uomo","storico":"—","daproporre":"rituale barba; far fissare il prossimo taglio"}
+    ]},
+    "cecilia": {"nome":"Cecilia","salone":"Tortona","ruolo":"Estetista","colore":"#1D9E75","appuntamenti":[]}
+  }
+}
+</script>
+
+<script>
+function esc(s){return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function qp(n){var m=new RegExp('[?&]'+n+'=([^&]+)').exec(location.search);return m?decodeURIComponent(m[1]):'';}
+function render(){
+  var d=JSON.parse(document.getElementById('collabdata').textContent);
+  var key=(qp('c')||'').toLowerCase().trim();
+  var c=d.collaboratrici[key];
+  var app=document.getElementById('app');
+  if(!c){
+    var idx='<div class="hdr"><span class="logo">MIHI</span></div><div class="wrap"><div class="lead">Apri il link della tua pagina:</div><div class="idx">';
+    Object.keys(d.collaboratrici).forEach(function(k){var x=d.collaboratrici[k];idx+='<a href="?c='+k+'">'+esc(x.nome)+' <span>· '+esc(x.salone)+'</span></a>';});
+    idx+='</div></div>';app.innerHTML=idx;return;
+  }
+  var h='<div class="hdr"><span class="logo">MIHI</span><div class="who"><span class="dot" style="background:'+c.colore+'"></span><span class="who-name">'+esc(c.nome)+'</span></div><div class="who-sub">'+esc(c.salone)+' · '+esc(d.data)+'</div></div>';
+  h+='<div class="wrap"><div class="lead">La tua giornata di oggi. Per ogni appuntamento: cosa è prenotato, lo storico e cosa proporre. (Il nome della cliente lo vedi su Treatwell, all\'orario corrispondente.)</div>';
+  if(!c.appuntamenti||!c.appuntamenti.length){h+='<div class="empty">Nessun appuntamento per oggi.</div>';}
+  (c.appuntamenti||[]).forEach(function(a){
+    h+='<div class="card"><div class="top"><span class="time">'+esc(a.orario)+'</span><span class="lab">appuntamento</span>'+(a.nuova?'<span class="newbadge">NUOVA</span>':'')+'</div>';
+    h+='<div class="line"><span class="k">Prenotato</span><span class="v">'+esc(a.dafare)+'</span></div>';
+    h+='<div class="line"><span class="k">Storico</span><span class="v '+((a.storico&&a.storico!=='—')?'':'muted')+'">'+esc(a.storico||'—')+'</span></div>';
+    h+='<div class="line"><span class="k">Da proporre</span><span class="v">'+esc(a.daproporre)+'</span></div></div>';
+  });
+  h+='<div class="foot">MIHI Milano · aggiornato '+esc(d.data)+'</div></div>';
+  app.innerHTML=h;
+}
+render();
+</script>
+</body>
+</html>
