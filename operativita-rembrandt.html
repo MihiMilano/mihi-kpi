@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MIHI · Operatività</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display',sans-serif;background:#1a1510;color:#eee;min-height:100vh;padding-bottom:40px}
+.hdr{display:flex;align-items:center;gap:12px;padding:14px 18px;border-bottom:1px solid #2c2419;position:sticky;top:0;background:#1a1510;z-index:10}
+.home{color:#a67318;text-decoration:none;font-size:13px;font-weight:700;border:1px solid #3a3024;border-radius:9px;padding:5px 11px}
+.logo{font-size:17px;font-weight:900;letter-spacing:4px;color:#a67318}.hsep{color:#4a3f30}.htitle{font-size:13px;color:#cabfa8;font-weight:700}
+.hdate{margin-left:auto;font-size:11px;color:#8a7d68}
+.tabs{display:flex;gap:6px;padding:12px 16px 4px;max-width:1120px;margin:0 auto;flex-wrap:wrap}
+.tab{font-size:13px;font-weight:700;color:#9a8d74;background:#211a12;border:1px solid #2f2618;border-radius:10px;padding:8px 15px;cursor:pointer}
+.tab.on{color:#1a1510;background:#a67318;border-color:#a67318}
+.wrap{max-width:1120px;margin:0 auto;padding:10px 16px}
+.lead{font-size:12.5px;color:#8a7d68;margin:4px 2px 14px}
+.salons{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:900px){.salons{grid-template-columns:1fr}}
+.salon{background:#211a12;border:1px solid #2f2618;border-radius:16px;padding:15px}
+.s-head{display:flex;align-items:center;gap:9px}.dot{width:11px;height:11px;border-radius:50%}.s-name{font-size:17px;font-weight:800;color:#fff}.s-sub{font-size:11.5px;color:#8a7d68;margin-left:auto}
+.lbl{font-size:10px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:#a67318;margin:14px 0 7px}
+.sub{font-size:11px;font-weight:800;color:#cabfa8;margin:8px 0 5px}
+.stats{display:flex;gap:7px;flex-wrap:wrap;margin:10px 0 4px}
+.stat{flex:1;min-width:72px;background:#19130c;border:1px solid #2f2618;border-radius:10px;padding:7px 9px}.stat .k{font-size:10px;color:#8a7d68}.stat .v{font-size:16px;font-weight:800;color:#f0e4cb}
+.card{background:#fff;border-radius:12px;padding:11px 13px;margin-bottom:8px;color:#1a1510}
+.c-name{font-size:14px;font-weight:800;margin-bottom:6px}
+.appt{border-top:1px solid #efece4;padding:7px 0}.appt:first-of-type{border-top:none}
+.atop{font-size:12.5px}.atop .t{font-weight:800;color:#a67318}.nb{font-size:9px;font-weight:800;background:#f3e3c2;color:#8a5a14;padding:1px 6px;border-radius:7px}
+.r{font-size:12px;color:#5a5246;margin-top:2px;line-height:1.4}.r .k{color:#9a8f7c;font-weight:700}
+.prop{background:#fbf3e2;border:1px solid #ecd9af;border-radius:8px;padding:5px 9px;margin-top:4px;font-size:12px;color:#5a3d10}
+.row{background:#fff;border-radius:10px;padding:9px 12px;margin-bottom:6px;color:#1a1510}.row .top{display:flex;gap:8px;align-items:center;font-size:13px}.row .nm{font-weight:800}.row .mn{margin-left:auto;color:#a67318;font-weight:800}.row .ssub{font-size:11.5px;color:#5a5246;margin-top:3px}.sost{color:#8a5a14}
+.follow{background:#2a2113;border:1px solid #4a3a16;border-radius:10px;padding:8px 11px;margin-bottom:7px;font-size:12.5px;color:#e9dcc2;line-height:1.5}.follow b{color:#f3c969}
+.rec{background:#241d12;border:1px solid #3a2f1c;border-radius:10px;padding:9px 11px;margin-bottom:7px}.rec-h{font-size:13px;color:#f0e4cb;font-weight:700}.rec-m{font-size:11.5px;color:#9a8d74;margin:3px 0 6px}.rec-x{font-size:12px;background:#1c160e;border-left:2px solid #a67318;border-radius:0 6px 6px 0;padding:7px 10px;line-height:1.5;color:#d8cbb0}.btn{margin-top:6px;font-size:11px;font-weight:800;color:#1a1510;background:#a67318;border:none;border-radius:8px;padding:4px 11px;cursor:pointer}
+.tag{font-size:9px;font-weight:800;padding:1px 6px;border-radius:6px}.tag.blue{background:#11324f;color:#85b7eb}.tag.amber{background:#3a2f1c;color:#caa253}.tag.green{background:#e3f0d6;color:#3b6d11}.tag.red{background:#f7d9d9;color:#a32d2d}
+.esito{display:flex;gap:9px;background:#19130c;border:1px solid #2f2618;border-radius:11px;padding:10px 12px;margin-top:4px}.esito .e{flex:1;text-align:center}.esito .e .v{font-size:18px;font-weight:800}.esito .e .k{font-size:10px;color:#8a7d68}
+.crow{background:#fff;border-radius:10px;padding:10px 12px;margin-bottom:6px;display:flex;gap:8px;align-items:center;color:#1a1510}.crow .nm{flex:1.3;font-size:13px;font-weight:800}.crow .c{flex:1;text-align:right;font-size:12.5px}.crow .tr{width:22px;text-align:center}
+.bars{display:flex;align-items:flex-end;gap:6px;height:46px;margin:4px 0 6px}.bars .b{flex:1;background:#a67318;border-radius:3px 3px 0 0}
+.cli{font-size:12px;padding:5px 0;border-top:1px solid #efece4;color:#3f3a31}.cli:first-of-type{border-top:none}.cli .y{color:#3b6d11;font-weight:800}.cli .n{color:#a32d2d;font-weight:800}.mk{font-size:9px;font-weight:800;background:#e6f1fb;color:#0c447c;padding:2px 7px;border-radius:7px;float:right}
+.none{font-size:12px;color:#7d7059;padding:2px}
+.foot{text-align:center;color:#5a4f3d;font-size:11px;margin-top:22px}
+</style>
+</head>
+<body>
+<div class="hdr">
+  <a class="home" href="rembrandt47.html">⌂ Home</a>
+  <span class="logo">MIHI</span><span class="hsep">·</span><span class="htitle">Operatività · centro controllo</span>
+  <span class="hdate" id="hdate"></span>
+</div>
+<div class="tabs" id="tabs">
+  <div class="tab on" data-t="domani" onclick="setTab('domani')">Domani</div>
+  <div class="tab" data-t="ieri" onclick="setTab('ieri')">Ieri</div>
+  <div class="tab" data-t="allert" onclick="setTab('allert')">Allert</div>
+  <div class="tab" data-t="team" onclick="setTab('team')">Team</div>
+</div>
+<div class="wrap"><div id="content"></div><div class="foot" id="foot">MIHI Milano · Operatività · uso interno riservato</div></div>
+
+<!-- ===== BLOCCHI DATI: gli agenti riscrivono SOLO il proprio blocco (il proprio salone) ===== -->
+<script id="op-domani" type="application/json">
+{"data":"—","saloni":[
+ {"nome":"San Siro","colore":"#378ADD","riepilogo":"—","nuove":[],"collaboratrici":[]},
+ {"nome":"Tortona","colore":"#1D9E75","riepilogo":"—","nuove":[],"collaboratrici":[]}]}
+</script>
+<script id="op-ieri" type="application/json">
+{"data":"—","saloni":[
+ {"nome":"San Siro","colore":"#378ADD","riepilogo":{"clienti":"—","incasso":"—","netto":"—","scontrino":"—"},"perCollaboratrice":[],"perCliente":[],"esito":{"proposte":"—","prese":"—","conversione":"—"},"allert":[]},
+ {"nome":"Tortona","colore":"#1D9E75","riepilogo":{"clienti":"—","incasso":"—","netto":"—","scontrino":"—"},"perCollaboratrice":[],"perCliente":[],"esito":{"proposte":"—","prese":"—","conversione":"—"},"allert":[]}]}
+</script>
+<script id="op-team" type="application/json">
+{"data":"—","saloni":[
+ {"nome":"San Siro","colore":"#378ADD","confronto":[],"dettaglio":[]},
+ {"nome":"Tortona","colore":"#1D9E75","confronto":[],"dettaglio":[]}]}
+</script>
+
+<script>
+function esc(s){return (s==null?'':String(s)).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function J(id){try{return JSON.parse(document.getElementById(id).textContent);}catch(e){return{saloni:[]};}}
+function trA(t){return t==='up'?'<span style="color:#3b6d11">▲</span>':t==='down'?'<span style="color:#a32d2d">▼</span>':'<span style="color:#9a8f7c">→</span>';}
+var TAB='domani';
+function setTab(t){TAB=t;document.querySelectorAll('.tab').forEach(function(x){x.classList.toggle('on',x.dataset.t===t);});render();}
+function salonHead(s,sub){return '<div class="s-head"><span class="dot" style="background:'+s.colore+'"></span><span class="s-name">'+esc(s.nome)+'</span>'+(sub?'<span class="s-sub">'+esc(sub)+'</span>':'')+'</div>';}
+
+function viewDomani(){var d=J('op-domani');document.getElementById('hdate').textContent=d.data||'';var o='';
+ (d.saloni||[]).forEach(function(s){o+='<div class="salon">'+salonHead(s,s.riepilogo);
+   o+='<div class="lbl">Nuove in arrivo</div>';
+   if((s.nuove||[]).length){s.nuove.forEach(function(t){o+='<div class="follow">'+t+'</div>';});}else{o+='<div class="none">Nessuna.</div>';}
+   o+='<div class="lbl">Note per collaboratrice</div>';
+   if((s.collaboratrici||[]).length){s.collaboratrici.forEach(function(c){o+='<div class="card"><div class="c-name">'+esc(c.nome)+'</div>';
+     (c.appuntamenti||[]).forEach(function(a){o+='<div class="appt"><div class="atop"><span class="t">'+esc(a.orario)+'</span> · '+esc(a.cliente)+(a.nuova?' <span class="nb">NUOVA</span>':'')+'</div><div class="r"><span class="k">Da fare:</span> '+esc(a.dafare)+'</div><div class="prop"><b>Da proporre:</b> '+esc(a.daproporre)+'</div></div>';});
+     o+='</div>';});}else{o+='<div class="none">—</div>';}
+   o+='</div>';});
+ return '<div class="lead">Cosa fare il prossimo giorno aperto: nuove da accogliere e, per ogni collaboratrice, cosa proporre.</div><div class="salons">'+o+'</div>';}
+
+function viewIeri(){var d=J('op-ieri');document.getElementById('hdate').textContent=d.data||'';var o='';
+ (d.saloni||[]).forEach(function(s){o+='<div class="salon">'+salonHead(s);var r=s.riepilogo||{};
+   o+='<div class="stats"><div class="stat"><div class="k">Clienti</div><div class="v">'+esc(r.clienti)+'</div></div><div class="stat"><div class="k">Incasso</div><div class="v">'+esc(r.incasso)+'</div></div><div class="stat"><div class="k">Netto</div><div class="v">'+esc(r.netto)+'</div></div><div class="stat"><div class="k">Scontrino</div><div class="v">'+esc(r.scontrino)+'</div></div></div>';
+   o+='<div class="lbl">Per collaboratrice</div>';
+   if((s.perCollaboratrice||[]).length){s.perCollaboratrice.forEach(function(c){o+='<div class="row"><div class="top"><span class="nm">'+esc(c.nome)+'</span>'+(c.nota?' <span class="tag green">'+esc(c.nota)+'</span>':'')+'<span class="mn">'+esc(c.incasso)+'</span></div><div class="ssub">'+esc(c.servizi)+' servizi · '+esc(c.clienti)+' clienti</div></div>';});}else{o+='<div class="none">—</div>';}
+   o+='<div class="lbl">Per cliente</div>';
+   if((s.perCliente||[]).length){s.perCliente.forEach(function(c){o+='<div class="row"><div class="top"><span class="nm">'+esc(c.nome)+'</span><span class="mn">'+esc(c.spesa)+'</span></div><div class="ssub">'+esc(c.servizi)+(c.sostituito?' · <span class="sost">sostituito: '+esc(c.sostituito)+'</span>':'')+'</div></div>';});}else{o+='<div class="none">—</div>';}
+   o+='<div class="lbl">Esito proposte</div>';var e=s.esito||{};
+   o+='<div class="esito"><div class="e"><div class="v" style="color:#f0e4cb">'+esc(e.proposte)+'</div><div class="k">Proposte</div></div><div class="e"><div class="v" style="color:#9cd67a">'+esc(e.prese)+'</div><div class="k">Prese</div></div><div class="e"><div class="v" style="color:#f3c969">'+esc(e.conversione)+'</div><div class="k">Conversione</div></div></div>';
+   o+='</div>';});
+ return '<div class="lead">Cosa è successo ieri: chiusura, come si sono mosse le collaboratrici, le clienti e l\'esito delle proposte.</div><div class="salons">'+o+'</div>';}
+
+function viewAllert(){var d=J('op-ieri');var o='';
+ (d.saloni||[]).forEach(function(s){o+='<div class="salon">'+salonHead(s);o+='<div class="lbl">Da richiamare</div>';
+   if((s.allert||[]).length){s.allert.forEach(function(a,i){var cls=a.tipo==='nuova'?'blue':'amber';var lab=a.tipo==='nuova'?'NUOVA · 2ª visita':'ABITUALE';var id='m_'+esc(s.nome).replace(/\W/g,'')+'_'+i;
+     o+='<div class="rec"><div class="rec-h">'+esc(a.nome)+' <span class="tag '+cls+'">'+lab+'</span></div><div class="rec-m">'+esc(a.meta||'')+'</div><div class="rec-x" id="'+id+'">'+esc(a.msg||'')+'</div><button class="btn" onclick="cp(\''+id+'\',this)">Copia messaggio</button></div>';});}
+   else{o+='<div class="none">Nessuna oggi.</div>';}o+='</div>';});
+ return '<div class="lead">Chi richiamare: nuove senza 2ª visita e abituali in ritardo. Messaggio già pronto da copiare.</div><div class="salons">'+o+'</div>';}
+
+function viewTeam(){var d=J('op-team');var o='';
+ (d.saloni||[]).forEach(function(s){o+='<div class="salon">'+salonHead(s);o+='<div class="lbl">Confronto collaboratrici</div>';
+   if((s.confronto||[]).length){s.confronto.forEach(function(c){o+='<div class="crow"><span class="nm">'+esc(c.nome)+(c.tag?' <span class="tag '+(c.tagcol||'green')+'">'+esc(c.tag)+'</span>':'')+'</span><span class="c"><b>'+esc(c.incasso)+'</b></span><span class="c">'+esc(c.conversione)+'</span><span class="tr">'+trA(c.trend)+'</span></div>';});}else{o+='<div class="none">—</div>';}
+   o+='<div class="lbl">Dettaglio</div>';
+   if((s.dettaglio||[]).length){s.dettaglio.forEach(function(c){o+='<div class="card"><div class="c-name">'+esc(c.nome)+'</div><div class="stats"><div class="stat"><div class="k">Incasso</div><div class="v">'+esc(c.incasso)+'</div></div><div class="stat"><div class="k">Clienti</div><div class="v">'+esc(c.clienti)+'</div></div><div class="stat"><div class="k">Conv.</div><div class="v">'+esc(c.conversione)+'</div></div></div>';
+     if(c.trend&&c.trend.length){var mx=Math.max.apply(null,c.trend)||1;o+='<div class="bars">';c.trend.forEach(function(v){o+='<div class="b" style="height:'+Math.round(v/mx*100)+'%"></div>';});o+='</div>';}
+     (c.clientiUpsell||[]).forEach(function(cl){o+='<div class="cli"><span class="'+(cl.upsell?'y':'n')+'">'+(cl.upsell?'✓':'✗')+'</span> '+esc(cl.nome)+' — '+esc(cl.nota)+(cl.upsell?'':' <span class="mk">→ marketing</span>')+'</div>';});
+     o+='</div>';});}else{o+='<div class="none">—</div>';}o+='</div>';});
+ return '<div class="lead">Come si muovono le collaboratrici: confronto e dettaglio (incasso, conversione, clienti con/senza upsell, andamento).</div><div class="salons">'+o+'</div>';}
+
+function render(){var html=TAB==='domani'?viewDomani():TAB==='ieri'?viewIeri():TAB==='allert'?viewAllert():viewTeam();document.getElementById('content').innerHTML=html;}
+function cp(id,btn){var t=document.getElementById(id).innerText;navigator.clipboard.writeText(t);var o=btn.innerText;btn.innerText='Copiato ✓';setTimeout(function(){btn.innerText=o;},1500);}
+render();
+</script>
+</body>
+</html>
