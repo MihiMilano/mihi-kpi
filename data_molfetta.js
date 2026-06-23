@@ -276,83 +276,86 @@ var STORICO = {
       }
     },
     "S2": {
-      "fat_totale_salone": 2090,
+      "fat_totale_salone": 9456,
       "miky": {
-        "fat": 325,
-        "pre": 6,
-        "ret": 0,
-        "serv": 1.83,
-        "fiche": 54.17,
-        "sat": 78,
+        "fat": 1629,
+        "pre": 24,
+        "ret": 2,
+        "serv": 2.04,
+        "fiche": 67.88,
+        "sat": null,
         "rit": null,
         "rich": null,
         "nuovi": null
       },
       "valentina": {
-        "fat": 385,
-        "pre": 10,
-        "ret": 0,
-        "serv": 1.5,
-        "fiche": 38.5,
-        "sat": 95,
+        "fat": 1614,
+        "pre": 34,
+        "ret": 5,
+        "serv": 1.62,
+        "fiche": 47.47,
+        "sat": null,
         "rit": null,
         "rich": null,
         "nuovi": null
       },
       "antonella": {
-        "fat": 330,
-        "pre": 6,
-        "ret": 0,
-        "serv": 1.67,
-        "fiche": 55,
-        "sat": 75,
+        "fat": 1760,
+        "pre": 36,
+        "ret": 1,
+        "serv": 1.61,
+        "fiche": 48.89,
+        "sat": null,
         "rit": null,
         "rich": null,
         "nuovi": null
       },
       "andrea": {
-        "fat": 300,
-        "pre": 9,
+        "fat": 1360,
+        "pre": 33,
         "ret": 1,
-        "serv": 1.22,
-        "fiche": 33.33,
-        "sat": 75,
+        "serv": 1.36,
+        "fiche": 41.21,
+        "sat": null,
         "rit": null,
         "rich": null,
         "nuovi": null
       },
       "mariangela": {
-        "fat": 275,
-        "pre": 7,
-        "ret": 0,
-        "serv": 1.43,
-        "fiche": 39.29,
-        "sat": 80,
+        "fat": 895,
+        "pre": 27,
+        "ret": 2,
+        "serv": 1.41,
+        "fiche": 33.15,
+        "sat": null,
         "rit": null,
         "rich": null,
         "nuovi": null
       },
       "mariarita": {
-        "fat": 185,
-        "pre": 7,
-        "ret": 0,
-        "serv": 1.14,
-        "fiche": 26.43,
-        "sat": 64,
+        "fat": 1166,
+        "pre": 30,
+        "ret": 1,
+        "serv": 1.7,
+        "fiche": 38.87,
+        "sat": null,
         "rit": null,
         "rich": null,
         "nuovi": null
       },
       "dario": {
-        "fat": 290,
-        "pre": 7,
-        "ret": 0,
-        "serv": 1.71,
-        "fiche": 41.43,
-        "sat": 78,
+        "fat": 1032,
+        "pre": 29,
+        "ret": 1,
+        "serv": 1.31,
+        "fiche": 35.59,
+        "sat": null,
         "rit": null,
         "rich": null,
         "nuovi": null
+      },
+      "_salone": {
+        "nuovi": 17
       }
     },
     "S3": {
@@ -536,53 +539,56 @@ var DAILY = {
   },
   "2026-06-13": {
     "miky": {
-      "fat": 325,
-      "cli": 6,
-      "ven": null,
-      "ser": 11,
-      "sat": 78
+      "fat": 1629,
+      "cli": 24,
+      "ven": 2,
+      "ser": 49,
+      "sat": null
     },
     "valentina": {
-      "fat": 385,
-      "cli": 10,
-      "ven": null,
-      "ser": 15,
-      "sat": 95
+      "fat": 1614,
+      "cli": 34,
+      "ven": 5,
+      "ser": 55,
+      "sat": null
     },
     "antonella": {
-      "fat": 330,
-      "cli": 6,
-      "ven": null,
-      "ser": 10,
-      "sat": 75
+      "fat": 1760,
+      "cli": 36,
+      "ven": 1,
+      "ser": 58,
+      "sat": null
     },
     "andrea": {
-      "fat": 300,
-      "cli": 9,
+      "fat": 1360,
+      "cli": 33,
       "ven": 1,
-      "ser": 11,
-      "sat": 75
+      "ser": 45,
+      "sat": null
     },
     "mariangela": {
-      "fat": 275,
-      "cli": 7,
-      "ven": null,
-      "ser": 10,
-      "sat": 80
+      "fat": 895,
+      "cli": 27,
+      "ven": 2,
+      "ser": 38,
+      "sat": null
     },
     "mariarita": {
-      "fat": 185,
-      "cli": 7,
-      "ven": null,
-      "ser": 8,
-      "sat": 64
+      "fat": 1166,
+      "cli": 30,
+      "ven": 1,
+      "ser": 51,
+      "sat": null
     },
     "dario": {
-      "fat": 290,
-      "cli": 7,
-      "ven": null,
-      "ser": 12,
-      "sat": 78
+      "fat": 1032,
+      "cli": 29,
+      "ven": 1,
+      "ser": 38,
+      "sat": null
+    },
+    "_salone": {
+      "nuovi": 17
     }
   },
   "2026-06-16": {
