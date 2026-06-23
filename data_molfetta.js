@@ -276,86 +276,83 @@ var STORICO = {
       }
     },
     "S2": {
-      "fat_totale_salone": 4499,
+      "fat_totale_salone": 2090,
       "miky": {
-        "fat": 585,
-        "pre": 14,
+        "fat": 325,
+        "pre": 6,
         "ret": 0,
-        "serv": 1.57,
-        "fiche": 41.79,
-        "sat": 82,
+        "serv": 1.83,
+        "fiche": 54.17,
+        "sat": 78,
         "rit": null,
         "rich": null,
         "nuovi": null
       },
       "valentina": {
-        "fat": 750,
-        "pre": 19,
-        "ret": 3,
-        "serv": 1.37,
-        "fiche": 39.47,
-        "sat": 96,
+        "fat": 385,
+        "pre": 10,
+        "ret": 0,
+        "serv": 1.5,
+        "fiche": 38.5,
+        "sat": 95,
         "rit": null,
         "rich": null,
         "nuovi": null
       },
       "antonella": {
-        "fat": 754,
-        "pre": 13,
+        "fat": 330,
+        "pre": 6,
         "ret": 0,
-        "serv": 1.69,
-        "fiche": 58,
-        "sat": 84,
+        "serv": 1.67,
+        "fiche": 55,
+        "sat": 75,
         "rit": null,
         "rich": null,
         "nuovi": null
       },
       "andrea": {
-        "fat": 720,
-        "pre": 21,
+        "fat": 300,
+        "pre": 9,
         "ret": 1,
-        "serv": 1.43,
-        "fiche": 34.29,
-        "sat": 88,
+        "serv": 1.22,
+        "fiche": 33.33,
+        "sat": 75,
         "rit": null,
         "rich": null,
         "nuovi": null
       },
       "mariangela": {
-        "fat": 645,
-        "pre": 18,
+        "fat": 275,
+        "pre": 7,
         "ret": 0,
-        "serv": 1.44,
-        "fiche": 35.83,
-        "sat": 90,
+        "serv": 1.43,
+        "fiche": 39.29,
+        "sat": 80,
         "rit": null,
         "rich": null,
         "nuovi": null
       },
       "mariarita": {
-        "fat": 475,
-        "pre": 16,
+        "fat": 185,
+        "pre": 7,
         "ret": 0,
-        "serv": 1.31,
-        "fiche": 29.69,
-        "sat": 79,
+        "serv": 1.14,
+        "fiche": 26.43,
+        "sat": 64,
         "rit": null,
         "rich": null,
         "nuovi": null
       },
       "dario": {
-        "fat": 570,
-        "pre": 19,
-        "ret": 1,
-        "serv": 1.37,
-        "fiche": 30,
-        "sat": 88,
+        "fat": 290,
+        "pre": 7,
+        "ret": 0,
+        "serv": 1.71,
+        "fiche": 41.43,
+        "sat": 78,
         "rit": null,
         "rich": null,
         "nuovi": null
-      },
-      "_salone": {
-        "nuovi": 9
       }
     },
     "S3": {
@@ -530,56 +527,11 @@ var DAILY = {
   "2026-06-11": {},
   "2026-06-12": {
     "miky": {
-      "fat": 260,
-      "cli": 8,
+      "fat": null,
+      "cli": null,
       "ven": 0,
-      "ser": 11,
-      "sat": 85
-    },
-    "valentina": {
-      "fat": 365,
-      "cli": 9,
-      "ven": 3,
-      "ser": 11,
-      "sat": 96
-    },
-    "antonella": {
-      "fat": 424,
-      "cli": 7,
-      "ven": null,
-      "ser": 12,
-      "sat": 93
-    },
-    "andrea": {
-      "fat": 420,
-      "cli": 12,
-      "ven": null,
-      "ser": 19,
-      "sat": 100
-    },
-    "mariangela": {
-      "fat": 370,
-      "cli": 11,
-      "ven": null,
-      "ser": 16,
-      "sat": 100
-    },
-    "mariarita": {
-      "fat": 290,
-      "cli": 9,
-      "ven": null,
-      "ser": 13,
-      "sat": 93
-    },
-    "dario": {
-      "fat": 280,
-      "cli": 12,
-      "ven": 1,
-      "ser": 14,
-      "sat": 98
-    },
-    "_salone": {
-      "nuovi": 9
+      "ser": null,
+      "sat": null
     }
   },
   "2026-06-13": {
