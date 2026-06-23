@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
 <title>MIHI · La tua giornata</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
@@ -15,6 +16,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display',sans-serif;ba
 .who-sub{font-size:12px;color:#8a7d68;margin-top:2px}
 .wrap{max-width:640px;margin:0 auto;padding:16px}
 .lead{font-size:12.5px;color:#8a7d68;margin:2px 2px 14px}
+.sechdr{font-size:11px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#a67318;margin:18px 2px 10px}
 .card{background:#fff;border-radius:16px;padding:15px 16px;margin-bottom:12px}
 .top{display:flex;align-items:center;gap:10px;margin-bottom:9px}
 .time{font-size:20px;font-weight:800;color:#a67318}
@@ -22,9 +24,24 @@ body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display',sans-serif;ba
 .newbadge{font-size:10px;font-weight:800;background:#f3e3c2;color:#8a5a14;padding:2px 8px;border-radius:8px;margin-left:auto}
 .line{font-size:13.5px;color:#3f3a31;padding:6px 0;border-top:1px solid #efece4;line-height:1.5}
 .line:first-of-type{border-top:none}
-.k{display:inline-block;min-width:84px;color:#a8895a;font-weight:800;font-size:11px;text-transform:uppercase;letter-spacing:.5px;vertical-align:top}
+.k{display:inline-block;min-width:96px;color:#a8895a;font-weight:800;font-size:11px;text-transform:uppercase;letter-spacing:.5px;vertical-align:top}
+.k.nota{color:#3b7d4f}
 .v{display:inline}.muted{color:#9a9486}
+.rep{border-top:1px solid #efece4;margin-top:4px;padding-top:9px}
+.rep-lbl{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:#a67318;display:flex;align-items:center;gap:6px;margin-bottom:6px}
+.rep textarea{width:100%;border:1px solid #e2ddd2;border-radius:9px;padding:8px 10px;font-family:inherit;font-size:13px;color:#3f3a31;resize:vertical;min-height:38px;background:#fcfbf8}
+.rep textarea:focus{outline:none;border-color:#a67318}
+.repbtn{margin-top:7px;font-size:12px;font-weight:800;color:#1a1510;background:#a67318;border:none;border-radius:9px;padding:7px 16px;cursor:pointer}
+.repbtn:disabled{opacity:.6;cursor:default}
 .empty{text-align:center;color:#8a7d68;font-size:14px;padding:40px 16px}
+.nums{background:#211a12;border:1px solid #2f2618;border-radius:16px;padding:15px 16px}
+.metric{margin-bottom:15px}.metric:last-child{margin-bottom:0}
+.metric .mtop{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px}
+.metric .mname{font-size:13px;font-weight:800;color:#f0e4cb}
+.metric .mval{font-size:13px;color:#cabfa8}.metric .mval b{color:#fff}
+.bar{height:8px;background:#19130c;border-radius:99px;overflow:hidden}
+.barfill{height:100%;border-radius:99px;background:#639922}
+.barfill.under{background:#BA7517}
 .idx a{display:block;background:#211a12;border:1px solid #2f2618;border-radius:12px;padding:13px 15px;margin-bottom:9px;color:#eee;text-decoration:none;font-weight:700}
 .idx a span{font-size:12px;color:#8a7d68;font-weight:400}
 .foot{text-align:center;color:#5a4f3d;font-size:11px;margin-top:22px}
@@ -119,11 +136,65 @@ body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display',sans-serif;ba
 }
 </script>
 
+<script src="data_rembrandt.js?t=1"></script>
 <script>
-function esc(s){return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+var WORKER='https://aged-snowflake-de3b.m-castellazzi.workers.dev/';
+var SHKEY='mihirep-92aF7q';
+// mappa chiave card -> id nei dati Target (data_rembrandt.js)
+var IDMAP={debora:'debora',helin:'helin',simona:'simona_balzano',alex:'alex',roberta:'roberta',cecilia:'simona_cecilia',chiara:'chiara'};
+var CUR=null, DATA='';
+
+function esc(s){return (s==null?'':String(s)).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 function qp(n){var m=new RegExp('[?&]'+n+'=([^&]+)').exec(location.search);return m?decodeURIComponent(m[1]):'';}
+
+function mese(off){var d=new Date();d.setDate(1);d.setMonth(d.getMonth()+(off||0));return d.toISOString().slice(0,7);}
+function nomeMese(ym){var M=['gennaio','febbraio','marzo','aprile','maggio','giugno','luglio','agosto','settembre','ottobre','novembre','dicembre'];var p=ym.split('-');return M[parseInt(p[1],10)-1];}
+function totMese(id,ym){var t={fat:0,cli:0,ven:0,ser:0,_ss:0,_sn:0};
+  if(typeof DAILY==='undefined'||!DAILY)return t;
+  for(var d in DAILY){if(d.slice(0,7)!==ym)continue;var r=DAILY[d][id];if(!r)continue;
+    t.fat+=r.fat||0;t.cli+=r.cli||0;t.ven+=r.ven||0;t.ser+=r.ser||0;if(r.sat!=null){t._ss+=r.sat;t._sn++;}}
+  t.fiche=t.cli?t.fat/t.cli:0;t.sat=t._sn?t._ss/t._sn:0;return t;}
+
+function metric(nome,val,obj,fmt){
+  var v=fmt(val), o=obj>0?fmt(obj):'—';
+  var pct=obj>0?Math.min(100,Math.round(val/obj*100)):0;
+  var under=obj>0&&val<obj*0.6;
+  return '<div class="metric"><div class="mtop"><span class="mname">'+nome+'</span>'+
+    '<span class="mval"><b>'+v+'</b> / obiettivo '+o+'</span></div>'+
+    '<div class="bar"><div class="barfill'+(under?' under':'')+'" style="width:'+pct+'%"></div></div></div>';
+}
+
+function bloccoNumeri(cardKey){
+  var id=IDMAP[cardKey]; if(!id)return '';
+  var ym=mese(0), ymp=mese(-1);
+  var cur=totMese(id,ym), prev=totMese(id,ymp);
+  if(cur.fat===0&&cur.cli===0&&cur.ser===0&&cur.ven===0) return '';
+  var eur=function(x){return '€'+Math.round(x).toLocaleString('it-IT');};
+  var pc=function(x){return Math.round(x)+'%';};
+  var nn=function(x){return Math.round(x).toString();};
+  var html='<div class="sechdr">I tuoi numeri · '+nomeMese(ym)+'</div><div class="nums">';
+  html+=metric('Fatturato',cur.fat, prev.fat*1.1, eur);
+  html+=metric('Fiche media',cur.fiche, prev.fiche*1.1, eur);
+  html+=metric('Saturazione',cur.sat, prev.sat>0?Math.min(100,prev.sat*1.1):0, pc);
+  html+=metric('Pezzi venduti',cur.ven, prev.ven*1.1, nn);
+  html+='</div>';
+  return html;
+}
+
+function inviaReport(orario,dafare,btn){
+  var ta=btn.parentNode.querySelector('textarea'); var testo=(ta.value||'').trim();
+  if(!testo){ta.focus();return;}
+  btn.disabled=true; var old=btn.textContent; btn.textContent='Invio…';
+  fetch(WORKER,{method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({key:SHKEY,operatrice:CUR.nome,data:DATA,salone:CUR.salone,cliente:orario+' · '+dafare,testo:testo})})
+   .then(function(r){return r.json();})
+   .then(function(j){ if(j&&j.ok){btn.textContent='✓ Inviato';ta.disabled=true;} else {btn.textContent='Errore, riprova';btn.disabled=false;} })
+   .catch(function(){btn.textContent='Errore, riprova';btn.disabled=false;});
+}
+
 function render(){
   var d=JSON.parse(document.getElementById('collabdata').textContent);
+  DATA=d.data;
   var key=(qp('c')||'').toLowerCase().trim();
   var c=d.collaboratrici[key];
   var app=document.getElementById('app');
@@ -132,15 +203,22 @@ function render(){
     Object.keys(d.collaboratrici).forEach(function(k){var x=d.collaboratrici[k];idx+='<a href="?c='+k+'">'+esc(x.nome)+' <span>· '+esc(x.salone)+'</span></a>';});
     idx+='</div></div>';app.innerHTML=idx;return;
   }
+  CUR=c;
   var h='<div class="hdr"><span class="logo">MIHI</span><div class="who"><span class="dot" style="background:'+c.colore+'"></span><span class="who-name">'+esc(c.nome)+'</span></div><div class="who-sub">'+esc(c.salone)+' · '+esc(d.data)+'</div></div>';
-  h+='<div class="wrap"><div class="lead">La tua giornata di oggi. Per ogni appuntamento: cosa è prenotato, lo storico e cosa proporre. (Il nome della cliente lo vedi su Treatwell, all\'orario corrispondente.)</div>';
-  if(!c.appuntamenti||!c.appuntamenti.length){h+='<div class="empty">Nessun appuntamento per oggi.</div>';}
-  (c.appuntamenti||[]).forEach(function(a){
+  h+='<div class="wrap"><div class="lead">La tua giornata. Per ogni appuntamento: cosa è prenotato, cosa proporre e l\'eventuale nota. Dopo il servizio puoi lasciare un report. (Il nome della cliente lo vedi su Treatwell, all\'orario corrispondente.)</div>';
+  h+='<div class="sechdr">La tua giornata</div>';
+  if(!c.appuntamenti||!c.appuntamenti.length){h+='<div class="empty">Nessun appuntamento.</div>';}
+  (c.appuntamenti||[]).forEach(function(a,i){
     h+='<div class="card"><div class="top"><span class="time">'+esc(a.orario)+'</span><span class="lab">appuntamento</span>'+(a.nuova?'<span class="newbadge">NUOVA</span>':'')+'</div>';
     h+='<div class="line"><span class="k">Prenotato</span><span class="v">'+esc(a.dafare)+'</span></div>';
-    h+='<div class="line"><span class="k">Storico</span><span class="v '+((a.storico&&a.storico!=='—')?'':'muted')+'">'+esc(a.storico||'—')+'</span></div>';
-    h+='<div class="line"><span class="k">Da proporre</span><span class="v">'+esc(a.daproporre)+'</span></div></div>';
+    h+='<div class="line"><span class="k">Da proporre</span><span class="v">'+esc(a.daproporre)+'</span></div>';
+    if(a.storico&&a.storico!=='—'){h+='<div class="line"><span class="k nota">Nota</span><span class="v">'+esc(a.storico)+'</span></div>';}
+    h+='<div class="rep"><div class="rep-lbl">Report servizio</div>'+
+       '<textarea placeholder="Scrivi qui com\'è andato il servizio, preferenze, cosa proporre la prossima volta…"></textarea>'+
+       '<button class="repbtn" onclick="inviaReport(\''+esc(a.orario)+'\',\''+esc(a.dafare).replace(/\x27/g,"")+'\',this)">Invia report</button></div>';
+    h+='</div>';
   });
+  h+=bloccoNumeri(key);
   h+='<div class="foot">MIHI Milano · aggiornato '+esc(d.data)+'</div></div>';
   app.innerHTML=h;
 }
