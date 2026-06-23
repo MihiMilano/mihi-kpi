@@ -59,9 +59,180 @@ body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display',sans-serif;ba
 
 <!-- ===== BLOCCHI DATI: gli agenti riscrivono SOLO il proprio blocco (il proprio salone) ===== -->
 <script id="op-domani" type="application/json">
-{"data":"Martedì 23/6/2026","saloni":[
- {"nome":"San Siro","colore":"#378ADD","riepilogo":"—","nuove":[],"collaboratrici":[]},
- {"nome":"Tortona","colore":"#1D9E75","riepilogo":"2 appuntamenti · Piega + Massaggio","nuove":[],"collaboratrici":[{"nome":"Roberta","appuntamenti":[{"orario":"18:15","cliente":"Linda Tommasini","nuova":false,"dafare":"Piega (cliente abituale di piega; capelli lunghi)","daproporre":"Maschera/trattamento ristrutturante (non prenotabile online) · Styling/Finish (non prenotabile online) · Lavateste: salire da Shampoo+Conditioner a Shampoo+Maschera (12€)"}]},{"nome":"Simona Cecilia","appuntamenti":[{"orario":"14:00","cliente":"Marta Scuri","nuova":false,"dafare":"Massaggio Tonificante (1h)","daproporre":"Win-back: Pulizia Viso Profonda (fatta il 16/6, non prenotata ora) · Estetica: nessun upsell singolo, nessuna promo/pacchetto attivo · verificare saldo tessera/buono"}]}]}]}
+{
+ "data": "Mercoledì 24/6/2026",
+ "saloni": [
+  {
+   "nome": "San Siro",
+   "colore": "#378ADD",
+   "riepilogo": "13 clienti · 3 nuove · 1 estetica · giornata piena (Chiara e Cecilia Simona non operative)",
+   "nuove": [
+    "<b>Tamara</b> — Simona · 10:00 · Taglio Donna · accoglienza + consenso privacy + fissare 2ª visita",
+    "<b>Angela Mlynska</b> — Helin 09:30 Colore Radice + Simona 11:00 Taglio Donna · accoglienza + consenso privacy + fissare 2ª visita",
+    "<b>Nadia Traibiz</b> — Simona · 12:30 · Epilazione Sopracciglia (estetica) · MANCA consenso privacy · accoglienza + consenso + fissare prossima seduta"
+   ],
+   "collaboratrici": [
+    {
+     "nome": "Debora",
+     "appuntamenti": [
+      {
+       "orario": "09:30",
+       "cliente": "Gambella Lidia",
+       "nuova": false,
+       "dafare": "Colore Radice + Ricostruzione capillare + Piega Capelli Corti",
+       "daproporre": "Color Gloss col colore · ricostruzione già in programma (ottimo) · Maschera+Shampoo + Styling/Finish sulla piega (non prenotabili online)"
+      },
+      {
+       "orario": "10:00",
+       "cliente": "Rizzini Rizzini",
+       "nuova": false,
+       "dafare": "Piega Capelli Corti",
+       "daproporre": "Salita lavateste (Maschera+Shampoo → Trattamento Sebastian 25€) · Trattamento/maschera + Styling/Finish (non prenotabili online)"
+      },
+      {
+       "orario": "11:30",
+       "cliente": "Palazzo Anna",
+       "nuova": false,
+       "dafare": "Colpi di sole stagnola + Piega Capelli Corti (13:30)",
+       "daproporre": "Gloss/tonalizzante sui colpi di sole · Trattamento ristrutturante (Wellaplex/Ricostruzione) al lavateste · Styling/Finish sulla piega (non prenotabili online)"
+      },
+      {
+       "orario": "12:30",
+       "cliente": "Alessandro Tarrini",
+       "nuova": false,
+       "dafare": "Taglio Uomo",
+       "daproporre": "Styling/Finish uomo (non prenotabile online) · NB Debora non fa rituale barba → non proporlo"
+      },
+      {
+       "orario": "14:30",
+       "cliente": "Ilaria Arena",
+       "nuova": false,
+       "dafare": "Colore Radice (poi Piega con Helin 15:30)",
+       "daproporre": "Color Gloss col colore · Maschera/trattamento ristrutturante + Styling/Finish (non prenotabili online)"
+      }
+     ]
+    },
+    {
+     "nome": "Simona",
+     "appuntamenti": [
+      {
+       "orario": "10:00",
+       "cliente": "Tamara",
+       "nuova": true,
+       "dafare": "Taglio Donna",
+       "daproporre": "Piega in abbinata · Trattamento/maschera + Styling/Finish (non prenotabili online) · NUOVA: accoglienza + privacy + 2ª visita"
+      },
+      {
+       "orario": "11:00",
+       "cliente": "Angela Mlynska",
+       "nuova": true,
+       "dafare": "Taglio Donna (Colore con Helin 09:30)",
+       "daproporre": "Piega in abbinata · Styling/Finish (non prenotabile online) · NUOVA: accoglienza + privacy + 2ª visita"
+      },
+      {
+       "orario": "11:30",
+       "cliente": "Giuliana Castelliti",
+       "nuova": false,
+       "dafare": "Colore Radice + Piega Capelli Lunghi (13:00)",
+       "daproporre": "Color Gloss col colore · Trattamento/maschera al lavateste · Styling/Finish sulla piega (non prenotabili online)"
+      },
+      {
+       "orario": "12:30",
+       "cliente": "Nadia Traibiz",
+       "nuova": true,
+       "dafare": "Epilazione a Cera Sopracciglia (estetica, 2 servizi)",
+       "daproporre": "Estetica → solo pacchetti/promo (nessuna attiva) · NUOVA, manca privacy: accoglienza + consenso + fissare prossima seduta (3 settimane)"
+      },
+      {
+       "orario": "16:00",
+       "cliente": "Rut Rut",
+       "nuova": false,
+       "dafare": "Ricostruzione Joico + Piega Capelli Corti (17:30)",
+       "daproporre": "Ricostruzione già in programma (ottimo) · Styling/Finish sulla piega · Maschera+Shampoo (non prenotabili online)"
+      }
+     ]
+    },
+    {
+     "nome": "Helin",
+     "appuntamenti": [
+      {
+       "orario": "09:30",
+       "cliente": "Angela Mlynska",
+       "nuova": true,
+       "dafare": "Colore Radice (Taglio con Simona 11:00)",
+       "daproporre": "Color Gloss col colore · Maschera/trattamento ristrutturante (non prenotabile online) · NUOVA: accoglienza + privacy + 2ª visita"
+      },
+      {
+       "orario": "10:30",
+       "cliente": "Silvia Stucchi",
+       "nuova": false,
+       "dafare": "Colore Radice + Piega (11:30)",
+       "daproporre": "Color Gloss col colore · Trattamento/maschera al lavateste · Styling/Finish sulla piega (non prenotabili online)"
+      },
+      {
+       "orario": "15:30",
+       "cliente": "Ilaria Arena",
+       "nuova": false,
+       "dafare": "Piega (Colore con Debora 14:30)",
+       "daproporre": "Trattamento/maschera + Styling/Finish sulla piega (non prenotabili online)"
+      },
+      {
+       "orario": "16:30",
+       "cliente": "Ilenia Sutera",
+       "nuova": false,
+       "dafare": "Colore Radice Senza Ammoniaca + Piega (17:30)",
+       "daproporre": "Color Gloss col colore · Trattamento/maschera al lavateste · Styling/Finish sulla piega (non prenotabili online)"
+      }
+     ]
+    },
+    {
+     "nome": "Pina",
+     "appuntamenti": [
+      {
+       "orario": "10:30",
+       "cliente": "Cerbi Silvana",
+       "nuova": false,
+       "dafare": "Permanente + Piega Capelli Corti",
+       "daproporre": "Styling/Finish sulla piega (non prenotabile online) · NB Pina fa solo permanente/piega/taglio → gloss/maschera/trattamenti tecnici non fattibili con lei"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "nome": "Tortona",
+   "colore": "#1D9E75",
+   "riepilogo": "2 appuntamenti · Piega + Massaggio",
+   "nuove": [],
+   "collaboratrici": [
+    {
+     "nome": "Roberta",
+     "appuntamenti": [
+      {
+       "orario": "18:15",
+       "cliente": "Linda Tommasini",
+       "nuova": false,
+       "dafare": "Piega (cliente abituale di piega; capelli lunghi)",
+       "daproporre": "Maschera/trattamento ristrutturante (non prenotabile online) · Styling/Finish (non prenotabile online) · Lavateste: salire da Shampoo+Conditioner a Shampoo+Maschera (12€)"
+      }
+     ]
+    },
+    {
+     "nome": "Simona Cecilia",
+     "appuntamenti": [
+      {
+       "orario": "14:00",
+       "cliente": "Marta Scuri",
+       "nuova": false,
+       "dafare": "Massaggio Tonificante (1h)",
+       "daproporre": "Win-back: Pulizia Viso Profonda (fatta il 16/6, non prenotata ora) · Estetica: nessun upsell singolo, nessuna promo/pacchetto attivo · verificare saldo tessera/buono"
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}
 </script>
 <script id="op-ieri" type="application/json">
 {"data":"—","saloni":[
