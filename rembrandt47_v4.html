@@ -758,12 +758,14 @@ function renderCollabLinks(){
   const stato=loadCollabStato();
   const prefix=COLLAB_STATO_KEY.split('_')[0];
   let rows='';
+  const LINK_OK=['debora','simona_balzano','helin','alex','roberta','simona_cecilia'];
   for(const c of collaboratori){
+    if(!LINK_OK.includes(c.id)) continue;
     const attivo=(stato[c.id]?.attivo??true);
     const color=attivo?'#22c55e':'#ef4444';
     const dot=`<span style="width:8px;height:8px;border-radius:50%;background:${color};display:inline-block;margin-right:6px;flex-shrink:0"></span>`;
     const cid=c.id.replace(/ /g,'_');
-    const url=`${GH_PAGES_BASE}${GH_FILENAME.replace('.html','')}_${cid}.html`;
+    const url=`${GH_PAGES_BASE}collaboratore.html?c=${cid}`;
     const copyBtn=attivo
       ? `<button onclick="miCopy('${url}',this)" style="background:var(--card);border:1px solid var(--bord);border-radius:8px;padding:6px 12px;font-size:11px;font-weight:700;color:var(--gold);cursor:pointer;font-family:inherit;white-space:nowrap">\ud83d\udccb Copia</button>`
       : `<span style="font-size:10px;color:#ef4444;font-weight:700;padding:6px 12px;background:#ef444415;border-radius:8px">DISATTIVATO</span>`;
