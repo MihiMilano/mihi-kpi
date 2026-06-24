@@ -3080,7 +3080,7 @@ var STORICO = {
   },
   "2026-06": {
     "chiuso": false,
-    "ultimo_aggiornamento": "21 giu 2026",
+    "ultimo_aggiornamento": "24 giu 2026",
     "S1": {
       "fat_totale_salone": 10015.99,
       "debora": {
@@ -3375,7 +3375,62 @@ var STORICO = {
       }
     },
     "S4": {
-      "fat_totale_salone": 0
+      "fat_totale_salone": 553.8,
+      "debora": {
+        "fat": 164,
+        "pre": 4,
+        "ret": 0,
+        "serv": 2,
+        "fiche": 41,
+        "sat": null,
+        "rit": null,
+        "rich": null,
+        "nuovi": null
+      },
+      "helin": {
+        "fat": 116.5,
+        "pre": 3,
+        "ret": 0,
+        "serv": 2,
+        "fiche": 38.83,
+        "sat": null,
+        "rit": null,
+        "rich": null,
+        "nuovi": null
+      },
+      "simona_balzano": {
+        "fat": 208.8,
+        "pre": 3,
+        "ret": 0,
+        "serv": 2.33,
+        "fiche": 69.6,
+        "sat": null,
+        "rit": null,
+        "rich": null,
+        "nuovi": null
+      },
+      "simona_cecilia": {
+        "fat": 9,
+        "pre": 1,
+        "ret": 0,
+        "serv": 1,
+        "fiche": 9,
+        "sat": null,
+        "rit": null,
+        "rich": null,
+        "nuovi": null
+      },
+      "roberta": {
+        "fat": 55.5,
+        "pre": 2,
+        "ret": 0,
+        "serv": 1.5,
+        "fiche": 27.75,
+        "sat": null,
+        "rit": null,
+        "rich": null,
+        "nuovi": null
+      }
     }
   }
 };
@@ -3789,6 +3844,46 @@ var DAILY = {
     },
     "_salone": {
       "nuovi": 4
+    }
+  },
+  "2026-06-23": {
+    "debora": {
+      "fat": 164,
+      "cli": 4,
+      "ven": 0,
+      "ser": 8,
+      "sat": null
+    },
+    "helin": {
+      "fat": 116.5,
+      "cli": 3,
+      "ven": 0,
+      "ser": 6,
+      "sat": null
+    },
+    "simona_balzano": {
+      "fat": 208.8,
+      "cli": 3,
+      "ven": 0,
+      "ser": 7,
+      "sat": null
+    },
+    "simona_cecilia": {
+      "fat": 9,
+      "cli": 1,
+      "ven": 0,
+      "ser": 1,
+      "sat": null
+    },
+    "roberta": {
+      "fat": 55.5,
+      "cli": 2,
+      "ven": 0,
+      "ser": 3,
+      "sat": null
+    },
+    "_salone": {
+      "nuovi": null
     }
   }
 };
