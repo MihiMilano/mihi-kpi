@@ -3375,7 +3375,7 @@ var STORICO = {
       }
     },
     "S4": {
-      "fat_totale_salone": 553.8,
+      "fat_totale_salone": 531.3,
       "debora": {
         "fat": 164,
         "pre": 4,
@@ -3421,11 +3421,11 @@ var STORICO = {
         "nuovi": null
       },
       "roberta": {
-        "fat": 55.5,
-        "pre": 2,
+        "fat": 33,
+        "pre": 1,
         "ret": 0,
-        "serv": 1.5,
-        "fiche": 27.75,
+        "serv": 2,
+        "fiche": 33,
         "sat": null,
         "rit": null,
         "rich": null,
@@ -3876,10 +3876,10 @@ var DAILY = {
       "sat": null
     },
     "roberta": {
-      "fat": 55.5,
-      "cli": 2,
+      "fat": 33,
+      "cli": 1,
       "ven": 0,
-      "ser": 3,
+      "ser": 2,
       "sat": null
     },
     "_salone": {
