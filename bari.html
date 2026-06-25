@@ -705,12 +705,16 @@ function getMk(){const d=new Date();return `${d.getFullYear()}-${String(d.getMon
 function getSW(mk){
   const m=MESI[mk];if(!m)return null;
   const t=new Date();t.setHours(12,0,0,0);
+  let cur=null;
   for(const s of m.settimane){
     const da=new Date(s.da);da.setHours(0,0,0,0);
     const a=new Date(s.a);a.setHours(23,59,59,0);
-    if(t>=da&&t<=a)return s;
+    if(t>=da&&t<=a){cur=s;break;}
   }
-  return [...m.settimane].reverse().find(s=>new Date(s.da)<=t)||m.settimane[0];
+  if(!cur)cur=[...m.settimane].reverse().find(s=>new Date(s.da)<=t)||m.settimane[0];
+  const hd=sw=>{const w=sw&&typeof STORICO!=='undefined'&&STORICO[mk]&&STORICO[mk][sw.id];if(!w)return false;if(w.fat_totale_salone>0)return true;return Object.keys(w).some(k=>k!=='fat_totale_salone'&&k!=='_salone'&&w[k]&&w[k].fat!=null);};
+  if(cur&&!hd(cur)){const i=m.settimane.findIndex(s=>s.id===cur.id);for(let j=i-1;j>=0;j--){if(hd(m.settimane[j]))return m.settimane[j];}}
+  return cur;
 }
 function sem(a,t){
   if(a===null||a===undefined)return'n';
@@ -1944,7 +1948,7 @@ function renderMese(){
   html+=`<th>TOT</th><th>TARGET</th><th>%</th></tr></thead><tbody>`;
   for(const c of m.collaboratori){
     const color=rc(c.ruolo);const tm=c[kd.tm];const tot=getTot(mk,c.id);const sf=semKpi(kd.k,tot[meseKpi],tm);
-    if(tm===null||tm===undefined)continue;
+    if((tm===null||tm===undefined)&&(tot[meseKpi]===null||tot[meseKpi]===undefined))continue;
     html+=`<tr><td><span style="color:${color};font-weight:800">${c.nome}</span></td>`;
     m.settimane.forEach(s=>{
       const v=STORICO[mk]?.[s.id]?.[c.id]?.[meseKpi];const sv=semKpi(kd.k,v,c[kd.tw]);const p=kd.k==='sat'?'':pct(v,c[kd.tw]);
@@ -2019,7 +2023,7 @@ function renderStorico(){
   html+=`<th>TOT</th><th>TARGET</th><th>%</th></tr></thead><tbody>`;
   for(const c of m.collaboratori){
     const color=rc(c.ruolo);const tm=c[kd.tm];const tot=getTot(stMk,c.id);const sf=semKpi(kd.k,tot[stKpi],tm);
-    if(tm===null||tm===undefined)continue;
+    if((tm===null||tm===undefined)&&(tot[stKpi]===null||tot[stKpi]===undefined))continue;
     html+=`<tr><td><span style="color:${color};font-weight:800">${c.nome}</span></td>`;
     m.settimane.forEach(s=>{const v=st?.[s.id]?.[c.id]?.[stKpi];html+=`<td class="${semKpi(kd.k,v,c[kd.tw])}"> ${kd.fmt(v)}</td>`;});
     html+=`<td class="${sf}" style="font-weight:800">${kd.fmt(tot[stKpi])}</td>
