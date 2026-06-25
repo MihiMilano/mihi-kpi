@@ -1,0 +1,33 @@
+data,cliente,servizio,operatrice,prezzo,pagamento,sostituito,fonte,salone
+2026-06-24,Gambella Lidia,Piega Capelli Corti,Debora,0.00,Omaggio,no,Direct,SSI
+2026-06-24,Angela Mlynska,Taglio Donna,Simona,30.00,Carte,no,Direct,SSI
+2026-06-24,Angela Mlynska,doppio gloss,Helin,85.00,Carte,no,Direct,SSI
+2026-06-24,Angela Mlynska,Piega Capelli Lunghi,Helin,21.00,Carte,no,Direct,SSI
+2026-06-24,Angela Mlynska,Maschera + Shampoo,Helin,12.00,Carte,no,Direct,SSI
+2026-06-24,Silvia Stucchi,Maschera + Shampoo,Helin,9.00,Detrazione,no,Direct,SSI
+2026-06-24,Silvia Stucchi,Pulizia sopracciglia,Simona,3.75,Detrazione,no,Direct,SSI
+2026-06-24,Silvia Stucchi,Colore radice,Helin,33.75,Detrazione,no,Direct,SSI
+2026-06-24,Silvia Stucchi,Piega,Simona,18.75,Detrazione,no,Direct,SSI
+2026-06-24,Silvia Stucchi,Sublime Skin Fluid Cream 60ml,Chiara,110.00,Detrazione,no,Direct,SSI
+2026-06-24,Silvia Stucchi,Color Gloss,Helin,18.75,Detrazione,no,Direct,SSI
+2026-06-24,Nadia Traibiz,Epilazione a Cera Sopracciglia,Simona,11.00,Carte,no,Direct,SSI
+2026-06-24,Nadia Traibiz,Ceretta Labbro,Simona,8.00,Carte,no,Direct,SSI
+2026-06-24,Giuliana Castelliti,Colore radice,Helin,46.00,Detrazione,no,Direct,SSI
+2026-06-24,Giuliana Castelliti,Maschera + Shampoo,Simona,15.00,Detrazione,no,Direct,SSI
+2026-06-24,Giuliana Castelliti,Piega Capelli Lunghi,Simona,21.00,Detrazione,no,Direct,SSI
+2026-06-24,Ilaria Arena,Piega,Helin,22.50,Carte,no,Direct,SSI
+2026-06-24,Ilaria Arena,Colore radice,Debora,40.50,Carte,no,Direct,SSI
+2026-06-24,Ilaria Arena,taglio bambina con piega,Debora,30.00,Carte,no,Direct,SSI
+2026-06-24,Ilaria Arena,taglio bambina con piega,Simona,30.00,Carte,no,Direct,SSI
+2026-06-24,Ilaria Arena,Taglio Donna,Debora,30.00,Carte,no,Direct,SSI
+2026-06-24,Rut Rut,Colore radice,Chiara,45.00,Contanti,no,Direct,SSI
+2026-06-24,Rut Rut,ricostruzione Joico,Chiara,30.00,Contanti,no,Direct,SSI
+2026-06-24,Rut Rut,Piega Capelli Corti,Simona,20.00,Contanti,no,Direct,SSI
+2026-06-24,Rut Rut,sebastian no break spray,Chiara,35.50,Contanti,no,Direct,SSI
+2026-06-24,Giovanna Russo,Taglio Donna,Simona,30.00,Contanti,no,Direct,SSI
+2026-06-24,Giovanna Russo,Piega Capelli Lunghi,Simona,21.00,Contanti,no,Direct,SSI
+2026-06-24,Moretti Angela,Piega,Helin,25.00,Carte,no,Direct,SSI
+2026-06-24,Moretti Angela,Shampoo e Conditioner,Helin,8.00,Carte,no,Direct,SSI
+2026-06-24,Ilenia Sutera,Shampoo,Helin,3.60,Online,si,Treatwell,SSI
+2026-06-24,Ilenia Sutera,Piega,Helin,22.50,Online,no,Treatwell,SSI
+2026-06-24,Ilenia Sutera,Colore Radice Senza Ammoniaca,Helin,41.40,Online,no,Treatwell,SSI
