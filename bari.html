@@ -956,7 +956,7 @@ function stampaProfilo(cid){
   let kpiH='';
   for(const kpi of KD){
     const av=d[kpi.k],tv=c[kpi.tw],s=semPace(kpi.k,av,tv,getPaceRatio(sw)),p=kpi.k==='sat'?'':pctPace(av,tv,getPaceRatio(sw));
-    if(tv===null||tv===undefined)continue;
+    if((tv===null||tv===undefined)&&(av===null||av===undefined))continue;
     kpiH+=`<div style="background:#eeecea;border-radius:10px;padding:10px 6px;text-align:center">
       <div style="font-size:9px;text-transform:uppercase;letter-spacing:.5px;color:#6b6055;margin-bottom:4px">${kpi.lbl}</div>
       <div style="font-size:15px;font-weight:800;color:${SC[s]}"><span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:${SCD[s]};margin-right:3px;vertical-align:middle"></span>${kpi.fmt(av)}${p?`<span style="font-size:9px;opacity:.55;margin-left:1px">${p}</span>`:''}</div>
@@ -998,7 +998,7 @@ function stampaProfilo(cid){
   let cumH='';
   for(const kpi of KD){
     const av=tot[kpi.k],tv=c[kpi.tm],s=semKpi(kpi.k,av,tv);
-    if(tv===null||tv===undefined)continue;
+    if((tv===null||tv===undefined)&&(av===null||av===undefined))continue;
     cumH+=`<div style="background:#eeecea;border-radius:8px;padding:8px 5px;text-align:center">
       <div style="font-size:9px;text-transform:uppercase;letter-spacing:.5px;color:#6b6055;margin-bottom:3px">${kpi.lbl}</div>
       <div style="font-size:13px;font-weight:800;color:${SC[s]}">${kpi.fmt(av)}</div>
@@ -1795,7 +1795,7 @@ function renderLive(){
       <div class="kpi-grid">`;
     for(const kpi of KD){
       const av=d[kpi.k],tv=c[kpi.tw],s=semPace(kpi.k,av,tv,pace),p=kpi.k==='sat'?'':pctPace(av,tv,pace);
-      if(tv===null||tv===undefined)continue;
+      if((tv===null||tv===undefined)&&(av===null||av===undefined))continue;
       html+=`<div class="kc"><div class="kl">${kpi.lbl}</div>
         <div class="kv ${s}"><span class="dot d${s}"></span>${kpi.fmt(av)}${p?`<span class="kp">${p}</span>`:''}</div>
         <div class="kt">▸ ${kpi.fmt(tv)}</div></div>`;
@@ -1862,7 +1862,7 @@ function renderLive(){
       <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:5px">`;
     for(const kpi of KD){
       const av=tot[kpi.k],tv=c[kpi.tm],s=semKpi(kpi.k,av,tv);
-      if(tv===null||tv===undefined)continue;
+      if((tv===null||tv===undefined)&&(av===null||av===undefined))continue;
       html+=`<div class="kc" style="padding:6px 4px"><div class="kl">${kpi.lbl}</div>
         <div class="kv ${s}" style="font-size:12px">${kpi.fmt(av)}</div>
         <div class="kt">/ ${kpi.fmt(tv)}</div></div>`;
