@@ -2189,7 +2189,7 @@ document.getElementById('cover-update').textContent=ua?`Aggiornato: ${ua}`:'';
   const m=MESI[getMk()];const sw=getSW(getMk());
   if(document.getElementById('hdr-week'))document.getElementById('hdr-week').textContent=sw?.label||'–';
   if(document.getElementById('hdr-month'))document.getElementById('hdr-month').textContent=m?.label||'';
-  renderLive();
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',renderLive);else renderLive();
 })();
 </script>
 
