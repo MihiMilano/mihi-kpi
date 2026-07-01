@@ -25,8 +25,8 @@ var MESI = {
       {
         "id": "S4",
         "da": "2026-06-22",
-        "a": "2026-06-27",
-        "label": "S4 · 22-27 giu"
+        "a": "2026-06-30",
+        "label": "S4 · 22-30 giu"
       }
     ],
     "collaboratori": [
@@ -442,7 +442,87 @@ var STORICO = {
       }
     },
     "S4": {
-      "fat_totale_salone": 0
+      "fat_totale_salone": 15985,
+      "michele": {
+        "fat": 2434,
+        "pre": 42,
+        "ret": 2,
+        "serv": 1.64,
+        "fiche": 57.95,
+        "sat": null,
+        "rit": null,
+        "rich": null,
+        "nuovi": null
+      },
+      "carmen": {
+        "fat": 2625,
+        "pre": 38,
+        "ret": 5,
+        "serv": 2.08,
+        "fiche": 69.08,
+        "sat": null,
+        "rit": null,
+        "rich": null,
+        "nuovi": null
+      },
+      "emilia": {
+        "fat": 2348,
+        "pre": 34,
+        "ret": 5,
+        "serv": 2.21,
+        "fiche": 69.06,
+        "sat": null,
+        "rit": null,
+        "rich": null,
+        "nuovi": null
+      },
+      "isa": {
+        "fat": 2274,
+        "pre": 33,
+        "ret": 2,
+        "serv": 1.91,
+        "fiche": 68.91,
+        "sat": null,
+        "rit": null,
+        "rich": null,
+        "nuovi": null
+      },
+      "rebecca": {
+        "fat": 1909,
+        "pre": 38,
+        "ret": 1,
+        "serv": 1.89,
+        "fiche": 50.24,
+        "sat": null,
+        "rit": null,
+        "rich": null,
+        "nuovi": null
+      },
+      "isabel": {
+        "fat": 2696,
+        "pre": 40,
+        "ret": 2,
+        "serv": 1.73,
+        "fiche": 67.4,
+        "sat": null,
+        "rit": null,
+        "rich": null,
+        "nuovi": null
+      },
+      "paola": {
+        "fat": 1699,
+        "pre": 37,
+        "ret": 2,
+        "serv": 1.81,
+        "fiche": 45.92,
+        "sat": null,
+        "rit": null,
+        "rich": null,
+        "nuovi": null
+      },
+      "_salone": {
+        "nuovi": 11
+      }
     }
   }
 };
