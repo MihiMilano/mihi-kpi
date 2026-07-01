@@ -701,7 +701,7 @@ const SALONE_ATTIVO = true;
 const RC = {"Stilista":"#6d28d9","Direttore":"#92400e","Resp.Tecnico":"#0369a1","Resp.Care":"#be185d","Resp.Styling":"#7c3aed","Assistente":"#64748b"};
 function rc(r){return RC[r]||'#64748b'}
 function ini(n){return n.charAt(0)}
-function getMk(){const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`}
+function getMk(){const d=new Date();const cur=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;try{if(typeof MESI!=='undefined'&&MESI){if(MESI[cur])return cur;const ks=Object.keys(MESI).sort();if(ks.length)return ks[ks.length-1];}}catch(e){}return cur;}
 function getSW(mk){
   const m=MESI[mk];if(!m)return null;
   const t=new Date();t.setHours(12,0,0,0);
