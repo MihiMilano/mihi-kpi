@@ -11,7 +11,7 @@
 <script>
 /* AUTO-AGGIORNAMENTO DASH: se online c'è una versione più nuova, ricarica fresca (anti-cache Safari/Pages). Bumpa DASH_VERSION a OGNI modifica strutturale della dash. */
 (function(){
-  var DASH_VERSION='2026-07-01-b';
+  var DASH_VERSION='2026-07-01-c';
   window.__DASH_VERSION=DASH_VERSION;
   try{
     fetch(location.pathname+'?_cb='+Date.now(),{cache:'no-store'})
@@ -883,6 +883,8 @@ const RC = {"Stilista":"#6d28d9","Estetista":"#be185d","Manager":"#92400e","Barb
 function rc(r){return RC[r]||'#64748b'}
 function ini(n){return n.charAt(0)}
 function getMk(){const d=new Date();const cur=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;try{if(typeof MESI!=='undefined'&&MESI&&MESI[cur])return cur;const ks=Object.keys((typeof MESI!=='undefined'&&MESI)?MESI:{}).sort();return ks.length?ks[ks.length-1]:cur;}catch(e){return cur;}}
+/* settimane REALI del mese (non cablate a 4): così una 5ª settimana entra in tutti i totali */
+function WKS(m){try{return (typeof MESI!=='undefined'&&MESI[m]&&MESI[m].settimane)?MESI[m].settimane.map(function(w){return w.id;}):WKS(mk);}catch(e){returnWKS(mk);}}
 function getSW(mk){
   const m=MESI[mk];if(!m)return null;
   const t=new Date();t.setHours(12,0,0,0);
@@ -939,13 +941,13 @@ const KD=[
 function getTot(mk,cid){
   const st=STORICO[mk];if(!st)return{};
   const t={fat:null,pre:null,ret:null,rit:null,nuovi:null,rich:null,serv:null,fiche:null};
-  for(const sid of['S1','S2','S3','S4']){
+  for(const sid of WKS(mk)){
     const d=st[sid]?.[cid];if(!d)continue;
     for(const k of['fat','pre','ret','rit','nuovi','rich'])
       if(d[k]!==null&&d[k]!==undefined)t[k]=(t[k]||0)+d[k];
   }
   for(const k of['serv','fiche','sat']){
-    const vs=['S1','S2','S3','S4'].map(s=>STORICO[mk]?.[s]?.[cid]?.[k]).filter(v=>v!==null&&v!==undefined);
+    const vs=WKS(mk).map(s=>STORICO[mk]?.[s]?.[cid]?.[k]).filter(v=>v!==null&&v!==undefined);
     t[k]=vs.length?vs.reduce((a,b)=>a+b,0)/vs.length:null;
   }
   return t;
@@ -1172,7 +1174,7 @@ function stampaProfilo(cid){
 
   // Sezione cumulato mese
   const tot=getTot(mk,cid);
-  const nW=['S1','S2','S3','S4'].filter(s=>STORICO[mk]?.[s]?.[cid]?.fat!==null&&STORICO[mk]?.[s]?.[cid]?.fat!==undefined).length;
+  const nW=WKS(mk).filter(s=>STORICO[mk]?.[s]?.[cid]?.fat!==null&&STORICO[mk]?.[s]?.[cid]?.fat!==undefined).length;
   let cumH='';
   for(const kpi of KD){
     const av=tot[kpi.k],tv=c[kpi.tm],s=semKpi(kpi.k,av,tv);
@@ -1433,7 +1435,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Segoe UI',sa
     <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px">${kpiH}</div>
     ${extraH}
     <!-- Cumulato mese -->
-    <div class="sec-lbl">📈 Cumulato ${MESI[mk]?.label||''} (${nW}/4 settimane)</div>
+    <div class="sec-lbl">📈 Cumulato ${MESI[mk]?.label||''} (${nW}/${(MESI[mk]?.settimane?.length)||4} settimane)</div>
     <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px">${cumH}</div>
     <!-- Suggerimenti -->
     <div class="sec-lbl">💡 Suggerimenti Personalizzati</div>
@@ -1912,7 +1914,7 @@ function renderRiepilogoSalone(sw, st, m, pace){
 // ║  TREND SETTIMANA SU SETTIMANA                               ║
 // ╚══════════════════════════════════════════════════════════════╝
 function getTrendArrow(mk, sid, cid){
-  const sids=['S1','S2','S3','S4'];
+  const sids=WKS(mk);
   const idx=sids.indexOf(sid);
   if(idx<=0)return '';
   const prev=sids[idx-1];
@@ -2061,11 +2063,11 @@ function renderLive(){
   for(const c of m.collaboratori){
     if(urlCollab&&c.id!==urlCollab)continue;
     const color=rc(c.ruolo);const tot=getTot(mk,c.id);
-    const nW=['S1','S2','S3','S4'].filter(s=>STORICO[mk]?.[s]?.[c.id]?.fat!==null&&STORICO[mk]?.[s]?.[c.id]?.fat!==undefined).length;
+    const nW=WKS(mk).filter(s=>STORICO[mk]?.[s]?.[c.id]?.fat!==null&&STORICO[mk]?.[s]?.[c.id]?.fat!==undefined).length;
     html+=`<div class="ccard" style="border-left-color:${color};padding:11px 13px">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
         <span style="font-weight:800;font-size:14px">${c.nome}</span>
-        <span style="font-size:10px;color:var(--text2)">${nW}/4 settimane</span>
+        <span style="font-size:10px;color:var(--text2)">${nW}/${(MESI[mk]?.settimane?.length)||4} settimane</span>
       </div>
       <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:5px">`;
     for(const kpi of KD){
@@ -2077,9 +2079,9 @@ function renderLive(){
     }
     html+=`</div>
       <div style="margin-top:10px;display:flex;align-items:flex-end;gap:4px;height:36px">
-        ${['S1','S2','S3','S4'].map(sid2=>{
+        ${WKS(mk).map(sid2=>{
           const v=STORICO[mk]?.[sid2]?.[c.id]?.fat;
-          const maxV=Math.max(...['S1','S2','S3','S4'].map(s2=>STORICO[mk]?.[s2]?.[c.id]?.fat||0));
+          const maxV=Math.max(...WKS(mk).map(s2=>STORICO[mk]?.[s2]?.[c.id]?.fat||0));
           const h2=v!=null&&maxV>0?Math.round((v/maxV)*32):0;
           const isAct=getSW(mk)?.id===sid2;
           return `<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px">
@@ -2120,7 +2122,7 @@ function renderMese(){
   const icons={fat:'💰',pre:'👥',ret:'🛍️',rit:'🔄',nuovi:'✨',rich:'📞',sat:'📅',fiche:'🧾',serv:'✂️'};
   // Calcola ticket medio e servizi/cliente salone per la summary card
   let _totFat=null,_totPre=null,_totServ=null,_cntServ=0;
-  for(const sid of['S1','S2','S3','S4']){
+  for(const sid of WKS(mk)){
     const sdw=STORICO[mk]?.[sid];
     if(!sdw)continue;
     m.collaboratori.forEach(c=>{
@@ -2164,14 +2166,14 @@ function renderMese(){
   }
   let totAll=null,tgTot=0;const sums={};
   const isAvg=!kd.sum;
-  for(const sid of['S1','S2','S3','S4']){
+  for(const sid of WKS(mk)){
     let sv=null,cnt=0;
     m.collaboratori.forEach(c=>{const v=STORICO[mk]?.[sid]?.[c.id]?.[meseKpi];if(v!==null&&v!==undefined){sv=(sv||0)+v;cnt++;}});
     sums[sid]=isAvg?(cnt>0?sv/cnt:null):sv;
   }
   if(isAvg){let cnt=0;m.collaboratori.forEach(c=>{const t=getTot(mk,c.id);if(t[meseKpi]!==null){totAll=(totAll||0)+t[meseKpi];cnt++;}});if(cnt)totAll/=cnt;tgTot=70;}
   else{m.collaboratori.forEach(c=>{const t=getTot(mk,c.id);if(t[meseKpi]!==null)totAll=(totAll||0)+t[meseKpi];if(c[kd.tm])tgTot+=c[kd.tm];});
-  if(meseKpi==='fat'){for(const sid of['S1','S2','S3','S4']){const fts=STORICO[mk]?.[sid]?.fat_totale_salone||0;if(fts>0)sums[sid]=fts;}const _rev=anMonthRevenue(mk);if(_rev.total!==null)totAll=_rev.total;}}
+  if(meseKpi==='fat'){for(const sid of WKS(mk)){const fts=STORICO[mk]?.[sid]?.fat_totale_salone||0;if(fts>0)sums[sid]=fts;}const _rev=anMonthRevenue(mk);if(_rev.total!==null)totAll=_rev.total;}}
   // Per fiche: ticket medio salone = fat_tot/pre_tot; per serv: media pesata
   if(meseKpi==='fiche'){
     html+=`<tr class="tot-row"><td>MEDIA SALONE</td>`;
@@ -2237,14 +2239,14 @@ function renderStorico(){
   }
   let totAll=null,tgTot=0;const sums={};
   const isAvgS=!kd.sum;
-  for(const sid of['S1','S2','S3','S4']){
+  for(const sid of WKS(stMk)){
     let sv=null,cnt=0;
     m.collaboratori.forEach(c=>{const v=st?.[sid]?.[c.id]?.[stKpi];if(v!==null&&v!==undefined){sv=(sv||0)+v;cnt++;}});
     sums[sid]=isAvgS?(cnt>0?sv/cnt:null):sv;
   }
   if(isAvgS){let cnt=0;m.collaboratori.forEach(c=>{const t=getTot(stMk,c.id);if(t[stKpi]!==null){totAll=(totAll||0)+t[stKpi];cnt++;}});if(cnt)totAll/=cnt;tgTot=70;}
   else{m.collaboratori.forEach(c=>{const t=getTot(stMk,c.id);if(t[stKpi]!==null)totAll=(totAll||0)+t[stKpi];if(c[kd.tm])tgTot+=c[kd.tm];});
-  if(stKpi==='fat'){for(const sid of['S1','S2','S3','S4']){const fts=STORICO[stMk]?.[sid]?.fat_totale_salone||0;if(fts>0)sums[sid]=fts;}const _rev=anMonthRevenue(stMk);if(_rev.total!==null)totAll=_rev.total;}}
+  if(stKpi==='fat'){for(const sid of WKS(stMk)){const fts=STORICO[stMk]?.[sid]?.fat_totale_salone||0;if(fts>0)sums[sid]=fts;}const _rev=anMonthRevenue(stMk);if(_rev.total!==null)totAll=_rev.total;}}
   // Per fiche: ticket medio salone = fat_tot/pre_tot; per serv: media pesata
   if(stKpi==='fiche'){
     html+=`<tr class="tot-row"><td>MEDIA SALONE</td>`;
