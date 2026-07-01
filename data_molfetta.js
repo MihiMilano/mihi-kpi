@@ -191,7 +191,7 @@ var MESI = {
 var STORICO = {
   "2026-06": {
     "chiuso": false,
-    "ultimo_aggiornamento": "23 giu 2026",
+    "ultimo_aggiornamento": "1 lug 2026",
     "S1": {
       "fat_totale_salone": 7959,
       "miky": {
@@ -678,6 +678,57 @@ var DAILY = {
     },
     "_salone": {
       "nuovi": 12
+    }
+  },
+  "2026-06-30": {
+    "miky": {
+      "fat": 1713,
+      "cli": 25,
+      "ven": 6,
+      "ser": 46,
+      "sat": null
+    },
+    "valentina": {
+      "fat": 1956,
+      "cli": 33,
+      "ven": 5,
+      "ser": 64,
+      "sat": null
+    },
+    "antonella": {
+      "fat": 1645,
+      "cli": 35,
+      "ven": 15,
+      "ser": 62,
+      "sat": null
+    },
+    "andrea": {
+      "fat": 1145,
+      "cli": 28,
+      "ven": 11,
+      "ser": 43,
+      "sat": null
+    },
+    "mariangela": {
+      "fat": 1397,
+      "cli": 34,
+      "ven": 5,
+      "ser": 57,
+      "sat": null
+    },
+    "mariarita": {
+      "fat": 227,
+      "cli": 7,
+      "ven": 1,
+      "ser": 10,
+      "sat": null
+    },
+    "dario": {
+      "fat": 1248,
+      "cli": 33,
+      "ven": 1,
+      "ser": 52,
+      "sat": null
     }
   }
 };
