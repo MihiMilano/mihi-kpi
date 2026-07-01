@@ -863,7 +863,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
 const RC = {"Stilista":"#6d28d9","Estetista":"#be185d","Manager":"#92400e","Barbiere":"#0369a1","Phonista":"#0369a1"};
 function rc(r){return RC[r]||'#64748b'}
 function ini(n){return n.charAt(0)}
-function getMk(){const d=new Date();const cur=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;try{if(typeof MESI!=='undefined'&&MESI){const ks=Object.keys(MESI).sort();if(ks.length){for(const k of ks){const st=(typeof STORICO!=='undefined'&&STORICO)?STORICO[k]:null;if(!st||!st.chiuso)return k;}return ks[ks.length-1];}}}catch(e){}return cur;}
+function getMk(){const d=new Date();const cur=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;try{if(typeof MESI!=='undefined'&&MESI){const ks=Object.keys(MESI).sort();const hd=k=>{const st=(typeof STORICO!=='undefined'&&STORICO)?STORICO[k]:null;if(!st)return false;return ['S1','S2','S3','S4','S5'].some(s=>{const w=st[s];if(!w)return false;if(w.fat_totale_salone>0)return true;return Object.keys(w).some(x=>x!=='fat_totale_salone'&&x!=='_salone'&&w[x]&&w[x].fat!=null);});};const wd=ks.filter(hd);if(wd.length)return wd[wd.length-1];if(ks.length)return ks[ks.length-1];}}catch(e){}return cur;}
 function getSW(mk){
   const m=MESI[mk];if(!m)return null;
   const t=new Date();t.setHours(12,0,0,0);
