@@ -279,6 +279,12 @@ var MESI = {
         "da": "2026-06-22",
         "a": "2026-06-27",
         "label": "S4 · 22-27 giu"
+      },
+      {
+        "id": "S5",
+        "da": "2026-06-29",
+        "a": "2026-06-30",
+        "label": "S5 · 29-30 giu"
       }
     ],
     "collaboratori": [
@@ -3466,6 +3472,75 @@ var STORICO = {
       },
       "_salone": {
         "nuovi": 16
+      }
+    },
+    "S5": {
+      "fat_totale_salone": 1777.05,
+      "debora": {
+        "fat": 400,
+        "pre": 6,
+        "ret": 0,
+        "serv": 2.5,
+        "fiche": 66.67,
+        "sat": 88,
+        "rit": null,
+        "rich": null,
+        "nuovi": null
+      },
+      "helin": {
+        "fat": 164.25,
+        "pre": 4,
+        "ret": 0,
+        "serv": 2.5,
+        "fiche": 41.06,
+        "sat": 35,
+        "rit": null,
+        "rich": null,
+        "nuovi": null
+      },
+      "alex": {
+        "fat": 109.7,
+        "pre": 7,
+        "ret": 0,
+        "serv": 1.14,
+        "fiche": 15.67,
+        "sat": 47,
+        "rit": null,
+        "rich": null,
+        "nuovi": null
+      },
+      "simona_cecilia": {
+        "fat": 164.5,
+        "pre": 5,
+        "ret": 0,
+        "serv": 1.4,
+        "fiche": 32.9,
+        "sat": 38,
+        "rit": null,
+        "rich": null,
+        "nuovi": null
+      },
+      "roberta": {
+        "fat": 555,
+        "pre": 2,
+        "ret": 0,
+        "serv": 4.0,
+        "fiche": 277.5,
+        "sat": 98,
+        "rit": null,
+        "rich": null,
+        "nuovi": null
+      },
+      "chiara": {
+        "fat": 383.6,
+        "pre": 4,
+        "ret": 2,
+        "serv": 1.5,
+        "fiche": 95.9,
+        "sat": null,
+        "rit": null,
+        "rich": null,
+        "nuovi": null
       }
     }
   }
