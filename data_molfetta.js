@@ -729,6 +729,9 @@ var DAILY = {
       "ven": 1,
       "ser": 52,
       "sat": null
+    },
+    "_salone": {
+      "nuovi": 14
     }
   }
 };
