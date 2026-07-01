@@ -11,7 +11,7 @@
 <script>
 /* AUTO-AGGIORNAMENTO DASH: se online c'è una versione più nuova, ricarica fresca (anti-cache Safari/Pages). Bumpa DASH_VERSION a OGNI modifica strutturale della dash. */
 (function(){
-  var DASH_VERSION='2026-07-01-a';
+  var DASH_VERSION='2026-07-01-b';
   window.__DASH_VERSION=DASH_VERSION;
   try{
     fetch(location.pathname+'?_cb='+Date.now(),{cache:'no-store'})
@@ -2208,6 +2208,7 @@ let stMk=getMk(),stKpi='fat';
 function renderStorico(){
   const keys=Object.keys(STORICO).sort().reverse();
   if(!keys.length){document.getElementById('pane-storico').innerHTML='<p class="no-data">Nessuno storico disponibile.</p>';return;}
+  if(!STORICO[stMk])stMk=keys[0]; /* lo storico non sparisce mai: se il mese scelto non esiste, ripiega sull'ultimo disponibile */
   const kd=KD.find(k=>k.k===stKpi)||KD[0];
   const icons={fat:'💰',pre:'👥',ret:'🛍️',rit:'🔄',nuovi:'✨',rich:'📞',sat:'📅',fiche:'🧾',serv:'✂️'};
   let html=`<div class="msel-wrap"><select onchange="stMk=this.value;renderStorico()">`;
