@@ -186,6 +186,192 @@ var MESI = {
       }
     ],
     "nuovi_target_mese": null
+  },
+  "2026-07": {
+    "label": "Luglio 2026",
+    "settimane": [
+      {
+        "id": "S1",
+        "da": "2026-07-01",
+        "a": "2026-07-06",
+        "label": "S1 · 1-6 lug"
+      },
+      {
+        "id": "S2",
+        "da": "2026-07-08",
+        "a": "2026-07-13",
+        "label": "S2 · 8-13 lug"
+      },
+      {
+        "id": "S3",
+        "da": "2026-07-15",
+        "a": "2026-07-20",
+        "label": "S3 · 15-20 lug"
+      },
+      {
+        "id": "S4",
+        "da": "2026-07-22",
+        "a": "2026-07-31",
+        "label": "S4 · 22-31 lug"
+      }
+    ],
+    "collaboratori": [
+      {
+        "id": "michele",
+        "nome": "Michele",
+        "ruolo": "Parrucchiere",
+        "costo_m": null,
+        "fat_tw": 2625,
+        "fat_tm": 10500,
+        "pre_tw": 37,
+        "pre_tm": 147,
+        "ret_tw": 3,
+        "ret_tm": 10,
+        "rit_tw": null,
+        "rit_tm": null,
+        "nuovi_tw": null,
+        "nuovi_tm": null,
+        "rich_tw": null,
+        "rich_tm": null,
+        "serv_t": 1.79,
+        "fiche_t": 64.4,
+        "sat_tw": null,
+        "sat_tm": null
+      },
+      {
+        "id": "carmen",
+        "nome": "Carmen",
+        "ruolo": "Parrucchiere",
+        "costo_m": null,
+        "fat_tw": 2250,
+        "fat_tm": 9000,
+        "pre_tw": 38,
+        "pre_tm": 150,
+        "ret_tw": 3,
+        "ret_tm": 10,
+        "rit_tw": null,
+        "rit_tm": null,
+        "nuovi_tw": null,
+        "nuovi_tm": null,
+        "rich_tw": null,
+        "rich_tm": null,
+        "serv_t": 2.36,
+        "fiche_t": 76,
+        "sat_tw": null,
+        "sat_tm": null
+      },
+      {
+        "id": "emilia",
+        "nome": "Emilia",
+        "ruolo": "Parrucchiere",
+        "costo_m": null,
+        "fat_tw": 2025,
+        "fat_tm": 8100,
+        "pre_tw": 30,
+        "pre_tm": 118,
+        "ret_tw": 4,
+        "ret_tm": 14,
+        "rit_tw": null,
+        "rit_tm": null,
+        "nuovi_tw": null,
+        "nuovi_tm": null,
+        "rich_tw": null,
+        "rich_tm": null,
+        "serv_t": 2.14,
+        "fiche_t": 72.2,
+        "sat_tw": null,
+        "sat_tm": null
+      },
+      {
+        "id": "isa",
+        "nome": "Isa",
+        "ruolo": "Parrucchiere",
+        "costo_m": null,
+        "fat_tw": 1950,
+        "fat_tm": 7800,
+        "pre_tw": 35,
+        "pre_tm": 141,
+        "ret_tw": 5,
+        "ret_tm": 18,
+        "rit_tw": null,
+        "rit_tm": null,
+        "nuovi_tw": null,
+        "nuovi_tm": null,
+        "rich_tw": null,
+        "rich_tm": null,
+        "serv_t": 1.88,
+        "fiche_t": 60.8,
+        "sat_tw": null,
+        "sat_tm": null
+      },
+      {
+        "id": "rebecca",
+        "nome": "Rebecca",
+        "ruolo": "Parrucchiere",
+        "costo_m": null,
+        "fat_tw": 2100,
+        "fat_tm": 8400,
+        "pre_tw": 32,
+        "pre_tm": 129,
+        "ret_tw": 5,
+        "ret_tm": 18,
+        "rit_tw": null,
+        "rit_tm": null,
+        "nuovi_tw": null,
+        "nuovi_tm": null,
+        "rich_tw": null,
+        "rich_tm": null,
+        "serv_t": 2.07,
+        "fiche_t": 64.6,
+        "sat_tw": null,
+        "sat_tm": null
+      },
+      {
+        "id": "isabel",
+        "nome": "Isabel",
+        "ruolo": "Parrucchiere",
+        "costo_m": null,
+        "fat_tw": 1950,
+        "fat_tm": 7800,
+        "pre_tw": 34,
+        "pre_tm": 137,
+        "ret_tw": 1,
+        "ret_tm": 4,
+        "rit_tw": null,
+        "rit_tm": null,
+        "nuovi_tw": null,
+        "nuovi_tm": null,
+        "rich_tw": null,
+        "rich_tm": null,
+        "serv_t": 1.98,
+        "fiche_t": 64,
+        "sat_tw": null,
+        "sat_tm": null
+      },
+      {
+        "id": "paola",
+        "nome": "Paola",
+        "ruolo": "Parrucchiere",
+        "costo_m": null,
+        "fat_tw": 900,
+        "fat_tm": 3600,
+        "pre_tw": 34,
+        "pre_tm": 135,
+        "ret_tw": 2,
+        "ret_tm": 8,
+        "rit_tw": null,
+        "rit_tm": null,
+        "nuovi_tw": null,
+        "nuovi_tm": null,
+        "rich_tw": null,
+        "rich_tm": null,
+        "serv_t": 1.6,
+        "fiche_t": 41.1,
+        "sat_tw": null,
+        "sat_tm": null
+      }
+    ],
+    "nuovi_target_mese": null
   }
 };
 var STORICO = {
@@ -523,6 +709,22 @@ var STORICO = {
       "_salone": {
         "nuovi": 11
       }
+    }
+  },
+  "2026-07": {
+    "chiuso": false,
+    "ultimo_aggiornamento": "—",
+    "S1": {
+      "fat_totale_salone": 0
+    },
+    "S2": {
+      "fat_totale_salone": 0
+    },
+    "S3": {
+      "fat_totale_salone": 0
+    },
+    "S4": {
+      "fat_totale_salone": 0
     }
   }
 };
