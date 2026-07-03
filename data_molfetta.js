@@ -186,6 +186,192 @@ var MESI = {
       }
     ],
     "nuovi_target_mese": null
+  },
+  "2026-07": {
+    "label": "Luglio 2026",
+    "settimane": [
+      {
+        "id": "S1",
+        "da": "2026-07-01",
+        "a": "2026-07-06",
+        "label": "S1 · 1-6 lug"
+      },
+      {
+        "id": "S2",
+        "da": "2026-07-08",
+        "a": "2026-07-13",
+        "label": "S2 · 8-13 lug"
+      },
+      {
+        "id": "S3",
+        "da": "2026-07-15",
+        "a": "2026-07-20",
+        "label": "S3 · 15-20 lug"
+      },
+      {
+        "id": "S4",
+        "da": "2026-07-22",
+        "a": "2026-07-31",
+        "label": "S4 · 22-31 lug"
+      }
+    ],
+    "collaboratori": [
+      {
+        "id": "miky",
+        "nome": "Miky Basile",
+        "ruolo": "Direttore",
+        "costo_m": null,
+        "fat_tw": 2625,
+        "fat_tm": 10500,
+        "pre_tw": 25,
+        "pre_tm": 101,
+        "ret_tw": 3,
+        "ret_tm": 10,
+        "rit_tw": null,
+        "rit_tm": null,
+        "nuovi_tw": null,
+        "nuovi_tm": null,
+        "rich_tw": null,
+        "rich_tm": null,
+        "serv_t": 2.11,
+        "fiche_t": 77.1,
+        "sat_tw": null,
+        "sat_tm": null
+      },
+      {
+        "id": "valentina",
+        "nome": "Valentina Dista",
+        "ruolo": "Resp.Tecnico",
+        "costo_m": null,
+        "fat_tw": 1625,
+        "fat_tm": 6500,
+        "pre_tw": 30,
+        "pre_tm": 121,
+        "ret_tw": 3,
+        "ret_tm": 12,
+        "rit_tw": null,
+        "rit_tm": null,
+        "nuovi_tw": null,
+        "nuovi_tm": null,
+        "rich_tw": null,
+        "rich_tm": null,
+        "serv_t": 1.98,
+        "fiche_t": 57.2,
+        "sat_tw": null,
+        "sat_tm": null
+      },
+      {
+        "id": "antonella",
+        "nome": "Antonella Maggi",
+        "ruolo": "Resp.Care",
+        "costo_m": null,
+        "fat_tw": 1375,
+        "fat_tm": 5500,
+        "pre_tw": 30,
+        "pre_tm": 121,
+        "ret_tw": 6,
+        "ret_tm": 22,
+        "rit_tw": null,
+        "rit_tm": null,
+        "nuovi_tw": null,
+        "nuovi_tm": null,
+        "rich_tw": null,
+        "rich_tm": null,
+        "serv_t": 1.76,
+        "fiche_t": 51.1,
+        "sat_tw": null,
+        "sat_tm": null
+      },
+      {
+        "id": "andrea",
+        "nome": "Andrea Stasolla",
+        "ruolo": "Resp.Styling",
+        "costo_m": null,
+        "fat_tw": 1250,
+        "fat_tm": 5000,
+        "pre_tw": 30,
+        "pre_tm": 119,
+        "ret_tw": 5,
+        "ret_tm": 18,
+        "rit_tw": null,
+        "rit_tm": null,
+        "nuovi_tw": null,
+        "nuovi_tm": null,
+        "rich_tw": null,
+        "rich_tm": null,
+        "serv_t": 1.66,
+        "fiche_t": 43.6,
+        "sat_tw": null,
+        "sat_tm": null
+      },
+      {
+        "id": "mariangela",
+        "nome": "Mariangela",
+        "ruolo": "Stilista",
+        "costo_m": null,
+        "fat_tw": 1125,
+        "fat_tm": 4500,
+        "pre_tw": 31,
+        "pre_tm": 124,
+        "ret_tw": 3,
+        "ret_tm": 10,
+        "rit_tw": null,
+        "rit_tm": null,
+        "nuovi_tw": null,
+        "nuovi_tm": null,
+        "rich_tw": null,
+        "rich_tm": null,
+        "serv_t": 1.64,
+        "fiche_t": 41.8,
+        "sat_tw": null,
+        "sat_tm": null
+      },
+      {
+        "id": "mariarita",
+        "nome": "Maria Rita",
+        "ruolo": "Stilista",
+        "costo_m": null,
+        "fat_tw": 1325,
+        "fat_tm": 5300,
+        "pre_tw": 20,
+        "pre_tm": 81,
+        "ret_tw": 1,
+        "ret_tm": 4,
+        "rit_tw": null,
+        "rit_tm": null,
+        "nuovi_tw": null,
+        "nuovi_tm": null,
+        "rich_tw": null,
+        "rich_tm": null,
+        "serv_t": 1.7,
+        "fiche_t": 40.6,
+        "sat_tw": null,
+        "sat_tm": null
+      },
+      {
+        "id": "dario",
+        "nome": "Dario",
+        "ruolo": "Assistente",
+        "costo_m": null,
+        "fat_tw": 625,
+        "fat_tm": 2500,
+        "pre_tw": 27,
+        "pre_tm": 109,
+        "ret_tw": 1,
+        "ret_tm": 2,
+        "rit_tw": null,
+        "rit_tm": null,
+        "nuovi_tw": null,
+        "nuovi_tm": null,
+        "rich_tw": null,
+        "rich_tm": null,
+        "serv_t": 1.21,
+        "fiche_t": 39.6,
+        "sat_tw": null,
+        "sat_tm": null
+      }
+    ],
+    "nuovi_target_mese": null
   }
 };
 var STORICO = {
@@ -512,6 +698,22 @@ var STORICO = {
       "_salone": {
         "nuovi": 14
       }
+    }
+  },
+  "2026-07": {
+    "chiuso": false,
+    "ultimo_aggiornamento": "—",
+    "S1": {
+      "fat_totale_salone": 0
+    },
+    "S2": {
+      "fat_totale_salone": 0
+    },
+    "S3": {
+      "fat_totale_salone": 0
+    },
+    "S4": {
+      "fat_totale_salone": 0
     }
   }
 };
