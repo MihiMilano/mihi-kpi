@@ -100,8 +100,8 @@ var MESI = {
       {
         "id": "S4",
         "da": "2026-06-22",
-        "a": "2026-06-27",
-        "label": "S4 · 22-27 giu"
+        "a": "2026-06-30",
+        "label": "S4 · 22-30 giu"
       }
     ],
     "collaboratori": [
@@ -621,7 +621,32 @@ var STORICO = {
       "fat_totale_salone": 0
     },
     "S4": {
-      "fat_totale_salone": 0
+      "fat_totale_salone": 6394.53,
+      "stefano": {
+        "fat": 3393.68,
+        "pre": 92,
+        "ret": 7,
+        "serv": 1.27,
+        "fiche": 36.89,
+        "sat": 61,
+        "rit": null,
+        "rich": null,
+        "nuovi": null
+      },
+      "simona": {
+        "fat": 3000.85,
+        "pre": 64,
+        "ret": 3,
+        "serv": 1.67,
+        "fiche": 46.89,
+        "sat": 51,
+        "rit": null,
+        "rich": null,
+        "nuovi": null
+      },
+      "_salone": {
+        "nuovi": 28
+      }
     }
   }
 };
