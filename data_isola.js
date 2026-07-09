@@ -151,6 +151,82 @@ var MESI = {
       }
     ],
     "nuovi_target_mese": 48
+  },
+  "2026-07": {
+    "label": "Luglio 2026",
+    "settimane": [
+      {
+        "id": "S1",
+        "da": "2026-07-01",
+        "a": "2026-07-06",
+        "label": "S1 · 1-6 lug"
+      },
+      {
+        "id": "S2",
+        "da": "2026-07-08",
+        "a": "2026-07-13",
+        "label": "S2 · 8-13 lug"
+      },
+      {
+        "id": "S3",
+        "da": "2026-07-15",
+        "a": "2026-07-20",
+        "label": "S3 · 15-20 lug"
+      },
+      {
+        "id": "S4",
+        "da": "2026-07-22",
+        "a": "2026-07-31",
+        "label": "S4 · 22-31 lug"
+      }
+    ],
+    "collaboratori": [
+      {
+        "id": "stefano",
+        "nome": "Stefano",
+        "ruolo": "Stilista",
+        "costo_m": 3509,
+        "fat_tw": 1840,
+        "fat_tm": 7359,
+        "pre_tw": 47,
+        "pre_tm": 187,
+        "ret_tw": 2,
+        "ret_tm": 7,
+        "rit_tw": null,
+        "rit_tm": null,
+        "nuovi_tw": null,
+        "nuovi_tm": null,
+        "rich_tw": null,
+        "rich_tm": null,
+        "serv_t": 1.64,
+        "fiche_t": 43.3,
+        "sat_tw": 61,
+        "sat_tm": 61
+      },
+      {
+        "id": "simona",
+        "nome": "Simona",
+        "ruolo": "Phonista",
+        "costo_m": 2447,
+        "fat_tw": 1202,
+        "fat_tm": 4806,
+        "pre_tw": 28,
+        "pre_tm": 111,
+        "ret_tw": 1,
+        "ret_tm": 4,
+        "rit_tw": null,
+        "rit_tm": null,
+        "nuovi_tw": null,
+        "nuovi_tm": null,
+        "rich_tw": null,
+        "rich_tm": null,
+        "serv_t": 1.77,
+        "fiche_t": 47.6,
+        "sat_tw": 38,
+        "sat_tm": 38
+      }
+    ],
+    "nuovi_target_mese": 48
   }
 };
 var STORICO = {
@@ -647,6 +723,22 @@ var STORICO = {
       "_salone": {
         "nuovi": 28
       }
+    }
+  },
+  "2026-07": {
+    "chiuso": false,
+    "ultimo_aggiornamento": "—",
+    "S1": {
+      "fat_totale_salone": 0
+    },
+    "S2": {
+      "fat_totale_salone": 0
+    },
+    "S3": {
+      "fat_totale_salone": 0
+    },
+    "S4": {
+      "fat_totale_salone": 0
     }
   }
 };
