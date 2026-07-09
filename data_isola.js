@@ -585,7 +585,7 @@ var STORICO = {
   },
   "2026-06": {
     "chiuso": false,
-    "ultimo_aggiornamento": "16 giu 2026",
+    "ultimo_aggiornamento": "9 lug 2026",
     "S1": {
       "fat_totale_salone": 0
     },
@@ -643,6 +643,25 @@ var DAILY = {
     },
     "_salone": {
       "nuovi": 19
+    }
+  },
+  "2026-06-30": {
+    "stefano": {
+      "fat": 3393.68,
+      "cli": 92,
+      "ven": 7,
+      "ser": 117,
+      "sat": 61
+    },
+    "simona": {
+      "fat": 3000.85,
+      "cli": 64,
+      "ven": 3,
+      "ser": 107,
+      "sat": 51
+    },
+    "_salone": {
+      "nuovi": 28
     }
   }
 };
