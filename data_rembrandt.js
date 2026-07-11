@@ -3765,7 +3765,7 @@ var STORICO = {
       "fat_totale_salone": 0
     },
     "S2": {
-      "fat_totale_salone": 10341.1,
+      "fat_totale_salone": 11341.1,
       "debora": {
         "fat": 2211.6,
         "pre": 46,
@@ -3844,11 +3844,11 @@ var STORICO = {
         "nuovi": null
       },
       "chiara": {
-        "fat": 301.9,
+        "fat": 1301.9,
         "pre": 17,
         "ret": 2,
         "serv": 1.59,
-        "fiche": 17.76,
+        "fiche": 76.58,
         "sat": null,
         "rit": null,
         "rich": null,
@@ -4499,7 +4499,7 @@ var DAILY = {
       "sat": 3
     },
     "chiara": {
-      "fat": 114.9,
+      "fat": 1114.9,
       "cli": 15,
       "ven": 2,
       "ser": 25,
