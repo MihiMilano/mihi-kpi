@@ -181,7 +181,7 @@ async function salva(){
   curOper().forEach(c=>{const r={fat:gv('in-'+c.id+'-fat'),cli:gv('in-'+c.id+'-cli'),ven:gv('in-'+c.id+'-ven'),ser:gv('in-'+c.id+'-ser'),sat:gv('in-'+c.id+'-sat')};
     if(r.fat!=null||r.cli!=null||r.ven!=null||r.ser!=null||r.sat!=null) day[c.id]=r;});
   const _nv=gv('salone-nuovi'); if(_nv!=null) day._salone={nuovi:_nv};
-  DAILY[d]=day;
+  let __sha=SHA;try{const __r=await fetch(`https://api.github.com/repos/${USER}/${REPO}/contents/${FILE}?t=`+Date.now(),{headers:H});const __j=await __r.json();if(__j&&__j.sha){__sha=__j.sha;const __t=decodeURIComponent(escape(atob(__j.content.replace(/\n/g,''))));const __e=new Function(__t+'; return {M:MESI,S:STORICO,D:(typeof DAILY!=="undefined"?DAILY:{})};')();MESI=__e.M;STORICO=__e.S;DAILY=__e.D;}}catch(__ex){}DAILY[d]=day;
   rebuildMonth(mkey);
   // serializza il file dati
   const body=`/* === MIHI · Rembrandt47 · FILE DATI ===\n   Aggiornato dalla pagina di inserimento. Non modificare a mano. */\n`+
@@ -192,7 +192,7 @@ async function salva(){
     log('Invio giornata del '+d+'…','inf');
     const content=btoa(unescape(encodeURIComponent(body)));
     const r=await fetch(`https://api.github.com/repos/${USER}/${REPO}/contents/${FILE}`,{
-      method:'PUT',headers:H,body:JSON.stringify({message:'Dati '+d,content:content,sha:SHA})});
+      method:'PUT',headers:H,body:JSON.stringify({message:'Dati '+d,content:content,sha:__sha})});
     const j=await r.json();
     if(!r.ok) throw new Error(j.message||('HTTP '+r.status));
     SHA=j.content.sha;
