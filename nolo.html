@@ -846,7 +846,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
 const RC = {"Stilista":"#6d28d9","Estetista":"#be185d","Manager":"#92400e","Phonista":"#0369a1"};
 function rc(r){return RC[r]||'#64748b'}
 function ini(n){return n.charAt(0)}
-function getMk(){const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`}
+function getMk(){const d=new Date();const cur=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;try{if(typeof MESI!=='undefined'&&MESI){const ks=Object.keys(MESI).sort();const hd=k=>{const st=(typeof STORICO!=='undefined'&&STORICO)?STORICO[k]:null;if(!st)return false;return ['S1','S2','S3','S4','S5'].some(s=>{const w=st[s];if(!w)return false;if(w.fat_totale_salone>0)return true;return Object.keys(w).some(x=>x!=='fat_totale_salone'&&x!=='_salone'&&w[x]&&w[x].fat!=null);});};const wd=ks.filter(hd);if(wd.length)return wd[wd.length-1];if(ks.length)return ks[ks.length-1];}}catch(e){}return cur;}
 function getSW(mk){
   const m=MESI[mk];if(!m)return null;
   const t=new Date();t.setHours(12,0,0,0);
@@ -864,7 +864,7 @@ function sem(a,t){
 }
 function eur(v){if(v===null||v===undefined)return'–';return'€'+Math.round(v).toLocaleString('it-IT')}
 function num(v,d=0){if(v===null||v===undefined)return'–';return d?v.toFixed(d):String(Math.round(v))}
-function pct(a,t){if(a===null||!t)return'';return Math.round((a/t)*100)+'%'}
+function pct(a,t){if(a==null||!t||isNaN(a))return'';return Math.round((a/t)*100)+'%'}
 function pctVal(v){if(v===null||v===undefined)return'–';return v.toFixed(1)+'%'}
 function semSat(v){if(v===null||v===undefined)return'n';if(v>=70)return'g';if(v>=60)return'a';return'r';}
 function semKpi(k,av,tv){return k==='sat'?semSat(av):sem(av,tv);}
