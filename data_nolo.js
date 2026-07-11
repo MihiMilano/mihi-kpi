@@ -482,7 +482,7 @@ var MESI = {
       {
         "id": "serena",
         "nome": "Serena",
-        "ruolo": "",
+        "ruolo": "Receptionist",
         "costo_m": null,
         "fat_tw": null,
         "fat_tm": null,
@@ -504,7 +504,7 @@ var MESI = {
       {
         "id": "mariella",
         "nome": "Mariella Calcaterra",
-        "ruolo": "",
+        "ruolo": "Receptionist",
         "costo_m": null,
         "fat_tw": null,
         "fat_tm": null,
@@ -526,7 +526,7 @@ var MESI = {
       {
         "id": "anna",
         "nome": "Anna",
-        "ruolo": "",
+        "ruolo": "Stilista",
         "costo_m": null,
         "fat_tw": null,
         "fat_tm": null,
@@ -548,7 +548,7 @@ var MESI = {
       {
         "id": "dionis",
         "nome": "Dionis",
-        "ruolo": "",
+        "ruolo": "Stilista",
         "costo_m": null,
         "fat_tw": null,
         "fat_tm": null,
