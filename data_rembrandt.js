@@ -3738,7 +3738,7 @@ var STORICO = {
         "fat": 555,
         "pre": 2,
         "ret": 0,
-        "serv": 4.0,
+        "serv": 4,
         "fiche": 277.5,
         "sat": 98,
         "rit": null,
@@ -3756,6 +3756,94 @@ var STORICO = {
         "rich": null,
         "nuovi": null
       }
+    }
+  },
+  "2026-07": {
+    "chiuso": false,
+    "ultimo_aggiornamento": "11 lug 2026",
+    "S1": {
+      "fat_totale_salone": 0
+    },
+    "S2": {
+      "fat_totale_salone": 4347.15,
+      "debora": {
+        "fat": 2211.6,
+        "pre": 46,
+        "ret": 4,
+        "serv": 2,
+        "fiche": 48.08,
+        "sat": 48,
+        "rit": null,
+        "rich": null,
+        "nuovi": null
+      },
+      "helin": {
+        "fat": 581.1,
+        "pre": 12,
+        "ret": 0,
+        "serv": 2,
+        "fiche": 48.43,
+        "sat": 7,
+        "rit": null,
+        "rich": null,
+        "nuovi": null
+      },
+      "simona_balzano": {
+        "fat": 1122.9,
+        "pre": 17,
+        "ret": 1,
+        "serv": 2.53,
+        "fiche": 66.05,
+        "sat": 17,
+        "rit": null,
+        "rich": null,
+        "nuovi": null
+      },
+      "simona_cecilia": {
+        "fat": 228.4,
+        "pre": 4,
+        "ret": 3,
+        "serv": 0.75,
+        "fiche": 57.1,
+        "sat": 13,
+        "rit": null,
+        "rich": null,
+        "nuovi": null
+      },
+      "valentina": {
+        "fat": 88.25,
+        "pre": 2,
+        "ret": 0,
+        "serv": 2.5,
+        "fiche": 44.13,
+        "sat": 3,
+        "rit": null,
+        "rich": null,
+        "nuovi": null
+      },
+      "chiara": {
+        "fat": 114.9,
+        "pre": 15,
+        "ret": 2,
+        "serv": 1.67,
+        "fiche": 7.66,
+        "sat": null,
+        "rit": null,
+        "rich": null,
+        "nuovi": null
+      },
+      "_salone": {
+        "nuovi": 29
+      }
+    },
+    "S3": {
+      "fat_totale_salone": 0
+    },
+    "S4": {
+      "fat_totale_salone": 0
+    },
+    "S5": {
+      "fat_totale_salone": 0
     }
   }
 };
@@ -4350,6 +4438,53 @@ var DAILY = {
     },
     "_salone": {
       "nuovi": 5
+    }
+  },
+  "2026-07-09": {
+    "debora": {
+      "fat": 2211.6,
+      "cli": 46,
+      "ven": 4,
+      "ser": 92,
+      "sat": 48
+    },
+    "helin": {
+      "fat": 581.1,
+      "cli": 12,
+      "ven": 0,
+      "ser": 24,
+      "sat": 7
+    },
+    "simona_balzano": {
+      "fat": 1122.9,
+      "cli": 17,
+      "ven": 1,
+      "ser": 43,
+      "sat": 17
+    },
+    "simona_cecilia": {
+      "fat": 228.4,
+      "cli": 4,
+      "ven": 3,
+      "ser": 3,
+      "sat": 13
+    },
+    "valentina": {
+      "fat": 88.25,
+      "cli": 2,
+      "ven": null,
+      "ser": 5,
+      "sat": 3
+    },
+    "chiara": {
+      "fat": 114.9,
+      "cli": 15,
+      "ven": 2,
+      "ser": 25,
+      "sat": null
+    },
+    "_salone": {
+      "nuovi": 29
     }
   }
 };
