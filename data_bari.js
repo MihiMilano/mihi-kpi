@@ -1058,7 +1058,7 @@ var DAILY = {
 var CONTO = {
   "ana": {
     "fissi": {
-      "affitto": 1234,
+      "affitto": 0,
       "utenze": 0,
       "assicurazione": 0,
       "marketing": 0,
