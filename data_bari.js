@@ -1054,3 +1054,22 @@ var DAILY = {
     }
   }
 };
+
+var CONTO = {
+  "ana": {
+    "fissi": {
+      "affitto": 1234,
+      "utenze": 0,
+      "assicurazione": 0,
+      "marketing": 0,
+      "altro": 0
+    },
+    "variabili": [],
+    "fissiExtra": []
+  },
+  "bud": {
+    "mensile": 65000
+  },
+  "sked": [],
+  "pers": {}
+};
