@@ -1071,5 +1071,18 @@ var CONTO = {
     "mensile": 65000
   },
   "sked": [],
-  "pers": {}
+  "pers": {
+    "2026-06": {
+      "costo_totale": 21000,
+      "nette": {
+        "michele": 2500,
+        "carmen": 1550,
+        "emilia": 1350,
+        "isa": 1250,
+        "rebecca": 1200,
+        "isabel": 1200,
+        "paola": 700
+      }
+    }
+  }
 };
