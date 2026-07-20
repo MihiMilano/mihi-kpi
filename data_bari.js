@@ -1118,7 +1118,7 @@ var CONTO = {
         "importo": 2000
       }
     ],
-    "lastUpdate": "2026-07-20T14:23:22.946Z"
+    "lastUpdate": "2026-07-20T14:25:26.433Z"
   },
   "bud": {
     "mensile": 65000
@@ -1138,7 +1138,7 @@ var CONTO = {
       }
     },
     "2026-07": {
-      "costo_totale": 0,
+      "costo_totale": 15000,
       "nette": {
         "michele": 3300,
         "carmen": 2670,
