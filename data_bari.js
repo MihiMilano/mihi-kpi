@@ -1058,14 +1058,67 @@ var DAILY = {
 var CONTO = {
   "ana": {
     "fissi": {
-      "affitto": 0,
-      "utenze": 0,
-      "assicurazione": 0,
-      "marketing": 0,
+      "affitto": 3350,
+      "utenze": 1250,
+      "assicurazione": 100,
+      "marketing": 1000,
       "altro": 0
     },
-    "variabili": [],
-    "fissiExtra": []
+    "variabili": [
+      {
+        "id": "v1784557240043",
+        "nome": "merce wella",
+        "importo": 5000
+      },
+      {
+        "id": "v1784557252066",
+        "nome": "merce GVf spa",
+        "importo": 1500
+      },
+      {
+        "id": "v1784557262513",
+        "nome": "materiale di consumo",
+        "importo": 300
+      },
+      {
+        "id": "v1784557279088",
+        "nome": "spese diverse",
+        "importo": 160
+      },
+      {
+        "id": "v1784557328198",
+        "nome": "",
+        "importo": 0
+      }
+    ],
+    "fissiExtra": [
+      {
+        "id": "f1784557015971",
+        "nome": "gestionale+whatt app",
+        "importo": 160
+      },
+      {
+        "id": "f1784557100917",
+        "nome": "consulenti lavoro/comm.sta",
+        "importo": 600
+      },
+      {
+        "id": "f1784557180626",
+        "nome": "planner/amministrazione",
+        "importo": 5000
+      },
+      {
+        "id": "f1784557226101",
+        "nome": "pulizie",
+        "importo": 300
+      },
+      {
+        "id": "f1784557360126",
+        "nome": "rateizazzioni ",
+        "importo": 2000
+      }
+    ],
+    "lastUpdate": "2026-07-20T14:23:22.946Z"
   },
   "bud": {
     "mensile": 65000
@@ -1082,6 +1135,18 @@ var CONTO = {
         "rebecca": 1200,
         "isabel": 1200,
         "paola": 700
+      }
+    },
+    "2026-07": {
+      "costo_totale": 0,
+      "nette": {
+        "michele": 3300,
+        "carmen": 2670,
+        "emilia": 2085,
+        "isa": 1920,
+        "rebecca": 1900,
+        "isabel": 1900,
+        "paola": 1200
       }
     }
   }
