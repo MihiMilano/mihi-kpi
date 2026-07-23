@@ -377,7 +377,7 @@ var MESI = {
 var STORICO = {
   "2026-06": {
     "chiuso": false,
-    "ultimo_aggiornamento": "1 lug 2026",
+    "ultimo_aggiornamento": "23 lug 2026",
     "S1": {
       "fat_totale_salone": 10994,
       "michele": {
@@ -628,22 +628,22 @@ var STORICO = {
       }
     },
     "S4": {
-      "fat_totale_salone": 15985,
+      "fat_totale_salone": 30180,
       "michele": {
-        "fat": 2434,
-        "pre": 42,
-        "ret": 2,
-        "serv": 1.64,
-        "fiche": 57.95,
+        "fat": 4613,
+        "pre": 78,
+        "ret": 4,
+        "serv": 1.65,
+        "fiche": 59.14,
         "sat": null,
         "rit": null,
         "rich": null,
         "nuovi": null
       },
       "carmen": {
-        "fat": 2625,
-        "pre": 38,
-        "ret": 5,
+        "fat": 5250,
+        "pre": 76,
+        "ret": 10,
         "serv": 2.08,
         "fiche": 69.08,
         "sat": null,
@@ -652,31 +652,31 @@ var STORICO = {
         "nuovi": null
       },
       "emilia": {
-        "fat": 2348,
-        "pre": 34,
-        "ret": 5,
-        "serv": 2.21,
-        "fiche": 69.06,
+        "fat": 4246,
+        "pre": 62,
+        "ret": 10,
+        "serv": 2.19,
+        "fiche": 68.48,
         "sat": null,
         "rit": null,
         "rich": null,
         "nuovi": null
       },
       "isa": {
-        "fat": 2274,
-        "pre": 33,
-        "ret": 2,
-        "serv": 1.91,
-        "fiche": 68.91,
+        "fat": 4198,
+        "pre": 60,
+        "ret": 3,
+        "serv": 1.9,
+        "fiche": 69.97,
         "sat": null,
         "rit": null,
         "rich": null,
         "nuovi": null
       },
       "rebecca": {
-        "fat": 1909,
-        "pre": 38,
-        "ret": 1,
+        "fat": 3818,
+        "pre": 76,
+        "ret": 2,
         "serv": 1.89,
         "fiche": 50.24,
         "sat": null,
@@ -685,29 +685,29 @@ var STORICO = {
         "nuovi": null
       },
       "isabel": {
-        "fat": 2696,
-        "pre": 40,
-        "ret": 2,
-        "serv": 1.73,
-        "fiche": 67.4,
+        "fat": 4952,
+        "pre": 73,
+        "ret": 4,
+        "serv": 1.75,
+        "fiche": 67.84,
         "sat": null,
         "rit": null,
         "rich": null,
         "nuovi": null
       },
       "paola": {
-        "fat": 1699,
-        "pre": 37,
-        "ret": 2,
-        "serv": 1.81,
-        "fiche": 45.92,
+        "fat": 3103,
+        "pre": 68,
+        "ret": 4,
+        "serv": 1.79,
+        "fiche": 45.63,
         "sat": null,
         "rit": null,
         "rich": null,
         "nuovi": null
       },
       "_salone": {
-        "nuovi": 11
+        "nuovi": 19
       }
     }
   },
@@ -1052,107 +1052,59 @@ var DAILY = {
     "_salone": {
       "nuovi": 11
     }
-  }
-};
-
-var CONTO = {
-  "ana": {
-    "fissi": {
-      "affitto": 3350,
-      "utenze": 1250,
-      "assicurazione": 100,
-      "marketing": 1000,
-      "altro": 0
-    },
-    "variabili": [
-      {
-        "id": "v1784557240043",
-        "nome": "merce wella",
-        "importo": 5000
-      },
-      {
-        "id": "v1784557252066",
-        "nome": "merce GVf spa",
-        "importo": 1500
-      },
-      {
-        "id": "v1784557262513",
-        "nome": "materiale di consumo",
-        "importo": 300
-      },
-      {
-        "id": "v1784557279088",
-        "nome": "spese diverse",
-        "importo": 160
-      },
-      {
-        "id": "v1784557328198",
-        "nome": "",
-        "importo": 0
-      }
-    ],
-    "fissiExtra": [
-      {
-        "id": "f1784557015971",
-        "nome": "gestionale+whatt app",
-        "importo": 160
-      },
-      {
-        "id": "f1784557100917",
-        "nome": "consulenti lavoro/comm.sta",
-        "importo": 600
-      },
-      {
-        "id": "f1784557180626",
-        "nome": "planner/amministrazione",
-        "importo": 5000
-      },
-      {
-        "id": "f1784557226101",
-        "nome": "pulizie",
-        "importo": 300
-      },
-      {
-        "id": "f1784557360126",
-        "nome": "rateizazzioni ",
-        "importo": 2000
-      },
-      {
-        "id": "f1784816210167",
-        "nome": "iva da versare",
-        "importo": 5000
-      }
-    ],
-    "lastUpdate": "2026-07-23T14:17:52.362Z"
   },
-  "bud": {
-    "mensile": 65000
-  },
-  "sked": [],
-  "pers": {
-    "2026-06": {
-      "costo_totale": 21000,
-      "nette": {
-        "michele": 2500,
-        "carmen": 1550,
-        "emilia": 1350,
-        "isa": 1250,
-        "rebecca": 1200,
-        "isabel": 1200,
-        "paola": 700
-      }
+  "2026-06-27": {
+    "michele": {
+      "fat": 2179,
+      "cli": 36,
+      "ven": 2,
+      "ser": 60,
+      "sat": null
     },
-    "2026-07": {
-      "costo_totale": 15000,
-      "nette": {
-        "michele": 3300,
-        "carmen": 2670,
-        "emilia": 2185,
-        "isa": 2020,
-        "rebecca": 1900,
-        "isabel": 1900,
-        "paola": 1200
-      }
+    "carmen": {
+      "fat": 2625,
+      "cli": 38,
+      "ven": 5,
+      "ser": 79,
+      "sat": null
+    },
+    "emilia": {
+      "fat": 1898,
+      "cli": 28,
+      "ven": 5,
+      "ser": 61,
+      "sat": null
+    },
+    "isa": {
+      "fat": 1924,
+      "cli": 27,
+      "ven": 1,
+      "ser": 51,
+      "sat": null
+    },
+    "rebecca": {
+      "fat": 1909,
+      "cli": 38,
+      "ven": 1,
+      "ser": 72,
+      "sat": null
+    },
+    "isabel": {
+      "fat": 2256,
+      "cli": 33,
+      "ven": 2,
+      "ser": 59,
+      "sat": null
+    },
+    "paola": {
+      "fat": 1404,
+      "cli": 31,
+      "ven": 2,
+      "ser": 55,
+      "sat": null
+    },
+    "_salone": {
+      "nuovi": 8
     }
   }
 };
