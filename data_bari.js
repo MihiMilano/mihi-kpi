@@ -1116,9 +1116,14 @@ var CONTO = {
         "id": "f1784557360126",
         "nome": "rateizazzioni ",
         "importo": 2000
+      },
+      {
+        "id": "f1784816210167",
+        "nome": "iva da versare",
+        "importo": 5000
       }
     ],
-    "lastUpdate": "2026-07-20T14:25:26.433Z"
+    "lastUpdate": "2026-07-23T14:17:52.362Z"
   },
   "bud": {
     "mensile": 65000
@@ -1142,8 +1147,8 @@ var CONTO = {
       "nette": {
         "michele": 3300,
         "carmen": 2670,
-        "emilia": 2085,
-        "isa": 1920,
+        "emilia": 2185,
+        "isa": 2020,
         "rebecca": 1900,
         "isabel": 1900,
         "paola": 1200
