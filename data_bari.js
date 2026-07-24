@@ -787,7 +787,7 @@ var STORICO = {
       }
     },
     "S2": {
-      "fat_totale_salone": 11711,
+      "fat_totale_salone": 13716,
       "michele": {
         "fat": 3248,
         "pre": 32,
@@ -816,6 +816,17 @@ var STORICO = {
         "ret": 0,
         "serv": 2.4,
         "fiche": 82,
+        "sat": null,
+        "rit": null,
+        "rich": null,
+        "nuovi": null
+      },
+      "isa": {
+        "fat": 2005,
+        "pre": 36,
+        "ret": 1,
+        "serv": 1.5,
+        "fiche": 55.69,
         "sat": null,
         "rit": null,
         "rich": null,
@@ -1309,6 +1320,13 @@ var DAILY = {
       "cli": 20,
       "ven": null,
       "ser": 48,
+      "sat": null
+    },
+    "isa": {
+      "fat": 2005,
+      "cli": 36,
+      "ven": 1,
+      "ser": 54,
       "sat": null
     },
     "rebecca": {
