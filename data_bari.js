@@ -784,7 +784,73 @@ var STORICO = {
       }
     },
     "S2": {
-      "fat_totale_salone": 0
+      "fat_totale_salone": 11711,
+      "michele": {
+        "fat": 3248,
+        "pre": 32,
+        "ret": 3,
+        "serv": 2.22,
+        "fiche": 101.5,
+        "sat": null,
+        "rit": null,
+        "rich": null,
+        "nuovi": null
+      },
+      "carmen": {
+        "fat": 2195,
+        "pre": 26,
+        "ret": 0,
+        "serv": 2.58,
+        "fiche": 84.42,
+        "sat": null,
+        "rit": null,
+        "rich": null,
+        "nuovi": null
+      },
+      "emilia": {
+        "fat": 1640,
+        "pre": 20,
+        "ret": 0,
+        "serv": 2.4,
+        "fiche": 82,
+        "sat": null,
+        "rit": null,
+        "rich": null,
+        "nuovi": null
+      },
+      "rebecca": {
+        "fat": 2633,
+        "pre": 41,
+        "ret": 15,
+        "serv": 1.85,
+        "fiche": 64.22,
+        "sat": null,
+        "rit": null,
+        "rich": null,
+        "nuovi": null
+      },
+      "isabel": {
+        "fat": 855,
+        "pre": 21,
+        "ret": 0,
+        "serv": 1.48,
+        "fiche": 40.71,
+        "sat": null,
+        "rit": null,
+        "rich": null,
+        "nuovi": null
+      },
+      "paola": {
+        "fat": 1140,
+        "pre": 29,
+        "ret": 0,
+        "serv": 1.55,
+        "fiche": 39.31,
+        "sat": null,
+        "rit": null,
+        "rich": null,
+        "nuovi": null
+      }
     },
     "S3": {
       "fat_totale_salone": 0
@@ -1214,6 +1280,50 @@ var DAILY = {
       "cli": 18,
       "ven": 1,
       "ser": 28,
+      "sat": null
+    }
+  },
+  "2026-07-11": {
+    "michele": {
+      "fat": 3248,
+      "cli": 32,
+      "ven": 3,
+      "ser": 71,
+      "sat": null
+    },
+    "carmen": {
+      "fat": 2195,
+      "cli": 26,
+      "ven": null,
+      "ser": 67,
+      "sat": null
+    },
+    "emilia": {
+      "fat": 1640,
+      "cli": 20,
+      "ven": null,
+      "ser": 48,
+      "sat": null
+    },
+    "rebecca": {
+      "fat": 2633,
+      "cli": 41,
+      "ven": 15,
+      "ser": 76,
+      "sat": null
+    },
+    "isabel": {
+      "fat": 855,
+      "cli": 21,
+      "ven": null,
+      "ser": 31,
+      "sat": null
+    },
+    "paola": {
+      "fat": 1140,
+      "cli": 29,
+      "ven": null,
+      "ser": 45,
       "sat": null
     }
   }
