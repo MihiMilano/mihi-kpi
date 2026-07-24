@@ -781,6 +781,9 @@ var STORICO = {
         "rit": null,
         "rich": null,
         "nuovi": null
+      },
+      "_salone": {
+        "nuovi": 6
       }
     },
     "S2": {
@@ -1281,6 +1284,9 @@ var DAILY = {
       "ven": 1,
       "ser": 28,
       "sat": null
+    },
+    "_salone": {
+      "nuovi": 6
     }
   },
   "2026-07-11": {
