@@ -713,9 +713,64 @@ var STORICO = {
   },
   "2026-07": {
     "chiuso": false,
-    "ultimo_aggiornamento": "—",
+    "ultimo_aggiornamento": "24 lug 2026",
     "S1": {
-      "fat_totale_salone": 0
+      "fat_totale_salone": 7668,
+      "emilia": {
+        "fat": 1867,
+        "pre": 25,
+        "ret": 3,
+        "serv": 2.04,
+        "fiche": 74.68,
+        "sat": null,
+        "rit": null,
+        "rich": null,
+        "nuovi": null
+      },
+      "isa": {
+        "fat": 1452,
+        "pre": 29,
+        "ret": 8,
+        "serv": 1.62,
+        "fiche": 50.07,
+        "sat": null,
+        "rit": null,
+        "rich": null,
+        "nuovi": null
+      },
+      "rebecca": {
+        "fat": 1751,
+        "pre": 21,
+        "ret": 12,
+        "serv": 2.48,
+        "fiche": 83.38,
+        "sat": null,
+        "rit": null,
+        "rich": null,
+        "nuovi": null
+      },
+      "isabel": {
+        "fat": 1794,
+        "pre": 28,
+        "ret": 1,
+        "serv": 1.96,
+        "fiche": 64.07,
+        "sat": null,
+        "rit": null,
+        "rich": null,
+        "nuovi": null
+      },
+      "paola": {
+        "fat": 804,
+        "pre": 18,
+        "ret": 1,
+        "serv": 1.56,
+        "fiche": 44.67,
+        "sat": null,
+        "rit": null,
+        "rich": null,
+        "nuovi": null
+      }
     },
     "S2": {
       "fat_totale_salone": 0
@@ -1105,6 +1160,43 @@ var DAILY = {
     },
     "_salone": {
       "nuovi": 8
+    }
+  },
+  "2026-07-04": {
+    "emilia": {
+      "fat": 1867,
+      "cli": 25,
+      "ven": 3,
+      "ser": 51,
+      "sat": null
+    },
+    "isa": {
+      "fat": 1452,
+      "cli": 29,
+      "ven": 8,
+      "ser": 47,
+      "sat": null
+    },
+    "rebecca": {
+      "fat": 1751,
+      "cli": 21,
+      "ven": 12,
+      "ser": 52,
+      "sat": null
+    },
+    "isabel": {
+      "fat": 1794,
+      "cli": 28,
+      "ven": 1,
+      "ser": 55,
+      "sat": null
+    },
+    "paola": {
+      "fat": 804,
+      "cli": 18,
+      "ven": 1,
+      "ser": 28,
+      "sat": null
     }
   }
 };
