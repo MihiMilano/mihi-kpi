@@ -870,7 +870,76 @@ var STORICO = {
       }
     },
     "S3": {
-      "fat_totale_salone": 0
+      "fat_totale_salone": 9848,
+      "michele": {
+        "fat": 1834,
+        "pre": 31,
+        "ret": 0,
+        "serv": 1.77,
+        "fiche": 59.16,
+        "sat": null,
+        "rit": null,
+        "rich": null,
+        "nuovi": null
+      },
+      "carmen": {
+        "fat": 2082,
+        "pre": 31,
+        "ret": 1,
+        "serv": 2.26,
+        "fiche": 67.16,
+        "sat": null,
+        "rit": null,
+        "rich": null,
+        "nuovi": null
+      },
+      "emilia": {
+        "fat": 1532,
+        "pre": 23,
+        "ret": 1,
+        "serv": 2.17,
+        "fiche": 66.61,
+        "sat": null,
+        "rit": null,
+        "rich": null,
+        "nuovi": null
+      },
+      "rebecca": {
+        "fat": 1895,
+        "pre": 36,
+        "ret": 8,
+        "serv": 1.56,
+        "fiche": 52.64,
+        "sat": null,
+        "rit": null,
+        "rich": null,
+        "nuovi": null
+      },
+      "isabel": {
+        "fat": 1745,
+        "pre": 28,
+        "ret": 0,
+        "serv": 2.21,
+        "fiche": 62.32,
+        "sat": null,
+        "rit": null,
+        "rich": null,
+        "nuovi": null
+      },
+      "paola": {
+        "fat": 760,
+        "pre": 21,
+        "ret": 0,
+        "serv": 1.43,
+        "fiche": 36.19,
+        "sat": null,
+        "rit": null,
+        "rich": null,
+        "nuovi": null
+      },
+      "_salone": {
+        "nuovi": 14
+      }
     },
     "S4": {
       "fat_totale_salone": 0
@@ -1355,6 +1424,53 @@ var DAILY = {
     },
     "_salone": {
       "nuovi": 16
+    }
+  },
+  "2026-07-18": {
+    "michele": {
+      "fat": 1834,
+      "cli": 31,
+      "ven": null,
+      "ser": 55,
+      "sat": null
+    },
+    "carmen": {
+      "fat": 2082,
+      "cli": 31,
+      "ven": 1,
+      "ser": 70,
+      "sat": null
+    },
+    "emilia": {
+      "fat": 1532,
+      "cli": 23,
+      "ven": 1,
+      "ser": 50,
+      "sat": null
+    },
+    "rebecca": {
+      "fat": 1895,
+      "cli": 36,
+      "ven": 8,
+      "ser": 56,
+      "sat": null
+    },
+    "isabel": {
+      "fat": 1745,
+      "cli": 28,
+      "ven": null,
+      "ser": 62,
+      "sat": null
+    },
+    "paola": {
+      "fat": 760,
+      "cli": 21,
+      "ven": null,
+      "ser": 30,
+      "sat": null
+    },
+    "_salone": {
+      "nuovi": 14
     }
   }
 };
